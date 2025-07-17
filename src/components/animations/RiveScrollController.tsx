@@ -13,20 +13,31 @@ interface RiveScrollControllerProps {
   onError?: (error: string) => void;
 }
 
-export const RiveScrollController: React.FC<RiveScrollControllerProps> = ({
+export function RiveScrollController({
   src,
-  stateMachine,
-  artboard,
-  width,
-  height,
+  stateMachine = "State Machine",
+  artboard = "New Artboard",
+  width = 100,
+  height = 100,
   scrollBound = false,
-  className = '',
+  className = "",
   onLoad,
   onError
-}) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+}: RiveScrollControllerProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const riveInstanceRef = useRef<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  // Enhanced error handling for missing .riv files
+  const handleLoadError = useCallback((error: any) => {
+    console.warn(`Rive file not found: ${src}. Using fallback animation.`);
+    setHasError(true);
+    setIsLoading(false);
+    onError?.(error);
+  }, [src, onError]);
 
   // Rive hook with error handling
   const { rive, RiveComponent } = useRive({
@@ -77,19 +88,26 @@ export const RiveScrollController: React.FC<RiveScrollControllerProps> = ({
 
   // Intersection Observer for performance
   useEffect(() => {
-    if (!containerRef.current) return;
-
+    if (!scrollBound) return;
+    
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
       },
       { threshold: 0.1 }
     );
-
-    observer.observe(containerRef.current);
-
-    return () => observer.disconnect();
-  }, []);
+    
+    if (!canvasRef.current) return;
+    
+    const cleanup = () => {
+      if (canvasRef.current) {
+        observer.unobserve(canvasRef.current);
+      }
+    };
+    
+    observer.observe(canvasRef.current);
+    return cleanup;
+  }, [scrollBound]);
 
   // Scroll event handler
   const handleScroll = useCallback(() => {
@@ -104,7 +122,7 @@ export const RiveScrollController: React.FC<RiveScrollControllerProps> = ({
       100
     );
     
-    setScrollProgress(progress);
+    setProgress(progress);
     progressInput.value = progress;
   }, [scrollBound, isVisible, progressInput]);
 
@@ -130,40 +148,76 @@ export const RiveScrollController: React.FC<RiveScrollControllerProps> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, [rive, throttle]);
 
+  // Enhanced fallback rendering
+  if (hasError || !src.endsWith('.riv')) {
+    return (
+      <div 
+        className={`rive-fallback ${className}`}
+        style={{ width, height }}
+      >
+        {/* Custom fallback based on animation type */}
+        {src.includes('yeti-logo') && (
+          <div className="yeti-logo-fallback">
+            <div className="mountain-silhouette"></div>
+            <div className="yeti-text">YETI</div>
+            <div className="snow-particles">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className={`snow-particle snow-${i + 1}`}></div>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        {src.includes('mountain-loading') && (
+          <div className="mountain-loading-fallback">
+            <div className="mountain-range">
+              <div className="peak peak-1"></div>
+              <div className="peak peak-2"></div>
+              <div className="peak peak-3"></div>
+            </div>
+            <div className="loading-aurora"></div>
+            <div className="progress-indicator" style={{ width: `${progress * 100}%` }}></div>
+          </div>
+        )}
+        
+        {src.includes('skill-animations') && (
+          <div className="skill-animation-fallback">
+            <div className="skill-icon-placeholder">
+              <div className="skill-glow"></div>
+              <div className="skill-pulse"></div>
+            </div>
+          </div>
+        )}
+        
+        {/* Generic fallback for other animations */}
+        {!src.includes('yeti-logo') && !src.includes('mountain-loading') && !src.includes('skill-animations') && (
+          <div className="generic-animation-fallback">
+            <div className="placeholder-icon"></div>
+            <div className="placeholder-glow"></div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <div
-      ref={containerRef}
-      className={`rive-scroll-container ${className}`}
-      style={{
-        width: `${width}px`,
-        height: `${height}px`,
-        position: 'relative',
-        overflow: 'hidden'
-      }}
-    >
-      {rive ? (
-        <RiveComponent
-          style={{
-            width: '100%',
-            height: '100%'
-          }}
-        />
-      ) : (
-        <div 
-          className="rive-loading-fallback"
-          style={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(0,0,0,0.1)',
-            borderRadius: '4px'
-          }}
-        >
-          <div className="loading-spinner" />
+    <div className={`rive-container ${className}`} style={{ width, height }}>
+      {isLoading && (
+        <div className="rive-loading">
+          <div className="loading-spinner"></div>
         </div>
       )}
+      <canvas
+        ref={canvasRef}
+        width={width}
+        height={height}
+        style={{ 
+          width: '100%', 
+          height: '100%',
+          opacity: isLoading ? 0 : 1,
+          transition: 'opacity 0.3s ease'
+        }}
+      />
     </div>
   );
-};
+}

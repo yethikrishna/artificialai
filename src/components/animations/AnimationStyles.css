@@ -43,10 +43,16 @@
 }
 
 .yeti-logo-fallback {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+  border-radius: 50%;
+  animation: yeti-logo-pulse 2s ease-in-out infinite;
 }
 
 .yeti-logo-svg {
@@ -54,144 +60,288 @@
 }
 
 .mountain-silhouette {
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 40%;
+  background: linear-gradient(to top, #1e40af, #ffffff);
+  clip-path: polygon(0% 100%, 20% 60%, 40% 80%, 60% 40%, 80% 70%, 100% 100%);
+  animation: mountain-sway 4s ease-in-out infinite;
+}
+
+.yeti-text {
+  position: relative;
+  z-index: 2;
+  font-size: 0.8em;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  letter-spacing: 1px;
 }
 
 .snow-caps {
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
 }
 
-/* Mountain Loading Animation */
+.snow-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.snow-particle {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
+.snow-1 { width: 3px; height: 3px; top: 10%; left: 20%; animation: snow-fall 3s linear infinite; }
+.snow-2 { width: 2px; height: 2px; top: 20%; left: 60%; animation: snow-fall 4s linear infinite 0.5s; }
+.snow-3 { width: 4px; height: 4px; top: 5%; left: 80%; animation: snow-fall 3.5s linear infinite 1s; }
+.snow-4 { width: 2px; height: 2px; top: 15%; left: 40%; animation: snow-fall 4.5s linear infinite 1.5s; }
+.snow-5 { width: 3px; height: 3px; top: 8%; left: 70%; animation: snow-fall 3.8s linear infinite 2s; }
+
+/* Mountain Loading Fallback */
 .mountain-loading-fallback {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.mountain-peaks {
+.mountain-range {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
   display: flex;
-  gap: 8px;
   align-items: flex-end;
+  justify-content: space-around;
 }
 
-.mountain-peak {
-  width: 16px;
-  height: 24px;
-  background: var(--aurora-gradient);
-  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-  border-radius: 0 0 2px 2px;
+.peak {
+  background: linear-gradient(to top, #1e40af, #ffffff);
+  border-radius: 2px 2px 0 0;
+  animation: peak-grow 2s ease-in-out infinite;
 }
 
-/* Skill Animation Styles */
-.skill-animation {
+.peak-1 { width: 25%; height: 80%; animation-delay: 0s; }
+.peak-2 { width: 30%; height: 100%; animation-delay: 0.3s; }
+.peak-3 { width: 20%; height: 70%; animation-delay: 0.6s; }
+
+.loading-aurora {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(16, 185, 129, 0.3) 25%, 
+    rgba(59, 130, 246, 0.3) 50%, 
+    rgba(139, 92, 246, 0.3) 75%, 
+    transparent 100%
+  );
+  animation: aurora-wave 3s ease-in-out infinite;
+}
+
+.progress-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #10b981, #3b82f6);
+  transition: width 0.3s ease;
+  border-radius: 0 2px 2px 0;
+}
+
+/* Skill Animation Fallback */
+.skill-animation-fallback {
   position: relative;
-  display: inline-block;
-  transition: all var(--animation-duration-medium) var(--animation-easing);
-}
-
-.skill-animation-rive.active {
-  transform: scale(1.1);
-}
-
-.skill-animation-rive.hovered {
-  transform: scale(1.05);
-}
-
-.skill-fallback {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.skill-icon-placeholder {
+  position: relative;
+  width: 60%;
+  height: 60%;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
   border-radius: 50%;
-  background: rgba(79, 70, 229, 0.1);
-  border: 2px solid rgba(79, 70, 229, 0.2);
-  transition: all var(--animation-duration-medium) var(--animation-easing);
-}
-
-.skill-fallback:hover {
-  background: rgba(79, 70, 229, 0.2);
-  border-color: rgba(79, 70, 229, 0.4);
-}
-
-/* Thinking Animation */
-.yeti-thinking-fallback {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.thinking-dots {
-  display: flex;
-  gap: 4px;
-}
-
-.thinking-dot {
-  width: 6px;
-  height: 6px;
+.skill-glow {
+  position: absolute;
+  top: -20%;
+  left: -20%;
+  width: 140%;
+  height: 140%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
   border-radius: 50%;
-  background: var(--mountain-primary);
+  animation: skill-glow-pulse 2s ease-in-out infinite;
 }
 
-/* Scroll Performance */
-@media (prefers-reduced-motion: reduce) {
-  .rive-scroll-container,
-  .yeti-logo,
-  .skill-animation {
-    animation: none !important;
-    transition: none !important;
-  }
+.skill-pulse {
+  width: 80%;
+  height: 80%;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  animation: skill-inner-pulse 1.5s ease-in-out infinite;
+}
+
+/* Generic Animation Fallback */
+.generic-animation-fallback {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  border-radius: 8px;
+  border: 2px dashed #9ca3af;
+}
+
+.placeholder-icon {
+  width: 50%;
+  height: 50%;
+  background: #d1d5db;
+  border-radius: 4px;
+  position: relative;
+  animation: placeholder-fade 2s ease-in-out infinite;
+}
+
+.placeholder-glow {
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle, rgba(156, 163, 175, 0.3) 0%, transparent 70%);
+  border-radius: 4px;
+  animation: placeholder-glow-pulse 3s ease-in-out infinite;
+}
+
+/* Keyframe Animations */
+@keyframes yeti-logo-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes mountain-sway {
+  0%, 100% { transform: translateX(-50%) rotate(0deg); }
+  50% { transform: translateX(-50%) rotate(1deg); }
+}
+
+@keyframes snow-fall {
+  0% { transform: translateY(-10px); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(100px); opacity: 0; }
+}
+
+@keyframes peak-grow {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.1); }
+}
+
+@keyframes aurora-wave {
+  0%, 100% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+}
+
+@keyframes skill-glow-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.1); }
+}
+
+@keyframes skill-inner-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.2; }
+  50% { transform: scale(1.2); opacity: 0.4; }
+}
+
+@keyframes placeholder-fade {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes placeholder-glow-pulse {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.4; }
+}
+
+/* Loading Spinner for Rive Files */
+.rive-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e5e7eb;
+  border-top: 2px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .rive-scroll-container {
-    max-width: 100%;
-  }
-  
-  .mountain-peak {
-    width: 12px;
-    height: 18px;
-  }
-  
-  .thinking-dot {
-    width: 4px;
-    height: 4px;
-  }
-}
-
-@media (max-width: 480px) {
-  .mountain-peaks {
-    gap: 6px;
-  }
-  
-  .mountain-peak {
-    width: 10px;
-    height: 15px;
-  }
-}
-
-/* High DPI Support */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .yeti-logo-svg,
-  .skill-fallback {
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-  }
+@media (max-width: 640px) {
+  .yeti-text { font-size: 0.6em; }
+  .snow-particle { transform: scale(0.8); }
+  .skill-icon-placeholder { width: 70%; height: 70%; }
 }
 
 /* Dark Mode Support */
-.dark .skill-fallback {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+.dark .generic-animation-fallback {
+  background: linear-gradient(135deg, #374151, #4b5563);
+  border-color: #6b7280;
 }
 
-.dark .skill-fallback:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.4);
+.dark .placeholder-icon {
+  background: #6b7280;
 }
 
-.dark .thinking-dot {
-  background: #60A5FA;
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .yeti-logo-fallback,
+  .mountain-silhouette,
+  .snow-particle,
+  .peak,
+  .loading-aurora,
+  .skill-glow,
+  .skill-pulse,
+  .placeholder-icon,
+  .placeholder-glow,
+  .loading-spinner {
+    animation: none !important;
+  }
 }
 
 /* Error Handling */

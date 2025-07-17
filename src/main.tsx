@@ -5,7 +5,7 @@ import NotFound from "@/pages/NotFound.tsx";
 import { useLenis } from "@/hooks/use-lenis";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
 import { ConvexReactClient } from "convex/react";
-import { StrictMode } from "react";
+import React, { StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router";
 import { ConfigProvider, theme } from 'antd';
@@ -59,6 +59,16 @@ function App() {
             <Route path="*" element={<NotFound />} />
             <Route path="/" element={<Landing />} />
             <Route path="/chat" element={<Chat />} />
+            <Route path="/rive-test" element={
+              <div>
+                <div className="p-4">
+                  <a href="/" className="text-blue-600 hover:underline">← Back to Home</a>
+                </div>
+                <Suspense fallback={<div className="flex items-center justify-center p-8">Loading...</div>}>
+                  {React.createElement(React.lazy(() => import('@/components/animations/RiveTestPage').then(module => ({ default: module.RiveTestPage }))))}
+                </Suspense>
+              </div>
+            } />
           </Routes>
         </BrowserRouter>
       </PersonalizationProvider>
