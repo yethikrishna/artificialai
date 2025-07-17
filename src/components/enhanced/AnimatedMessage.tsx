@@ -1,9 +1,7 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { Card, Avatar, Badge, Typography } from "antd";
-import { RobotOutlined } from "@ant-design/icons";
-import { MessageAnimation } from "@/components/animations/MessageAnimation";
-import { TypingAnimation } from "@/components/animations/TypingAnimation";
-import { usePersonalization } from "@/components/enhanced/PersonalizationProvider";
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Avatar, Badge, Typography } from 'antd';
+import { TypingAnimation } from '@/components/animations/TypingAnimation';
 
 const { Text } = Typography;
 
@@ -20,126 +18,100 @@ interface AnimatedMessageProps {
   isTyping?: boolean;
 }
 
-export function AnimatedMessage({ message, isTyping = false }: AnimatedMessageProps) {
-  const { settings } = usePersonalization();
+// Simple typing effect component
+const TypewriterText: React.FC<{ text: string; speed?: number }> = ({ text, speed = 50 }) => {
+  const [displayText, setDisplayText] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const messageVariants = {
-    hidden: { 
-      opacity: 0, 
-      y: 20,
-      scale: 0.95
-    },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      scale: 1,
-      transition: {
-        duration: settings.animationsEnabled ? 0.3 : 0,
-        ease: "easeOut"
-      }
-    },
-    exit: { 
-      opacity: 0, 
-      y: -20,
-      scale: 0.95,
-      transition: {
-        duration: settings.animationsEnabled ? 0.2 : 0
-      }
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayText(prev => prev + text[currentIndex]);
+        setCurrentIndex(prev => prev + 1);
+      }, speed);
+
+      return () => clearTimeout(timeout);
     }
-  };
+  }, [currentIndex, text, speed]);
 
-  const avatarVariants = {
-    hidden: { scale: 0, rotate: -180 },
-    visible: { 
-      scale: 1, 
-      rotate: 0,
-      transition: {
-        duration: settings.animationsEnabled ? 0.5 : 0,
-        delay: 0.1,
-        type: "spring",
-        stiffness: 200
-      }
-    }
-  };
+  return <span>{displayText}</span>;
+};
 
+export const AnimatedMessage: React.FC<AnimatedMessageProps> = ({ message, isTyping = false }) => {
+  const isUser = message.type === 'user';
+  
+  // Simple markdown-like formatting function
+  const formatContent = (content: string) => {
+    return content
+      .split('\n')
+      .map((line, index) => {
+        // Handle bold text
+        line = line.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-blue-700">$1</strong>');
+        // Handle italic text
+        line = line.replace(/\*(.*?)\*/g, '<em class="italic text-gray-600">$1</em>');
+        // Handle code
+        line = line.replace(/`(.*?)`/g, '<code class="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">$1</code>');
+        
+        return (
+          <div key={index} className="mb-1 last:mb-0" dangerouslySetInnerHTML={{ __html: line }} />
+        );
+      });
+  };
+  
   return (
     <motion.div
-      variants={messageVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}
     >
-      <div className={`flex items-start space-x-2 sm:space-x-3 max-w-[85%] sm:max-w-[80%] ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-        <motion.div
-          variants={avatarVariants}
-          whileHover={settings.animationsEnabled ? { scale: 1.1, rotate: 5 } : {}}
-          whileTap={settings.animationsEnabled ? { scale: 0.9 } : {}}
+      <div className={`flex items-start space-x-3 max-w-[80%] ${isUser ? 'flex-row-reverse space-x-reverse' : ''}`}>
+        {/* Avatar */}
+        <Avatar 
+          src={isUser ? undefined : "/assets/1000158361.jpg"}
+          className={`border-2 shadow-lg mt-1 ${isUser ? 'border-green-200' : 'border-blue-200'}`}
+          size="large"
         >
-          <Avatar 
-            src={message.type === 'ai' ? '/assets/1000158361.jpg' : undefined}
-            icon={message.type === 'user' ? <RobotOutlined /> : undefined}
-            className={`${message.type === 'ai' ? 'border-2 border-blue-200 shadow-lg' : 'bg-blue-600 shadow-lg'}`}
-            size={window.innerWidth < 640 ? "default" : "large"}
-          />
-          
-          {/* Message Animation Overlay */}
-          {settings.animationsEnabled && (
-            <div className="absolute inset-0 pointer-events-none">
-              <MessageAnimation 
-                messageType={message.type}
-                isVisible={true}
-                className="w-full h-full"
-              />
-            </div>
-          )}
-        </motion.div>
+          {isUser ? 'U' : undefined}
+        </Avatar>
         
-        <motion.div
-          whileHover={settings.animationsEnabled ? { scale: 1.02 } : {}}
-          transition={{ duration: 0.2 }}
-        >
-          <Card
-            className={`${
-              message.type === 'user' 
-                ? 'bg-blue-600 text-white border-blue-500' 
-                : 'bg-white/80 backdrop-blur-sm text-gray-700 border-gray-200'
-            } shadow-lg transition-all duration-300`}
-            bodyStyle={{ padding: window.innerWidth < 640 ? '8px 12px' : '12px 16px' }}
-          >
-            {message.skill && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 }}
-              >
-                <Badge 
-                  count={message.skill} 
-                  color="blue" 
-                  className="mb-2"
-                />
-              </motion.div>
-            )}
-            
-            <div className="relative">
-              <Text className={`${message.type === 'user' ? 'text-white' : 'text-gray-700'} text-sm sm:text-base`}>
-                {message.content}
-              </Text>
-              
-              {/* Typing Animation for AI messages */}
-              {isTyping && message.type === 'ai' && settings.animationsEnabled && (
-                <div className="absolute right-0 bottom-0">
-                  <TypingAnimation isTyping={true} speed="medium" />
+        {/* Message Content */}
+        <div className={`relative ${isUser ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200'} rounded-2xl px-4 py-3 shadow-sm`}>
+          {/* Message text with typing animation for AI */}
+          {isUser ? (
+            <Text className="text-white text-base leading-relaxed">
+              {message.content}
+            </Text>
+          ) : (
+            <div className="text-gray-800 text-base leading-relaxed">
+              {isTyping ? (
+                <div className="flex items-center space-x-2">
+                  <TypewriterText text={message.content} speed={30} />
+                  <TypingAnimation isTyping={true} size={16} variant="default" />
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  {formatContent(message.content)}
                 </div>
               )}
             </div>
-            
-            <div className={`text-xs opacity-70 mt-1 sm:mt-2 ${message.type === 'user' ? 'text-white/70' : 'text-gray-500'}`}>
-              {message.timestamp.toLocaleTimeString()}
+          )}
+          
+          {/* Skill badge */}
+          {message.skill && (
+            <div className="mt-2">
+              <Badge size="small" color="blue">
+                {message.skill}
+              </Badge>
             </div>
-          </Card>
-        </motion.div>
+          )}
+          
+          {/* Timestamp */}
+          <div className={`text-xs mt-2 ${isUser ? 'text-blue-100' : 'text-gray-500'}`}>
+            {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </div>
+        </div>
       </div>
     </motion.div>
   );
-}
+};
