@@ -1,123 +1,61 @@
-# YETI AI Custom Rive Animations
+# YETI AI Custom Rive Animations Guide
 
-This directory contains custom Rive animation files (.riv) for the YETI AI platform.
+## 🎨 Professional Mountain/Snow Themed Animations
 
-## Required Animation Files
+This guide outlines the custom Rive animations needed for YETI AI with mountain/snow themes and professional responsiveness.
 
-### 1. yeti-logo.riv
-**Purpose:** Main YETI logo animation with mountain theme
-**States:** idle, hover, pulse
-**Features:**
-- Mountain silhouette with snow caps
-- YETI text integration
-- Subtle breathing/pulsing animation
-- Hover effects with glow
+## 📁 Required Rive Files
 
-### 2. yeti-loading.riv
-**Purpose:** Loading indicator with mountain theme
-**States:** spinning, pulsing, breathing
-**Features:**
-- Three mountain peaks that light up in sequence
-- Snow particle effects
-- Rotating mountain range
-- Smooth transitions
+### Core Animations
+- `yeti-logo.riv` - Main YETI logo with mountain silhouette
+- `mountain-loading.riv` - Three mountain peaks loading sequence
+- `mountain-background.riv` - Scroll-bound mountain landscape
+- `typing-indicator.riv` - AI thinking animation with snow effects
+- `model-indicator.riv` - AI model type indicators
 
-### 3. yeti-thinking.riv
-**Purpose:** AI thinking indicator
-**States:** idle, processing, complete
-**Features:**
-- Brain/thought bubble with mountain backdrop
-- Pulsing neural network effect
-- Snow falling animation
-- Processing indicators
+### Skill Animations (16 files)
+- `skills/writing.riv` - Pen writing on mountain paper
+- `skills/image.riv` - Camera capturing mountain scene
+- `skills/music.riv` - Musical notes floating over peaks
+- `skills/search.riv` - Magnifying glass over mountain map
+- `skills/code.riv` - Code brackets forming mountain shape
+- `skills/translate.riv` - Language bubbles over globe
+- `skills/voice.riv` - Sound waves echoing in mountains
+- `skills/meeting.riv` - Video call with mountain backdrop
+- `skills/data.riv` - Charts growing like mountain peaks
+- `skills/research.riv` - Books stacked like mountains
+- `skills/summary.riv` - Document condensing to mountain icon
+- `skills/email.riv` - Email flying over mountain range
+- `skills/debug.riv` - Bug being caught in mountain net
+- `skills/ai.riv` - Brain with mountain neural network
+- `skills/optimize.riv` - Gears turning mountain machinery
+- `skills/design.riv` - Palette painting mountain scene
 
-### 4. yeti-success.riv
-**Purpose:** Success/completion animation
-**States:** idle, celebrate, complete
-**Features:**
-- Mountain with flag on peak
-- Celebration particles
-- Victory animation
-- Confetti/snow burst
-
-### 5. yeti-error.riv
-**Purpose:** Error/warning animation
-**States:** idle, shake, warning
-**Features:**
-- Avalanche/warning theme
-- Shaking mountain
-- Red warning indicators
-- Error recovery animation
-
-### 6. yeti-skills.riv
-**Purpose:** Skill-specific animations
-**States:** writing, coding, image, translate, research, music
-**Features:**
-- Different mountain scenes for each skill
-- Skill-specific icons integrated with mountains
-- Smooth state transitions
-- Interactive hover effects
-
-## Design Guidelines
+## 🏔️ Design Guidelines
 
 ### Color Palette
-- Primary: #3B82F6 (Blue)
-- Secondary: #8B5CF6 (Purple)
-- Accent: #1E40AF (Dark Blue)
-- Snow: #FFFFFF
-- Mountain: #4A5568 to #2D3748 (Gradient)
+- **Primary Mountain**: #4F46E5 (Indigo 600)
+- **Secondary Mountain**: #1E40AF (Blue 800)
+- **Snow White**: #FFFFFF
+- **Aurora Effects**: Gradient from #4F46E5 to #7C3AED to #EC4899
+- **Sky Background**: #F8FAFC to #E2E8F0
 
 ### Animation Principles
-- Smooth, natural movements
-- 60fps performance
-- Lightweight file sizes (<50KB each)
-- Consistent timing (2-3 second loops)
-- Subtle, professional animations
+1. **Smooth 60fps Performance**: All animations optimized for web
+2. **Responsive Scaling**: Works from 320px to 4K displays
+3. **Scroll Integration**: Background animations bound to scroll
+4. **State Machines**: Hover, active, idle, loading states
+5. **Accessibility**: Respects prefers-reduced-motion
 
-### Mountain Theme Elements
-- Snow-capped peaks
-- Layered mountain ranges
-- Falling snow particles
-- Aurora/sky effects
-- Minimalist, clean design
+### Technical Specifications
+- **File Size**: <50KB per animation
+- **Artboard Size**: 400x300 (4:3 ratio) for main animations
+- **Icon Size**: 100x100 for skill icons
+- **Frame Rate**: 60fps
+- **Export Format**: .riv (Rive native format)
 
-## Creating Custom Animations
+## 🛠️ Rive Editor Setup
 
-### Tools Needed
-1. [Rive Editor](https://rive.app/downloads) (Free)
-2. Vector graphics software (optional)
-3. Reference images of mountains/snow
+### 1. Create New File
 
-### Steps
-1. **Design Phase:**
-   - Sketch mountain silhouettes
-   - Plan animation states
-   - Create vector assets
-
-2. **Animation Phase:**
-   - Import/create vectors in Rive
-   - Set up bones and constraints
-   - Create smooth transitions
-   - Add particle effects
-
-3. **State Machine:**
-   - Define input triggers
-   - Set up state transitions
-   - Add interactive elements
-   - Test all states
-
-4. **Optimization:**
-   - Minimize file size
-   - Optimize for web performance
-   - Test on different devices
-   - Ensure smooth playback
-
-### File Naming Convention
-- Use kebab-case: `yeti-logo.riv`
-- Include version numbers: `yeti-logo-v2.riv`
-- Backup originals: `yeti-logo-source.riv`
-
-## Integration
-
-The animations are automatically loaded by the `YetiAnimation` component:
-
+[Insert Rive Editor setup instructions here]

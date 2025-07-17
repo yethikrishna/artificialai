@@ -42,6 +42,7 @@ import { EnhancedUserButton } from "@/components/enhanced/EnhancedUserButton";
 import { usePersonalization } from "@/components/enhanced/PersonalizationProvider";
 import { YetiLogo, YetiAnimation } from "@/components/animations/YetiAnimations";
 import { MountainTheme, mountainThemeStyles } from "@/components/animations/MountainTheme";
+import { RiveScrollController } from "@/components/animations/RiveScrollController";
 
 const { Text, Title } = Typography;
 const { TextArea } = Input;
@@ -86,6 +87,7 @@ export default function Chat() {
   } | null>(null);
   const [apiClient] = useState(new YetiAPIClient());
   const [apiStatus, setApiStatus] = useState<Record<string, boolean>>({});
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const inputRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -261,8 +263,24 @@ export default function Chat() {
     // TODO: Add file to current chat context
   };
 
+  useEffect(() => {
+    let scrollTimeout: NodeJS.Timeout;
+    
+    const handleScroll = () => {
+      setIsScrolling(true);
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => setIsScrolling(false), 150);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollTimeout);
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className={`min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 ${isScrolling ? 'scrolling' : ''}`}>
       {/* Floating Sidebar */}
       <FloatingSidebar
         onNewConversation={handleNewConversation}
@@ -270,9 +288,9 @@ export default function Chat() {
         onFileSelect={handleFileSelect}
       />
 
-      {/* Header - Mobile Responsive */}
+      {/* Header - Enhanced with Rive */}
       <motion.header 
-        className="bg-white/80 backdrop-blur-sm border-b border-gray-200 px-3 sm:px-6 py-3 sm:py-4 shadow-sm"
+        className="bg-white/80 backdrop-blur-sm border-b border-gray-200 px-3 sm:px-6 py-3 sm:py-4 shadow-sm sticky top-0 z-50"
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -283,20 +301,20 @@ export default function Chat() {
               className="flex items-center space-x-2 sm:space-x-3"
               whileHover={{ scale: 1.05 }}
             >
-              <motion.div 
-                className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg overflow-hidden border-2 border-blue-200 shadow-lg"
-                animate={{
-                  rotateY: [0, 10, -10, 0],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                whileHover={{ scale: 1.1, rotate: 5 }}
-              >
-                <YetiLogo size={window.innerWidth < 640 ? 32 : 40} animated={true} />
-              </motion.div>
+              {/* Enhanced YETI Logo with Rive */}
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg overflow-hidden border-2 border-blue-200 shadow-lg">
+                <RiveScrollController
+                  src="/animations/yeti-logo.riv"
+                  stateMachine="Logo State Machine"
+                  artboard="Logo"
+                  width={window.innerWidth < 640 ? 32 : 40}
+                  height={window.innerWidth < 640 ? 32 : 40}
+                  scrollBound={false}
+                  className="yeti-header-logo"
+                  onLoad={() => console.log('Header logo loaded')}
+                />
+              </div>
+              
               <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent tracking-wider">
                 YETI
               </div>
@@ -318,7 +336,7 @@ export default function Chat() {
           </div>
           
           <div className="flex items-center space-x-2 sm:space-x-4">
-            {/* API Status Indicators */}
+            {/* API Status with Enhanced Indicators */}
             <div className="hidden sm:flex items-center space-x-2">
               {Object.entries(apiStatus).map(([provider, status]) => (
                 <motion.div
@@ -327,6 +345,7 @@ export default function Chat() {
                   animate={{ scale: 1 }}
                   className={`w-2 h-2 rounded-full ${status ? 'bg-green-500' : 'bg-red-500'}`}
                   title={`${provider}: ${status ? 'Connected' : 'Disconnected'}`}
+                  whileHover={{ scale: 1.2 }}
                 />
               ))}
             </div>
@@ -335,7 +354,6 @@ export default function Chat() {
               size={window.innerWidth < 640 ? 8 : 10}
               showNotifications={true}
               onThemeChange={(theme) => {
-                // Handle theme change
                 console.log('Theme changed to:', theme);
               }}
             />
@@ -343,33 +361,43 @@ export default function Chat() {
         </div>
       </motion.header>
 
-      {/* Main Chat Interface - Mobile Responsive */}
+      {/* Main Chat Interface */}
       <div className="flex flex-col h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)]">
-        {/* Messages Area - Mobile Responsive */}
+        {/* Messages Area with Scroll Optimization */}
         <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-4 sm:py-6 custom-scrollbar">
           <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
-            {/* Welcome Message - Mobile Responsive */}
+            {/* Welcome Message with Enhanced Animation */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               className="text-center py-4 sm:py-8 relative"
             >
-              {/* Mountain background */}
+              {/* Mountain background with scroll binding */}
               <div className="absolute inset-0 opacity-10 pointer-events-none">
-                <MountainTheme variant="background" animated={true} />
+                <RiveScrollController
+                  src="/animations/mountain-background.riv"
+                  stateMachine="Background State Machine"
+                  artboard="Background"
+                  width={800}
+                  height={400}
+                  scrollBound={true}
+                  className="mountain-background"
+                />
               </div>
               
+              {/* Animated YETI Logo */}
               <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                 className="inline-block mb-3 sm:mb-4 relative z-10"
               >
-                <YetiAnimation 
-                  type="logo"
-                  state="pulse"
-                  size={window.innerWidth < 640 ? 64 : 80}
-                  className="border-4 border-blue-200 shadow-xl rounded-full"
+                <RiveScrollController
+                  src="/animations/yeti-logo.riv"
+                  stateMachine="Welcome State Machine"
+                  artboard="Welcome"
+                  width={window.innerWidth < 640 ? 64 : 80}
+                  height={window.innerWidth < 640 ? 64 : 80}
+                  scrollBound={false}
+                  className="welcome-logo border-4 border-blue-200 shadow-xl rounded-full"
                 />
               </motion.div>
               
@@ -380,7 +408,7 @@ export default function Chat() {
                 I have 8 AI model types with smart routing. Type @ or / to see all 16 skills!
               </Text>
               
-              {/* Current Model Display */}
+              {/* Current Model Display with Animation */}
               {currentModel && routingInfo && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -388,7 +416,16 @@ export default function Chat() {
                   className="mt-4 px-4"
                 >
                   <Card className="bg-blue-50/80 border-blue-200 max-w-md mx-auto">
-                    <div className="text-center">
+                    <div className="text-center flex items-center justify-center gap-2">
+                      <RiveScrollController
+                        src="/animations/model-indicator.riv"
+                        stateMachine="Model State Machine"
+                        artboard={currentModel}
+                        width={20}
+                        height={20}
+                        scrollBound={false}
+                        className="model-indicator"
+                      />
                       <Text className="text-blue-700 font-medium text-sm">
                         🧠 Current Model: {MODEL_CAPABILITIES[currentModel].name}
                       </Text>
@@ -401,6 +438,7 @@ export default function Chat() {
               )}
             </motion.div>
 
+            {/* Messages with Enhanced Animations */}
             <AnimatePresence>
               {messages.map((message) => (
                 <AnimatedMessage
@@ -428,7 +466,15 @@ export default function Chat() {
                     />
                     <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
                       <div className="flex items-center space-x-2 p-2">
-                        <TypingAnimation isTyping={true} speed="medium" />
+                        <RiveScrollController
+                          src="/animations/typing-indicator.riv"
+                          stateMachine="Typing State Machine"
+                          artboard="Typing"
+                          width={40}
+                          height={20}
+                          scrollBound={false}
+                          className="typing-indicator"
+                        />
                         <Text className="text-gray-600 text-sm">YETI is thinking...</Text>
                       </div>
                     </Card>
@@ -441,7 +487,7 @@ export default function Chat() {
           </div>
         </div>
 
-        {/* Skill Selector - Mobile Responsive */}
+        {/* Skill Selector with Enhanced Animations */}
         <AnimatePresence>
           {showSkillSelector && (
             <motion.div
@@ -468,18 +514,30 @@ export default function Chat() {
                               bodyStyle={{ padding: window.innerWidth < 640 ? '8px' : '12px' }}
                               onClick={() => handleSkillSelect(skill)}
                             >
-                              {/* Skill Animation Background */}
+                              {/* Enhanced Skill Animation */}
                               <div className="absolute inset-0 pointer-events-none opacity-20">
-                                <SkillAnimation 
-                                  skillType={skill.id}
-                                  isActive={selectedSkill?.id === skill.id}
-                                  isHovered={false}
+                                <RiveScrollController
+                                  src="/animations/skill-animations.riv"
+                                  stateMachine="Skill State Machine"
+                                  artboard={skill.id}
+                                  width={100}
+                                  height={100}
+                                  scrollBound={false}
+                                  className={`skill-background skill-${skill.id}`}
                                 />
                               </div>
                               
                               <div className="text-center relative z-10">
                                 <div className={`text-lg sm:text-2xl text-${skill.color}-500 mb-1 sm:mb-2`}>
-                                  {skill.icon}
+                                  <RiveScrollController
+                                    src={`/animations/skills/${skill.id}.riv`}
+                                    stateMachine="Icon State Machine"
+                                    artboard="Icon"
+                                    width={24}
+                                    height={24}
+                                    scrollBound={false}
+                                    className="skill-icon"
+                                  />
                                 </div>
                                 <Text className="text-gray-700 text-xs sm:text-sm font-medium block mb-1">
                                   {skill.name}
@@ -557,7 +615,7 @@ export default function Chat() {
         </motion.div>
       </div>
 
-      {/* Custom Scrollbar Styles - Mobile Responsive */}
+      {/* Enhanced Scrollbar Styles with Performance */}
       <style dangerouslySetInnerHTML={{
         __html: `
           .custom-scrollbar::-webkit-scrollbar {
@@ -570,14 +628,31 @@ export default function Chat() {
           .custom-scrollbar::-webkit-scrollbar-thumb {
             background: rgba(59, 130, 246, 0.3);
             border-radius: 2px;
+            transition: background 0.2s ease;
           }
           .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: rgba(59, 130, 246, 0.5);
           }
           
+          /* Scroll Performance Optimizations */
+          .scrolling .rive-scroll-container {
+            pointer-events: none;
+          }
+          
+          .scrolling .skill-animation {
+            animation-play-state: paused;
+          }
+          
           @media (max-width: 640px) {
             .custom-scrollbar::-webkit-scrollbar {
               width: 3px;
+            }
+          }
+          
+          /* Reduced Motion Support */
+          @media (prefers-reduced-motion: reduce) {
+            .rive-scroll-container {
+              animation: none !important;
             }
           }
         `

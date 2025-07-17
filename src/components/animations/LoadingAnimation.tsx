@@ -1,4 +1,4 @@
-import { YetiAnimation, YetiLoader } from './YetiAnimations';
+import { YetiAnimation } from './YetiAnimations';
 import { MountainTheme } from './MountainTheme';
 
 interface LoadingAnimationProps {
@@ -25,7 +25,7 @@ export function LoadingAnimation({
           </div>
         );
       case 'yeti':
-        return <YetiLoader size={size} className={className} />;
+        return <YetiAnimation type="loading" size={size} className={className} />;
       default:
         return <YetiAnimation type="loading" size={size} className={className} />;
     }

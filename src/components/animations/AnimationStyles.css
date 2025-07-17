@@ -1,249 +1,235 @@
-/* YETI AI Animation Styles */
+/* Enhanced Animation Styles with Scroll Performance */
 
-/* Global animation variables */
 :root {
-  --yeti-primary: #3B82F6;
-  --yeti-secondary: #8B5CF6;
-  --yeti-accent: #1E40AF;
-  --yeti-snow: #FFFFFF;
-  --yeti-mountain-light: #4A5568;
-  --yeti-mountain-dark: #2D3748;
-  --animation-duration-fast: 0.3s;
-  --animation-duration-medium: 0.6s;
-  --animation-duration-slow: 1.2s;
+  --animation-duration-fast: 0.2s;
+  --animation-duration-medium: 0.5s;
+  --animation-duration-slow: 1s;
+  --animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --mountain-primary: #4F46E5;
+  --mountain-secondary: #1E40AF;
+  --snow-white: #FFFFFF;
+  --aurora-gradient: linear-gradient(45deg, #4F46E5, #7C3AED, #EC4899);
 }
 
-/* Rive animation containers */
-.yeti-rive-animation {
+/* Rive Container Styles */
+.rive-scroll-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.rive-scroll-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+}
+
+/* Performance Optimizations */
+.rive-scroll-container {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* YETI Logo Styles */
+.yeti-logo {
   position: relative;
   display: inline-block;
-  cursor: pointer;
-  transition: transform var(--animation-duration-fast) ease;
 }
 
-.yeti-rive-animation:hover {
+.yeti-logo-rive {
+  position: relative;
+  z-index: 2;
+}
+
+.yeti-logo-fallback {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.yeti-logo-svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.mountain-silhouette {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.snow-caps {
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+}
+
+/* Mountain Loading Animation */
+.mountain-loading-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.mountain-peaks {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.mountain-peak {
+  width: 16px;
+  height: 24px;
+  background: var(--aurora-gradient);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  border-radius: 0 0 2px 2px;
+}
+
+/* Skill Animation Styles */
+.skill-animation {
+  position: relative;
+  display: inline-block;
+  transition: all var(--animation-duration-medium) var(--animation-easing);
+}
+
+.skill-animation-rive.active {
+  transform: scale(1.1);
+}
+
+.skill-animation-rive.hovered {
   transform: scale(1.05);
 }
 
-.yeti-rive-animation.active {
-  transform: scale(1.1);
-  filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
+.skill-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(79, 70, 229, 0.1);
+  border: 2px solid rgba(79, 70, 229, 0.2);
+  transition: all var(--animation-duration-medium) var(--animation-easing);
 }
 
-/* Fallback animations */
-.yeti-animation-fallback {
-  position: relative;
-  display: inline-block;
-  transition: all var(--animation-duration-medium) ease;
+.skill-fallback:hover {
+  background: rgba(79, 70, 229, 0.2);
+  border-color: rgba(79, 70, 229, 0.4);
 }
 
-.yeti-animation-fallback::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg, var(--yeti-primary), var(--yeti-secondary));
-  border-radius: inherit;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity var(--animation-duration-fast) ease;
-}
-
-.yeti-animation-fallback:hover::before {
-  opacity: 0.3;
-}
-
-/* Keyframe animations */
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.1); opacity: 1; }
-}
-
-@keyframes breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-
-@keyframes bounce {
-  0%, 20%, 53%, 80%, 100% { transform: translateY(0); }
-  40%, 43% { transform: translateY(-10px); }
-  70% { transform: translateY(-5px); }
-  90% { transform: translateY(-2px); }
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
-  20%, 40%, 60%, 80% { transform: translateX(2px); }
-}
-
-@keyframes skillPulse {
-  0%, 100% { 
-    transform: scale(1); 
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
-  }
-  50% { 
-    transform: scale(1.02); 
-    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
-  }
-}
-
-@keyframes rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* Mountain theme specific styles */
-.mountain-theme {
-  position: relative;
-  overflow: hidden;
-}
-
-.mountain-theme.animated {
-  animation: mountainPulse 3s ease-in-out infinite;
-}
-
-@keyframes mountainPulse {
-  0%, 100% { 
-    transform: scale(1); 
-    filter: brightness(1);
-  }
-  50% { 
-    transform: scale(1.02); 
-    filter: brightness(1.1);
-  }
-}
-
-/* Snow particle effects */
-.snow-particle {
-  position: absolute;
-  color: white;
-  user-select: none;
-  pointer-events: none;
-  animation: snowfall linear infinite;
-}
-
-@keyframes snowfall {
-  0% {
-    transform: translateY(-100vh) translateX(0) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100vh) translateX(100px) rotate(360deg);
-    opacity: 0;
-  }
-}
-
-/* Skill-specific animation styles */
-.skill-animation-container {
-  position: relative;
-  display: inline-block;
-}
-
-.skill-animation-container.writing {
-  --skill-color: var(--yeti-primary);
-}
-
-.skill-animation-container.coding {
-  --skill-color: var(--yeti-secondary);
-}
-
-.skill-animation-container.image {
-  --skill-color: #10B981;
-}
-
-.skill-animation-container.translate {
-  --skill-color: #F59E0B;
-}
-
-.skill-animation-container.research {
-  --skill-color: #EF4444;
-}
-
-.skill-animation-container.music {
-  --skill-color: #06B6D4;
-}
-
-/* Loading animation styles */
-.loading-animation-container {
+/* Thinking Animation */
+.yeti-thinking-fallback {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Typing animation styles */
-.typing-animation {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
+.thinking-dots {
+  display: flex;
+  gap: 4px;
 }
 
-.typing-dot {
-  opacity: 0.4;
-  animation: typingPulse 1.2s ease-in-out infinite;
+.thinking-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mountain-primary);
 }
 
-@keyframes typingPulse {
-  0%, 60%, 100% { opacity: 0.4; }
-  30% { opacity: 1; }
-}
-
-/* Responsive adjustments */
-@media (max-width: 640px) {
-  .yeti-rive-animation {
-    transform: scale(0.9);
-  }
-  
-  .yeti-rive-animation:hover {
-    transform: scale(0.95);
-  }
-  
-  .mountain-theme {
-    transform: scale(0.95);
-  }
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --yeti-snow: #F8FAFC;
-    --yeti-mountain-light: #6B7280;
-    --yeti-mountain-dark: #374151;
-  }
-}
-
-/* High contrast mode */
-@media (prefers-contrast: high) {
-  .yeti-animation-fallback {
-    border: 2px solid currentColor;
-  }
-  
-  .yeti-rive-animation {
-    outline: 2px solid transparent;
-  }
-  
-  .yeti-rive-animation:focus {
-    outline: 2px solid var(--yeti-primary);
-  }
-}
-
-/* Reduced motion support */
+/* Scroll Performance */
 @media (prefers-reduced-motion: reduce) {
-  .yeti-rive-animation,
-  .yeti-animation-fallback,
-  .mountain-theme {
+  .rive-scroll-container,
+  .yeti-logo,
+  .skill-animation {
     animation: none !important;
     transition: none !important;
   }
-  
-  .snow-particle {
-    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .rive-scroll-container {
+    max-width: 100%;
   }
+  
+  .mountain-peak {
+    width: 12px;
+    height: 18px;
+  }
+  
+  .thinking-dot {
+    width: 4px;
+    height: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mountain-peaks {
+    gap: 6px;
+  }
+  
+  .mountain-peak {
+    width: 10px;
+    height: 15px;
+  }
+}
+
+/* High DPI Support */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .yeti-logo-svg,
+  .skill-fallback {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Dark Mode Support */
+.dark .skill-fallback {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark .skill-fallback:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.dark .thinking-dot {
+  background: #60A5FA;
+}
+
+/* Error Handling */
+.rive-scroll-container.error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px dashed rgba(239, 68, 68, 0.3);
+}
+
+.rive-scroll-container.error::after {
+  content: "Animation Loading...";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  color: rgba(107, 114, 128, 0.7);
+}
+
+/* Loading States */
+.rive-scroll-container.loading {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Intersection Observer Optimizations */
+.rive-scroll-container:not(.visible) {
+  opacity: 0.5;
+  transform: scale(0.95);
+}
+
+.rive-scroll-container.visible {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }

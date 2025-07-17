@@ -1,4 +1,4 @@
-import { YetiAnimation, YetiThinking } from './YetiAnimations';
+import { YetiAnimation } from './YetiAnimations';
 
 interface TypingAnimationProps {
   isTyping: boolean;
@@ -26,7 +26,7 @@ export function TypingAnimation({
   };
 
   if (variant === 'yeti') {
-    return <YetiThinking size={size} isThinking={isTyping} className={className} />;
+    return <YetiAnimation type="thinking" size={size} className={className} />;
   }
 
   // Fallback typing dots animation
