@@ -37,7 +37,7 @@ import { YetiAPIClient } from '@/lib/api-clients';
 import { AnimatedMessage } from "@/components/enhanced/AnimatedMessage";
 import { LoadingAnimation } from "@/components/animations/LoadingAnimation";
 import { TypingAnimation } from "@/components/animations/TypingAnimation";
-import { SkillAnimation } from "@/components/animations/SkillAnimation";
+import { SkillAnimation, SkillGrid } from "@/components/animations/SkillAnimation";
 import { EnhancedUserButton } from "@/components/enhanced/EnhancedUserButton";
 import { usePersonalization } from "@/components/enhanced/PersonalizationProvider";
 import { YetiLogo, YetiAnimation } from "@/components/animations/YetiAnimations";
@@ -93,6 +93,7 @@ export default function Chat() {
   const [showAvatarSelector, setShowAvatarSelector] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
   const [showMountainAnimation, setShowMountainAnimation] = useState(false);
+  const [activeSkill, setActiveSkill] = useState<string | null>(null);
 
   const inputRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -152,6 +153,7 @@ export default function Chat() {
 
   const handleSkillSelect = (skill: Skill) => {
     setSelectedSkill(skill);
+    setActiveSkill(skill.id);
     setInputValue(prev => prev.replace(/@$|\/$/g, '') + skill.shortcut + ' ');
     setShowSkillSelector(false);
     inputRef.current?.focus();
@@ -501,63 +503,119 @@ export default function Chat() {
               exit={{ opacity: 0, y: 20 }}
               className="mx-2 sm:mx-4 mb-2 sm:mb-4"
             >
-              <Card className="bg-white/90 backdrop-blur-sm border-gray-200 shadow-xl max-w-4xl mx-auto">
-                <Title level={5} className="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base">Select a Skill</Title>
+              <Card className="bg-white/90 backdrop-blur-sm border-gray-200 shadow-xl max-w-6xl mx-auto">
+                <Title level={5} className="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base">
+                  Select a Skill - Enhanced with Custom Animations
+                </Title>
                 
                 {Object.entries(skillCategories).map(([category, categorySkills]) => (
                   <div key={category} className="mb-4 sm:mb-6">
-                    <Text className="text-gray-600 font-medium mb-2 sm:mb-3 block text-sm sm:text-base">{category}</Text>
-                    <Row gutter={[8, 8]} className="sm:gutter-12">
-                      {categorySkills.map((skill) => (
-                        <Col xs={12} sm={8} md={6} key={skill.id}>
-                          <motion.div
-                            whileHover={{ scale: 1.05, y: -2 }}
-                            whileTap={{ scale: 0.95 }}
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="flex items-center gap-3 mb-3"
+                    >
+                      <div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></div>
+                      <Text className="text-gray-700 font-bold text-base sm:text-lg">{category}</Text>
+                      <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
+                    </motion.div>
+                    
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
+                      {categorySkills.map((skill, index) => (
+                        <motion.div
+                          key={skill.id}
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: index * 0.1 }}
+                          whileHover={{ y: -5 }}
+                        >
+                          <Card
+                            className="bg-white/60 border-gray-200 hover:bg-white/80 hover:border-blue-300 cursor-pointer transition-all duration-300 shadow-md hover:shadow-xl h-full relative overflow-hidden group"
+                            bodyStyle={{ padding: window.innerWidth < 640 ? '12px' : '16px' }}
+                            onClick={() => handleSkillSelect(skill)}
                           >
-                            <Card
-                              className="bg-white/60 border-gray-200 hover:bg-white/80 hover:border-blue-300 cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg h-full relative overflow-hidden"
-                              bodyStyle={{ padding: window.innerWidth < 640 ? '8px' : '12px' }}
-                              onClick={() => handleSkillSelect(skill)}
-                            >
-                              {/* Enhanced Skill Animation */}
-                              <div className="absolute inset-0 pointer-events-none opacity-20">
-                                <RiveScrollController
-                                  src="/animations/skill-animations.riv"
-                                  stateMachine="Skill State Machine"
-                                  artboard={skill.id}
-                                  width={100}
-                                  height={100}
-                                  scrollBound={false}
-                                  className={`skill-background skill-${skill.id}`}
+                            {/* Enhanced Background Animation */}
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300">
+                              <div className={`w-full h-full bg-gradient-to-br ${skill.color === 'blue' ? 'from-blue-400 to-blue-600' : 
+                                skill.color === 'purple' ? 'from-purple-400 to-purple-600' :
+                                skill.color === 'green' ? 'from-green-400 to-green-600' :
+                                skill.color === 'pink' ? 'from-pink-400 to-pink-600' :
+                                skill.color === 'orange' ? 'from-orange-400 to-orange-600' :
+                                skill.color === 'red' ? 'from-red-400 to-red-600' :
+                                skill.color === 'cyan' ? 'from-cyan-400 to-cyan-600' :
+                                skill.color === 'gold' ? 'from-yellow-400 to-yellow-600' :
+                                skill.color === 'lime' ? 'from-lime-400 to-lime-600' :
+                                skill.color === 'magenta' ? 'from-fuchsia-400 to-fuchsia-600' :
+                                skill.color === 'volcano' ? 'from-rose-400 to-rose-600' :
+                                skill.color === 'geekblue' ? 'from-indigo-400 to-indigo-600' :
+                                'from-gray-400 to-gray-600'}`}></div>
+                            </div>
+                            
+                            <div className="text-center relative z-10">
+                              {/* Custom Skill Animation */}
+                              <div className="mb-2 flex justify-center">
+                                <SkillAnimation
+                                  skillId={skill.id}
+                                  isActive={activeSkill === skill.id}
+                                  size="small"
+                                  showLabel={false}
                                 />
                               </div>
                               
-                              <div className="text-center relative z-10">
-                                <div className={`text-lg sm:text-2xl text-${skill.color}-500 mb-1 sm:mb-2`}>
-                                  <RiveScrollController
-                                    src={`/animations/skills/${skill.id}.riv`}
-                                    stateMachine="Icon State Machine"
-                                    artboard="Icon"
-                                    width={24}
-                                    height={24}
-                                    scrollBound={false}
-                                    className="skill-icon"
-                                  />
-                                </div>
-                                <Text className="text-gray-700 text-xs sm:text-sm font-medium block mb-1">
-                                  {skill.name}
-                                </Text>
-                                <Text className="text-gray-500 text-xs">
-                                  {skill.shortcut}
-                                </Text>
-                              </div>
-                            </Card>
-                          </motion.div>
-                        </Col>
+                              <Text className="text-gray-700 text-xs sm:text-sm font-medium block mb-1">
+                                {skill.name}
+                              </Text>
+                              <Text className="text-gray-500 text-xs">
+                                {skill.shortcut}
+                              </Text>
+                              
+                              {/* Skill Description on Hover */}
+                              <motion.div
+                                className="absolute inset-x-0 bottom-0 bg-black/80 text-white text-xs p-2 rounded-b-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                initial={{ y: 10 }}
+                                whileHover={{ y: 0 }}
+                              >
+                                {skill.description}
+                              </motion.div>
+                            </div>
+                          </Card>
+                        </motion.div>
                       ))}
-                    </Row>
+                    </div>
                   </div>
                 ))}
+                
+                {/* Quick Access Skill Grid */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="mt-6 pt-4 border-t border-gray-200"
+                >
+                  <Text className="text-gray-600 font-medium mb-3 block text-center">
+                    🔥 Most Popular Skills
+                  </Text>
+                  <div className="flex justify-center gap-2 flex-wrap">
+                    {['writing', 'code', 'search', 'image', 'translate', 'ai'].map((skillId) => (
+                      <motion.div
+                        key={skillId}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <SkillAnimation
+                          skillId={skillId}
+                          isActive={activeSkill === skillId}
+                          size="small"
+                          showLabel={false}
+                          onClick={() => {
+                            const skill = skills.find(s => s.id === skillId);
+                            if (skill) handleSkillSelect(skill);
+                          }}
+                        />
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
               </Card>
             </motion.div>
           )}
