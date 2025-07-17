@@ -72,7 +72,7 @@ export function RiveTestPage() {
                   scrollBound={false}
                   className="border border-gray-200 rounded"
                   onLoad={() => console.log(`${animation.name} loaded`)}
-                  onError={(error) => console.log(`${animation.name} error:`, error)}
+                  onLoadError={(error: string) => console.log(`${animation.name} error:`, error)}
                 />
               </div>
               

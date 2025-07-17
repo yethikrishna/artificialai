@@ -704,3 +704,169 @@
     transition: none !important;
   }
 }
+
+/* Enhanced Modal Scrolling Styles */
+.custom-scrollbar-modal {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(59, 130, 246, 0.3) rgba(0, 0, 0, 0.1);
+}
+
+.custom-scrollbar-modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar-modal::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.custom-scrollbar-modal::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.4);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+.custom-scrollbar-modal::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.6);
+}
+
+/* Fix scroll issues on mobile */
+.custom-scrollbar-modal {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Prevent scroll conflicts */
+body.scroll-locked {
+  overflow: hidden !important;
+  position: fixed;
+  width: 100%;
+}
+
+/* Enhanced sticky headers in modal */
+.skill-category-sticky {
+  position: sticky;
+  top: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+  margin: 0 -16px;
+  padding: 8px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Smooth scroll behavior */
+.custom-scrollbar-modal {
+  scroll-behavior: smooth;
+}
+
+/* Fix for iOS scroll bounce */
+@supports (-webkit-touch-callout: none) {
+  .custom-scrollbar-modal {
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+  }
+}
+
+/* Enhanced mobile responsiveness */
+@media (max-width: 768px) {
+  .custom-scrollbar-modal {
+    max-height: calc(100vh - 120px);
+  }
+  
+  .skill-category-sticky {
+    margin: 0 -12px;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-scrollbar-modal {
+    max-height: calc(100vh - 100px);
+  }
+  
+  .custom-scrollbar-modal::-webkit-scrollbar {
+    width: 4px;
+  }
+}
+
+/* Performance optimizations for scrolling */
+.skill-animation-container {
+  contain: layout style paint;
+  will-change: transform;
+}
+
+.skill-card {
+  contain: layout style paint;
+}
+
+/* Reduce animations during scroll for performance */
+.scrolling .skill-animation-container {
+  animation-play-state: paused;
+}
+
+.scrolling .skill-icon {
+  animation-play-state: paused;
+}
+
+/* Dark mode modal enhancements */
+.dark .custom-scrollbar-modal::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark .custom-scrollbar-modal::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+}
+
+.dark .custom-scrollbar-modal::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.7);
+}
+
+.dark .skill-category-sticky {
+  background: rgba(0, 0, 0, 0.95);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .custom-scrollbar-modal {
+    scroll-behavior: auto;
+  }
+  
+  .skill-animation-container,
+  .skill-icon {
+    animation: none !important;
+  }
+}
+
+/* Focus management for modal */
+.skill-selector-modal {
+  isolation: isolate;
+}
+
+.skill-selector-modal:focus-within {
+  outline: none;
+}
+
+/* Prevent text selection during scroll */
+.custom-scrollbar-modal {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.skill-card {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Re-enable text selection for skill descriptions */
+.skill-card .skill-description {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}

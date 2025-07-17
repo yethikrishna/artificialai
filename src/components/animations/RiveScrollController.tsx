@@ -5,39 +5,42 @@ interface RiveScrollControllerProps {
   src: string;
   stateMachine?: string;
   artboard?: string;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   scrollBound?: boolean;
   className?: string;
+  onLoadError?: (error: string) => void;
   onLoad?: () => void;
-  onError?: (error: string) => void;
 }
 
-export function RiveScrollController({
+export const RiveScrollController: React.FC<RiveScrollControllerProps> = ({
   src,
-  stateMachine = "State Machine",
+  stateMachine = "State Machine 1",
   artboard = "New Artboard",
-  width = 100,
-  height = 100,
+  width = 400,
+  height = 300,
   scrollBound = false,
   className = "",
+  onLoadError,
   onLoad,
-  onError
-}: RiveScrollControllerProps) {
+  ...props
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const riveInstanceRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Enhanced error handling for missing .riv files
   const handleLoadError = useCallback((error: any) => {
-    console.warn(`Rive file not found: ${src}. Using fallback animation.`);
-    setHasError(true);
-    setIsLoading(false);
-    onError?.(error);
-  }, [src, onError]);
+    console.error('Rive animation load error:', error);
+    setError(error?.message || 'Failed to load animation');
+    onLoadError?.(error?.message || 'Failed to load animation');
+  }, [src, onLoadError]);
 
   // Rive hook with error handling
   const { rive, RiveComponent } = useRive({
@@ -46,12 +49,14 @@ export function RiveScrollController({
     artboard,
     autoplay: !scrollBound,
     onLoad: () => {
-      console.log(`Rive animation loaded: ${src}`);
+      console.log('Rive animation loaded successfully');
+      setIsLoaded(true);
       onLoad?.();
     },
     onLoadError: (error: any) => {
-      console.error(`Failed to load Rive animation: ${src}`, error);
-      onError?.(`Failed to load animation: ${error?.message || 'Unknown error'}`);
+      console.error('Rive load error:', error);
+      onLoadError?.(`Failed to load animation: ${error?.message || 'Unknown error'}`);
+      handleLoadError(error);
     },
   });
 
@@ -86,28 +91,103 @@ export function RiveScrollController({
     };
   }, []);
 
-  // Intersection Observer for performance
+  // Check if any modal is open to pause scroll binding
   useEffect(() => {
-    if (!scrollBound) return;
-    
+    const checkModalState = () => {
+      const hasModal = document.querySelector('[role="dialog"]') || 
+                      document.querySelector('.ant-modal-mask') ||
+                      document.body.style.overflow === 'hidden';
+      setIsModalOpen(!!hasModal);
+    };
+
+    // Check initially
+    checkModalState();
+
+    // Set up observer for modal changes
+    const observer = new MutationObserver(checkModalState);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['style', 'class']
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Enhanced scroll progress tracking with modal awareness
+  useEffect(() => {
+    if (!scrollBound || !progressInput || isModalOpen) return;
+
+    const throttle = (func: Function, limit: number) => {
+      let inThrottle: boolean;
+      return function(this: any, ...args: any[]) {
+        if (!inThrottle) {
+          func.apply(this, args);
+          inThrottle = true;
+          setTimeout(() => inThrottle = false, limit);
+        }
+      };
+    };
+
+    const handleScroll = throttle(() => {
+      if (isModalOpen) return; // Don't handle scroll when modal is open
+      
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progressValue = Math.min(Math.max(scrollTop / scrollHeight, 0), 1);
+      
+      if (progressInput && typeof progressInput.value === 'number') {
+        progressInput.value = progressValue;
+      }
+      
+      setProgress(progressValue);
+    }, 16); // ~60fps
+
+    // Use passive listeners for better performance
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, [scrollBound, progressInput, isModalOpen]);
+
+  // Enhanced intersection observer with modal awareness
+  useEffect(() => {
+    if (!canvasRef.current || isModalOpen) return;
+
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            if (rive && !rive.isPlaying) {
+              rive.play();
+            }
+          } else {
+            setIsVisible(false);
+            if (rive && rive.isPlaying) {
+              rive.pause();
+            }
+          }
+        });
       },
-      { threshold: 0.1 }
+      { 
+        threshold: 0.1,
+        rootMargin: '50px'
+      }
     );
-    
-    if (!canvasRef.current) return;
-    
-    const cleanup = () => {
+
+    observer.observe(canvasRef.current);
+
+    return () => {
       if (canvasRef.current) {
         observer.unobserve(canvasRef.current);
       }
     };
-    
-    observer.observe(canvasRef.current);
-    return cleanup;
-  }, [scrollBound]);
+  }, [rive, isModalOpen]);
 
   // Scroll event handler
   const handleScroll = useCallback(() => {

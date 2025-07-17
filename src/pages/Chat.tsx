@@ -94,6 +94,7 @@ export default function Chat() {
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
   const [showMountainAnimation, setShowMountainAnimation] = useState(false);
   const [activeSkill, setActiveSkill] = useState<string | null>(null);
+  const [isScrollLocked, setIsScrollLocked] = useState(false);
 
   const inputRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -277,20 +278,44 @@ export default function Chat() {
   };
 
   useEffect(() => {
+    if (showSkillSelector) {
+      // Prevent body scroll when skill selector is open
+      document.body.style.overflow = 'hidden';
+      setIsScrollLocked(true);
+    } else {
+      // Restore body scroll when skill selector is closed
+      document.body.style.overflow = 'unset';
+      setIsScrollLocked(false);
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showSkillSelector]);
+
+  // Enhanced scroll handling
+  useEffect(() => {
     let scrollTimeout: NodeJS.Timeout;
     
     const handleScroll = () => {
+      if (isScrollLocked) return; // Don't handle scroll when locked
+      
       setIsScrolling(true);
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => setIsScrolling(false), 150);
     };
     
+    // Use passive listeners for better performance
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('touchmove', handleScroll, { passive: true });
+    
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('touchmove', handleScroll);
       clearTimeout(scrollTimeout);
     };
-  }, []);
+  }, [isScrollLocked]);
 
   return (
     <div className={`min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 ${isScrolling ? 'scrolling' : ''}`}>
@@ -501,122 +526,145 @@ export default function Chat() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              className="mx-2 sm:mx-4 mb-2 sm:mb-4"
+              className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4"
+              style={{ 
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                backdropFilter: 'blur(8px)'
+              }}
+              onClick={() => setShowSkillSelector(false)}
             >
-              <Card className="bg-white/90 backdrop-blur-sm border-gray-200 shadow-xl max-w-6xl mx-auto">
-                <Title level={5} className="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base">
-                  Select a Skill - Enhanced with Custom Animations
-                </Title>
-                
-                {Object.entries(skillCategories).map(([category, categorySkills]) => (
-                  <div key={category} className="mb-4 sm:mb-6">
-                    <motion.div
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      className="flex items-center gap-3 mb-3"
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="w-full max-w-6xl max-h-[90vh] overflow-hidden"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Card className="bg-white/95 backdrop-blur-sm border-gray-200 shadow-2xl h-full">
+                  {/* Header with Close Button */}
+                  <div className="flex items-center justify-between p-4 border-b border-gray-200 sticky top-0 bg-white/95 backdrop-blur-sm z-10">
+                    <Title level={5} className="text-gray-700 mb-0">
+                      Select a Skill - Enhanced with Custom Animations
+                    </Title>
+                    <Button
+                      type="text"
+                      size="small"
+                      onClick={() => setShowSkillSelector(false)}
+                      className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100"
                     >
-                      <div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></div>
-                      <Text className="text-gray-700 font-bold text-base sm:text-lg">{category}</Text>
-                      <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
-                    </motion.div>
-                    
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
-                      {categorySkills.map((skill, index) => (
-                        <motion.div
-                          key={skill.id}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: index * 0.1 }}
-                          whileHover={{ y: -5 }}
-                        >
-                          <Card
-                            className="bg-white/60 border-gray-200 hover:bg-white/80 hover:border-blue-300 cursor-pointer transition-all duration-300 shadow-md hover:shadow-xl h-full relative overflow-hidden group"
-                            bodyStyle={{ padding: window.innerWidth < 640 ? '12px' : '16px' }}
-                            onClick={() => handleSkillSelect(skill)}
+                      ✕
+                    </Button>
+                  </div>
+
+                  {/* Scrollable Content */}
+                  <div className="overflow-y-auto max-h-[calc(90vh-80px)] custom-scrollbar-modal">
+                    <div className="p-4">
+                      {Object.entries(skillCategories).map(([category, categorySkills]) => (
+                        <div key={category} className="mb-6">
+                          <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="flex items-center gap-3 mb-4 sticky top-0 bg-white/90 backdrop-blur-sm py-2 z-5"
                           >
-                            {/* Enhanced Background Animation */}
-                            <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300">
-                              <div className={`w-full h-full bg-gradient-to-br ${skill.color === 'blue' ? 'from-blue-400 to-blue-600' : 
-                                skill.color === 'purple' ? 'from-purple-400 to-purple-600' :
-                                skill.color === 'green' ? 'from-green-400 to-green-600' :
-                                skill.color === 'pink' ? 'from-pink-400 to-pink-600' :
-                                skill.color === 'orange' ? 'from-orange-400 to-orange-600' :
-                                skill.color === 'red' ? 'from-red-400 to-red-600' :
-                                skill.color === 'cyan' ? 'from-cyan-400 to-cyan-600' :
-                                skill.color === 'gold' ? 'from-yellow-400 to-yellow-600' :
-                                skill.color === 'lime' ? 'from-lime-400 to-lime-600' :
-                                skill.color === 'magenta' ? 'from-fuchsia-400 to-fuchsia-600' :
-                                skill.color === 'volcano' ? 'from-rose-400 to-rose-600' :
-                                skill.color === 'geekblue' ? 'from-indigo-400 to-indigo-600' :
-                                'from-gray-400 to-gray-600'}`}></div>
-                            </div>
-                            
-                            <div className="text-center relative z-10">
-                              {/* Custom Skill Animation */}
-                              <div className="mb-2 flex justify-center">
-                                <SkillAnimation
-                                  skillId={skill.id}
-                                  isActive={activeSkill === skill.id}
-                                  size="small"
-                                  showLabel={false}
-                                />
-                              </div>
-                              
-                              <Text className="text-gray-700 text-xs sm:text-sm font-medium block mb-1">
-                                {skill.name}
-                              </Text>
-                              <Text className="text-gray-500 text-xs">
-                                {skill.shortcut}
-                              </Text>
-                              
-                              {/* Skill Description on Hover */}
+                            <div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></div>
+                            <Text className="text-gray-700 font-bold text-lg">{category}</Text>
+                            <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
+                          </motion.div>
+                          
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                            {categorySkills.map((skill, index) => (
                               <motion.div
-                                className="absolute inset-x-0 bottom-0 bg-black/80 text-white text-xs p-2 rounded-b-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                initial={{ y: 10 }}
-                                whileHover={{ y: 0 }}
+                                key={skill.id}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: index * 0.05 }}
+                                whileHover={{ y: -3 }}
                               >
-                                {skill.description}
+                                <Card
+                                  className="bg-white/80 border-gray-200 hover:bg-white hover:border-blue-300 cursor-pointer transition-all duration-300 shadow-sm hover:shadow-lg h-full relative overflow-hidden group"
+                                  bodyStyle={{ padding: '16px' }}
+                                  onClick={() => handleSkillSelect(skill)}
+                                >
+                                  {/* Enhanced Background Animation */}
+                                  <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300">
+                                    <div className={`w-full h-full bg-gradient-to-br ${skill.color === 'blue' ? 'from-blue-400 to-blue-600' : 
+                                      skill.color === 'purple' ? 'from-purple-400 to-purple-600' :
+                                      skill.color === 'green' ? 'from-green-400 to-green-600' :
+                                      skill.color === 'pink' ? 'from-pink-400 to-pink-600' :
+                                      skill.color === 'orange' ? 'from-orange-400 to-orange-600' :
+                                      skill.color === 'red' ? 'from-red-400 to-red-600' :
+                                      skill.color === 'cyan' ? 'from-cyan-400 to-cyan-600' :
+                                      skill.color === 'gold' ? 'from-yellow-400 to-yellow-600' :
+                                      skill.color === 'lime' ? 'from-lime-400 to-lime-600' :
+                                      skill.color === 'magenta' ? 'from-fuchsia-400 to-fuchsia-600' :
+                                      skill.color === 'volcano' ? 'from-rose-400 to-rose-600' :
+                                      skill.color === 'geekblue' ? 'from-indigo-400 to-indigo-600' :
+                                      'from-gray-400 to-gray-600'}`}></div>
+                                  </div>
+                                  
+                                  <div className="text-center relative z-10">
+                                    {/* Custom Skill Animation */}
+                                    <div className="mb-3 flex justify-center">
+                                      <SkillAnimation
+                                        skillId={skill.id}
+                                        isActive={activeSkill === skill.id}
+                                        size="small"
+                                        showLabel={false}
+                                      />
+                                    </div>
+                                    
+                                    <Text className="text-gray-700 text-sm font-medium block mb-1">
+                                      {skill.name}
+                                    </Text>
+                                    <Text className="text-gray-500 text-xs mb-2">
+                                      {skill.shortcut}
+                                    </Text>
+                                    <Text className="text-gray-600 text-xs leading-tight">
+                                      {skill.description}
+                                    </Text>
+                                  </div>
+                                </Card>
                               </motion.div>
-                            </div>
-                          </Card>
-                        </motion.div>
+                            ))}
+                          </div>
+                        </div>
                       ))}
+                      
+                      {/* Quick Access Skill Grid */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="mt-8 pt-6 border-t border-gray-200"
+                      >
+                        <Text className="text-gray-600 font-medium mb-4 block text-center text-lg">
+                          🔥 Most Popular Skills
+                        </Text>
+                        <div className="flex justify-center gap-3 flex-wrap">
+                          {['writing', 'code', 'search', 'image', 'translate', 'ai'].map((skillId) => (
+                            <motion.div
+                              key={skillId}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                            >
+                              <SkillAnimation
+                                skillId={skillId}
+                                isActive={activeSkill === skillId}
+                                size="medium"
+                                showLabel={false}
+                                onClick={() => {
+                                  const skill = skills.find(s => s.id === skillId);
+                                  if (skill) handleSkillSelect(skill);
+                                }}
+                              />
+                            </motion.div>
+                          ))}
+                        </div>
+                      </motion.div>
                     </div>
                   </div>
-                ))}
-                
-                {/* Quick Access Skill Grid */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className="mt-6 pt-4 border-t border-gray-200"
-                >
-                  <Text className="text-gray-600 font-medium mb-3 block text-center">
-                    🔥 Most Popular Skills
-                  </Text>
-                  <div className="flex justify-center gap-2 flex-wrap">
-                    {['writing', 'code', 'search', 'image', 'translate', 'ai'].map((skillId) => (
-                      <motion.div
-                        key={skillId}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <SkillAnimation
-                          skillId={skillId}
-                          isActive={activeSkill === skillId}
-                          size="small"
-                          showLabel={false}
-                          onClick={() => {
-                            const skill = skills.find(s => s.id === skillId);
-                            if (skill) handleSkillSelect(skill);
-                          }}
-                        />
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
-              </Card>
+                </Card>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
