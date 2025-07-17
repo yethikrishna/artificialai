@@ -10,7 +10,6 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router";
 import { ConfigProvider, theme } from 'antd';
 import "./index.css";
-import { VlyToolbar } from "@/components/VlyToolbar";
 import { useEffect } from "react";
 import Chat from "@/pages/Chat.tsx";
 import { PersonalizationProvider } from "@/components/enhanced/PersonalizationProvider";
@@ -69,7 +68,6 @@ function App() {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <VlyToolbar />
     <InstrumentationProvider>
       <ConvexAuthProvider client={convex}>
         <App />
