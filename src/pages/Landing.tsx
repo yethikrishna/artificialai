@@ -134,6 +134,7 @@ export default function Landing() {
                 size="large" 
                 icon={<RocketOutlined />}
                 className="h-14 px-8 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+                onClick={() => window.location.href = '/chat'}
               >
                 Try YETI AI Now
               </Button>
@@ -407,6 +408,7 @@ export default function Landing() {
                 size="large" 
                 icon={<RocketOutlined />}
                 className="h-14 px-8 text-lg font-medium bg-white text-blue-600 border-white hover:bg-blue-50 hover:text-blue-700"
+                onClick={() => window.location.href = '/chat'}
               >
                 Start Using YETI AI
               </Button>
