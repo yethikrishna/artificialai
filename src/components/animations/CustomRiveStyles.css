@@ -1,0 +1,275 @@
+/* Avatar Selector Styles */
+.avatar-selector-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.rive-avatar-animation {
+  width: 100%;
+  height: 300px;
+  border-radius: 15px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.avatar-controls {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.avatar-btn {
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+.avatar-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+}
+
+.avatar-btn:active {
+  transform: translateY(0);
+}
+
+/* Mountain Skiing Styles */
+.mountain-skiing-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  background: linear-gradient(to bottom, #87CEEB 0%, #98D8E8 50%, #B0E0E6 100%);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.rive-skiing-animation {
+  width: 100%;
+  height: 400px;
+  border-radius: 15px;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #E0F6FF 0%, #B8E6FF 100%);
+  position: relative;
+}
+
+.skiing-controls {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.control-group label {
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.control-group input[type="range"] {
+  width: 120px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.3);
+  outline: none;
+  cursor: pointer;
+}
+
+.control-group input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #3498db;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(52, 152, 219, 0.4);
+}
+
+/* AI Loading Styles */
+.ai-loading-container {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.rive-ai-animation {
+  width: 100%;
+  height: 200px;
+  border-radius: 15px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  margin-bottom: 15px;
+}
+
+.loading-message {
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.loading-message p {
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced YETI Logo Styles */
+.enhanced-yeti-logo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.logo-mountain-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.yeti-logo-overlay {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  padding: 10px;
+  width: 80%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.yeti-text {
+  font-size: 18px;
+  font-weight: 900;
+  color: #2c3e50;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ai-text {
+  font-size: 12px;
+  font-weight: 400;
+  color: #7f8c8d;
+  letter-spacing: 1px;
+  margin-top: -2px;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .avatar-selector-container,
+  .mountain-skiing-container {
+    max-width: 100%;
+    margin: 0 10px;
+    padding: 15px;
+  }
+  
+  .rive-avatar-animation {
+    height: 250px;
+  }
+  
+  .rive-skiing-animation {
+    height: 300px;
+  }
+  
+  .skiing-controls {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .control-group {
+    flex-direction: row;
+    gap: 15px;
+  }
+  
+  .control-group input[type="range"] {
+    width: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .avatar-btn {
+    padding: 10px 25px;
+    font-size: 14px;
+  }
+  
+  .yeti-text {
+    font-size: 14px;
+  }
+  
+  .ai-text {
+    font-size: 10px;
+  }
+}
+
+/* Dark Mode Support */
+.dark .avatar-selector-container,
+.dark .mountain-skiing-container,
+.dark .ai-loading-container {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+}
+
+.dark .control-group label {
+  color: #ecf0f1;
+}
+
+.dark .loading-message {
+  color: #ecf0f1;
+}
+
+.dark .yeti-logo-overlay {
+  background: rgba(44, 62, 80, 0.9);
+}
+
+.dark .yeti-text {
+  color: #ecf0f1;
+}
+
+.dark .ai-text {
+  color: #bdc3c7;
+}

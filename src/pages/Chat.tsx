@@ -43,6 +43,8 @@ import { usePersonalization } from "@/components/enhanced/PersonalizationProvide
 import { YetiLogo, YetiAnimation } from "@/components/animations/YetiAnimations";
 import { MountainTheme, mountainThemeStyles } from "@/components/animations/MountainTheme";
 import { RiveScrollController } from "@/components/animations/RiveScrollController";
+import { AvatarSelector, MountainSkiing, AILoading, EnhancedYetiLogo } from "@/components/animations/CustomRiveAnimations";
+import "@/components/animations/CustomRiveStyles.css";
 
 const { Text, Title } = Typography;
 const { TextArea } = Input;
@@ -88,6 +90,9 @@ export default function Chat() {
   const [apiClient] = useState(new YetiAPIClient());
   const [apiStatus, setApiStatus] = useState<Record<string, boolean>>({});
   const [isScrolling, setIsScrolling] = useState(false);
+  const [showAvatarSelector, setShowAvatarSelector] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
+  const [showMountainAnimation, setShowMountainAnimation] = useState(false);
 
   const inputRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -150,6 +155,12 @@ export default function Chat() {
     setInputValue(prev => prev.replace(/@$|\/$/g, '') + skill.shortcut + ' ');
     setShowSkillSelector(false);
     inputRef.current?.focus();
+  };
+
+  const handleAvatarSelect = (avatarId: string) => {
+    setSelectedAvatar(avatarId);
+    setShowAvatarSelector(false);
+    console.log('Avatar selected:', avatarId);
   };
 
   // Test API connections on component mount
@@ -288,7 +299,7 @@ export default function Chat() {
         onFileSelect={handleFileSelect}
       />
 
-      {/* Header - Enhanced with Rive */}
+      {/* Enhanced Header with Custom Rive Logo */}
       <motion.header 
         className="bg-white/80 backdrop-blur-sm border-b border-gray-200 px-3 sm:px-6 py-3 sm:py-4 shadow-sm sticky top-0 z-50"
         initial={{ y: -50, opacity: 0 }}
@@ -301,19 +312,8 @@ export default function Chat() {
               className="flex items-center space-x-2 sm:space-x-3"
               whileHover={{ scale: 1.05 }}
             >
-              {/* Enhanced YETI Logo with Rive */}
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg overflow-hidden border-2 border-blue-200 shadow-lg">
-                <RiveScrollController
-                  src="/animations/yeti-logo.riv"
-                  stateMachine="Logo State Machine"
-                  artboard="Logo"
-                  width={window.innerWidth < 640 ? 32 : 40}
-                  height={window.innerWidth < 640 ? 32 : 40}
-                  scrollBound={false}
-                  className="yeti-header-logo"
-                  onLoad={() => console.log('Header logo loaded')}
-                />
-              </div>
+              {/* Enhanced YETI Logo with your mountain animation */}
+              <EnhancedYetiLogo size={window.innerWidth < 640 ? 40 : 50} />
               
               <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent tracking-wider">
                 YETI
@@ -336,6 +336,26 @@ export default function Chat() {
           </div>
           
           <div className="flex items-center space-x-2 sm:space-x-4">
+            {/* Avatar Selector Button */}
+            <Button
+              type="default"
+              size="small"
+              onClick={() => setShowAvatarSelector(true)}
+              className="hidden sm:flex"
+            >
+              Choose Avatar
+            </Button>
+            
+            {/* Mountain Animation Toggle */}
+            <Button
+              type="default"
+              size="small"
+              onClick={() => setShowMountainAnimation(!showMountainAnimation)}
+              className="hidden sm:flex"
+            >
+              🏔️
+            </Button>
+            
             {/* API Status with Enhanced Indicators */}
             <div className="hidden sm:flex items-center space-x-2">
               {Object.entries(apiStatus).map(([provider, status]) => (
@@ -361,9 +381,70 @@ export default function Chat() {
         </div>
       </motion.header>
 
+      {/* Avatar Selection Modal */}
+      <AnimatePresence>
+        {showAvatarSelector && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowAvatarSelector(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <AvatarSelector 
+                onAvatarSelect={handleAvatarSelect}
+                className="max-w-md"
+              />
+              <div className="text-center mt-4">
+                <Button
+                  type="default"
+                  onClick={() => setShowAvatarSelector(false)}
+                >
+                  Close
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Mountain Animation Overlay */}
+      <AnimatePresence>
+        {showMountainAnimation && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed bottom-4 right-4 z-40"
+          >
+            <div className="relative">
+              <MountainSkiing 
+                autoplay={true}
+                className="w-80 h-60"
+                onAnimationComplete={() => console.log('Mountain animation completed')}
+              />
+              <Button
+                type="default"
+                size="small"
+                onClick={() => setShowMountainAnimation(false)}
+                className="absolute top-2 right-2"
+              >
+                ✕
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Main Chat Interface */}
       <div className="flex flex-col h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)]">
-        {/* Messages Area with Scroll Optimization */}
+        {/* Messages Area */}
         <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-4 sm:py-6 custom-scrollbar">
           <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
             {/* Welcome Message with Enhanced Animation */}
@@ -438,7 +519,7 @@ export default function Chat() {
               )}
             </motion.div>
 
-            {/* Messages with Enhanced Animations */}
+            {/* Messages with Enhanced AI Loading */}
             <AnimatePresence>
               {messages.map((message) => (
                 <AnimatedMessage
@@ -449,7 +530,7 @@ export default function Chat() {
               ))}
             </AnimatePresence>
             
-            {/* Enhanced Typing Indicator */}
+            {/* Enhanced Typing Indicator with Custom Rive */}
             <AnimatePresence>
               {isTyping && (
                 <motion.div
@@ -465,17 +546,12 @@ export default function Chat() {
                       size={window.innerWidth < 640 ? "default" : "large"}
                     />
                     <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
-                      <div className="flex items-center space-x-2 p-2">
-                        <RiveScrollController
-                          src="/animations/typing-indicator.riv"
-                          stateMachine="Typing State Machine"
-                          artboard="Typing"
-                          width={40}
-                          height={20}
-                          scrollBound={false}
-                          className="typing-indicator"
+                      <div className="p-2">
+                        <AILoading 
+                          isLoading={true}
+                          message="YETI is processing your request..."
+                          className="w-48 h-32"
                         />
-                        <Text className="text-gray-600 text-sm">YETI is thinking...</Text>
                       </div>
                     </Card>
                   </div>

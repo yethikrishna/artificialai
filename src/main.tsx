@@ -10,6 +10,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router";
 import { ConfigProvider, theme } from 'antd';
 import "./index.css";
+import "@/components/animations/CustomRiveStyles.css";
 import { useEffect } from "react";
 import Chat from "@/pages/Chat.tsx";
 import { PersonalizationProvider } from "@/components/enhanced/PersonalizationProvider";
