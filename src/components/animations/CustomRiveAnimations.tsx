@@ -60,16 +60,19 @@ export const AvatarSelector: React.FC<AvatarSelectorProps> = ({
 
 // Mountain Skiing Animation Component
 interface MountainSkiingProps {
-  isVisible?: boolean;
+  isActive?: boolean;
   className?: string;
-  onSpeedChange?: () => void;
-  onSnowChange?: () => void;
+  onSpeedChange?: (speed: number) => void;
+  onSnowChange?: (intensity: number) => void;
+  onClose?: () => void;
 }
 
 export const MountainSkiing: React.FC<MountainSkiingProps> = ({ 
-  isVisible = true, 
+  isActive = true, 
   onClose,
-  className = "" 
+  className = "",
+  onSpeedChange,
+  onSnowChange 
 }) => {
   const [showFallback, setShowFallback] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -78,7 +81,7 @@ export const MountainSkiing: React.FC<MountainSkiingProps> = ({
     src: "/assets/new_file.riv",
     stateMachines: "State Machine 1",
     artboard: "New Artboard",
-    autoplay: isVisible,
+    autoplay: isActive,
     onLoad: () => {
       console.log('Mountain skiing animation loaded');
       setShowFallback(false);
@@ -96,12 +99,12 @@ export const MountainSkiing: React.FC<MountainSkiingProps> = ({
 
   useEffect(() => {
     if (rive && isLoaded && speedInput) {
-      speedInput.value = isVisible ? 1.0 : 0.0;
+      speedInput.value = isActive ? 1.0 : 0.0;
     }
     if (rive && isLoaded && snowInput) {
       snowInput.value = 0.8; // Medium snow intensity
     }
-  }, [isVisible, speedInput, snowInput, rive, isLoaded]);
+  }, [isActive, speedInput, snowInput, rive, isLoaded]);
 
   if (showFallback || !isLoaded) {
     return (
@@ -138,7 +141,7 @@ export const AILoading: React.FC<AILoadingProps> = ({
   size = "default"
 }) => {
   const [showFallback, setShowFallback] = useState(false);
-  const [riveLoaded, setRiveLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   
   // Size configurations for better scaling
   const sizeConfig = {
@@ -156,13 +159,13 @@ export const AILoading: React.FC<AILoadingProps> = ({
     autoplay: isLoading,
     onLoad: () => {
       console.log('AI Loading animation loaded');
-      setRiveLoaded(true);
+      setIsLoaded(true);
       setShowFallback(false);
     },
     onLoadError: (error) => {
       console.error('Failed to load AI loading animation:', error);
       setShowFallback(true);
-      setRiveLoaded(false);
+      setIsLoaded(false);
     },
   });
 
@@ -181,15 +184,23 @@ export const AILoading: React.FC<AILoadingProps> = ({
   useEffect(() => {
     // Only try to control inputs if rive is loaded and inputs exist
     if (rive && isLoaded && loadingInput) {
-      loadingInput.value = isLoading;
+      try {
+        loadingInput.value = isLoading;
+      } catch (error) {
+        console.warn('Error setting loading input:', error);
+      }
     }
     if (rive && isLoaded && speedInput) {
-      speedInput.value = isLoading ? 1.0 : 0.5; // Adjust animation speed
+      try {
+        speedInput.value = isLoading ? 1.0 : 0.5; // Adjust animation speed
+      } catch (error) {
+        console.warn('Error setting speed input:', error);
+      }
     }
   }, [isLoading, loadingInput, speedInput, rive, isLoaded]);
 
   // Show fallback immediately if there's an error or while loading
-  if (showFallback || !riveLoaded) {
+  if (showFallback || !isLoaded) {
     return (
       <div className={`ai-loading-fallback ${config.containerClass} ${className}`}>
         <div className="flex flex-col items-center justify-center h-full space-y-2">
@@ -259,6 +270,12 @@ export const AILoading: React.FC<AILoadingProps> = ({
 };
 
 // Enhanced YETI Logo using your mountain animation
+interface EnhancedYetiLogoProps {
+  size?: number;
+  className?: string;
+  onClick?: () => void;
+}
+
 export const EnhancedYetiLogo: React.FC<EnhancedYetiLogoProps> = ({ 
   size = 50, 
   className = "" 
