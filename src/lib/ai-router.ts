@@ -1,3 +1,4 @@
+import { YetiAPIClient } from './api-clients';
 import { toast } from "sonner";
 
 // AI Model Types and their capabilities
@@ -149,6 +150,8 @@ interface RoutingFactors {
 // Smart routing algorithm
 export class AIRouter {
   
+  private static apiClient = new YetiAPIClient();
+
   static analyzeInput(input: string): {
     detectedPatterns: string[];
     complexity: 'low' | 'medium' | 'high';
@@ -194,12 +197,26 @@ export class AIRouter {
     return { detectedPatterns, complexity, suggestedModels };
   }
   
-  static selectOptimalModel(factors: RoutingFactors): {
+  static selectOptimalModel(
+    input: string,
+    selectedSkill?: string,
+    preferences: {
+      requiresFastResponse?: boolean;
+      complexityLevel?: 'low' | 'medium' | 'high';
+    } = {}
+  ): {
     selectedModel: AIModelType;
     confidence: number;
     reasoning: string;
     fallbackModels: AIModelType[];
   } {
+    const factors: RoutingFactors = {
+      skill: selectedSkill,
+      inputText: input,
+      requiresFastResponse: preferences.requiresFastResponse,
+      complexityLevel: preferences.complexityLevel
+    };
+    
     let selectedModel: AIModelType;
     let confidence = 0;
     let reasoning = '';
@@ -280,42 +297,50 @@ export class AIRouter {
     return Object.values(AI_MODEL_TYPES);
   }
   
-  static routeMessage(
-    inputText: string,
+  static async routeMessage(
+    input: string,
     selectedSkill?: string,
-    options?: {
+    preferences: {
       requiresFastResponse?: boolean;
       complexityLevel?: 'low' | 'medium' | 'high';
-      userPreference?: AIModelType;
-    }
+    } = {}
   ) {
-    const factors: RoutingFactors = {
-      skill: selectedSkill,
-      inputText,
-      requiresFastResponse: options?.requiresFastResponse || false,
-      complexityLevel: options?.complexityLevel || 'medium',
-      userPreference: options?.userPreference
-    };
+    const routingResult = this.selectOptimalModel(input, selectedSkill, preferences);
     
-    const result = this.selectOptimalModel(factors);
-    
-    // Log routing decision
-    console.log('🧠 AI Router Decision:', {
-      input: inputText.substring(0, 100) + (inputText.length > 100 ? '...' : ''),
-      skill: selectedSkill,
-      selectedModel: result.selectedModel,
-      confidence: result.confidence,
-      reasoning: result.reasoning,
-      fallbacks: result.fallbackModels
+    // Show routing decision to user
+    toast(`🧠 ${MODEL_CAPABILITIES[routingResult.selectedModel].name} selected`, {
+      description: `${Math.round(routingResult.confidence * 100)}% confidence - ${routingResult.reasoning}`,
+      duration: 3000,
     });
-    
-    // Show toast with routing info
-    toast.success(`Routing to ${MODEL_CAPABILITIES[result.selectedModel].name}`, {
-      description: `Confidence: ${Math.round(result.confidence * 100)}% - ${result.reasoning}`,
-      duration: 3000
-    });
-    
-    return result;
+
+    // Process with real API
+    try {
+      const apiResponse = await this.apiClient.processRequest(
+        routingResult.selectedModel.toUpperCase() as keyof typeof import('./api-clients').FREE_API_MODELS,
+        input,
+        selectedSkill,
+        [{ role: 'user', content: input }]
+      );
+
+      return {
+        ...routingResult,
+        apiResponse,
+        realResponse: apiResponse.success ? apiResponse.data : null,
+        error: apiResponse.success ? null : apiResponse.error
+      };
+    } catch (error) {
+      return {
+        ...routingResult,
+        apiResponse: null,
+        realResponse: null,
+        error: error instanceof Error ? error.message : 'API request failed'
+      };
+    }
+  }
+
+  // Test API connections
+  static async testAPIs() {
+    return await this.apiClient.testConnections();
   }
 }
 

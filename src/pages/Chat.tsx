@@ -33,6 +33,7 @@ import {
 import { RiveAnimation } from "@/components/RiveAnimation";
 import FloatingSidebar from '@/components/FloatingSidebar';
 import AIRouter, { AIModelType, AI_MODEL_TYPES, MODEL_CAPABILITIES } from '@/lib/ai-router';
+import { YetiAPIClient } from '@/lib/api-clients';
 
 const { Text, Title } = Typography;
 const { TextArea } = Input;
@@ -75,6 +76,8 @@ export default function Chat() {
     reasoning: string;
     fallbacks: AIModelType[];
   } | null>(null);
+  const [apiClient] = useState(new YetiAPIClient());
+  const [apiStatus, setApiStatus] = useState<Record<string, boolean>>({});
 
   const inputRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -139,25 +142,17 @@ export default function Chat() {
     inputRef.current?.focus();
   };
 
+  // Test API connections on component mount
+  useEffect(() => {
+    const testAPIs = async () => {
+      const status = await AIRouter.testAPIs();
+      setApiStatus(status);
+    };
+    testAPIs();
+  }, []);
+
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
-
-    // Smart routing logic
-    const routingResult = AIRouter.routeMessage(
-      inputValue,
-      selectedSkill?.id,
-      {
-        requiresFastResponse: false,
-        complexityLevel: inputValue.length > 100 ? 'high' : inputValue.length > 50 ? 'medium' : 'low'
-      }
-    );
-
-    setCurrentModel(routingResult.selectedModel);
-    setRoutingInfo({
-      confidence: routingResult.confidence,
-      reasoning: routingResult.reasoning,
-      fallbacks: routingResult.fallbackModels
-    });
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -168,23 +163,66 @@ export default function Chat() {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const currentInput = inputValue;
     setInputValue('');
     setSelectedSkill(null);
     setIsTyping(true);
 
-    // Simulate AI response with model info
-    setTimeout(() => {
-      const modelInfo = MODEL_CAPABILITIES[routingResult.selectedModel];
+    try {
+      // Smart routing with real API integration
+      const routingResult = await AIRouter.routeMessage(
+        currentInput,
+        selectedSkill?.id,
+        {
+          requiresFastResponse: false,
+          complexityLevel: currentInput.length > 100 ? 'high' : currentInput.length > 50 ? 'medium' : 'low'
+        }
+      );
+
+      setCurrentModel(routingResult.selectedModel);
+      setRoutingInfo({
+        confidence: routingResult.confidence,
+        reasoning: routingResult.reasoning,
+        fallbacks: routingResult.fallbackModels
+      });
+
+      // Create AI response with real or fallback content
+      let responseContent = '';
+      
+      if (routingResult.realResponse) {
+        // Real API response
+        responseContent = `${routingResult.realResponse}`;
+      } else if (routingResult.error) {
+        // API error - show demo response with error info
+        const modelInfo = MODEL_CAPABILITIES[routingResult.selectedModel];
+        responseContent = `⚠️ **API Connection Issue**\n\n**Selected Model:** ${modelInfo.name}\n**Error:** ${routingResult.error}\n\n**Demo Response:** This is a simulated response for "${currentInput}". In production, this would be processed by ${modelInfo.providers.join('/')} APIs.\n\n**Model Capabilities:** ${modelInfo.strengths.join(', ')}\n**Speed:** ${modelInfo.speed} | **Cost:** ${modelInfo.cost}`;
+      } else {
+        // Fallback demo response
+        const modelInfo = MODEL_CAPABILITIES[routingResult.selectedModel];
+        responseContent = `🧠 **${modelInfo.name}** processed your request!\n\n**Confidence:** ${Math.round(routingResult.confidence * 100)}%\n**Reasoning:** ${routingResult.reasoning}\n\n**Response:** This is a demo response for "${currentInput}". The real API integration is ready - just add your API keys!\n\n**Model Strengths:** ${modelInfo.strengths.join(', ')}\n**Speed:** ${modelInfo.speed} | **Cost:** ${modelInfo.cost}`;
+      }
+
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: `🧠 **${modelInfo.name}** selected for this task!\n\n**Confidence:** ${Math.round(routingResult.confidence * 100)}%\n**Reasoning:** ${routingResult.reasoning}\n\n**Model Strengths:** ${modelInfo.strengths.join(', ')}\n**Speed:** ${modelInfo.speed} | **Cost:** ${modelInfo.cost}\n\n*This is a demo response. In the next phase, I'll connect to real ${modelInfo.providers.join('/')} APIs to process your request: "${inputValue}"*`,
+        content: responseContent,
         timestamp: new Date()
       };
       
       setMessages(prev => [...prev, aiMessage]);
+    } catch (error) {
+      // Error handling
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: `❌ **Error Processing Request**\n\nSorry, there was an issue processing your message: "${currentInput}"\n\n**Error:** ${error instanceof Error ? error.message : 'Unknown error'}\n\nPlease try again or contact support if the issue persists.`,
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 2000);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -276,6 +314,17 @@ export default function Chat() {
           </div>
           
           <div className="flex items-center space-x-2 sm:space-x-4">
+            {/* API Status Indicators */}
+            <div className="hidden sm:flex items-center space-x-2">
+              {Object.entries(apiStatus).map(([provider, status]) => (
+                <div
+                  key={provider}
+                  className={`w-2 h-2 rounded-full ${status ? 'bg-green-500' : 'bg-red-500'}`}
+                  title={`${provider}: ${status ? 'Connected' : 'Disconnected'}`}
+                />
+              ))}
+            </div>
+            
             <motion.div
               whileHover={{ scale: 1.1, rotate: 5 }}
               whileTap={{ scale: 0.9 }}
