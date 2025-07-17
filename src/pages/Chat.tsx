@@ -251,16 +251,6 @@ export default function Chat() {
           </div>
           
           <div className="flex items-center space-x-2 sm:space-x-4">
-            <Badge count={16} color="blue" className="hidden sm:block">
-              <Button type="default" className="border-blue-200 text-blue-600 hover:border-blue-400 text-xs sm:text-sm">
-                Skills Available
-              </Button>
-            </Badge>
-            <Badge count={16} color="blue" className="sm:hidden">
-              <Button type="default" size="small" className="border-blue-200 text-blue-600 hover:border-blue-400 text-xs">
-                16 Skills
-              </Button>
-            </Badge>
             <motion.div
               whileHover={{ scale: 1.1, rotate: 5 }}
               whileTap={{ scale: 0.9 }}
