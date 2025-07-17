@@ -140,9 +140,9 @@ export const AILoading: React.FC<AILoadingProps> = ({
   className = "",
   size = "default"
 }) => {
-  const [showFallback, setShowFallback] = useState(false);
+  const [showFallback, setShowFallback] = useState(true); // Start with fallback due to corrupted file
   const [isLoaded, setIsLoaded] = useState(false);
-  const [debugInfo, setDebugInfo] = useState<string>("");
+  const [debugInfo, setDebugInfo] = useState<string>("Using CSS fallback due to corrupted .riv file");
   
   // Size configurations for better scaling
   const sizeConfig = {
@@ -153,11 +153,14 @@ export const AILoading: React.FC<AILoadingProps> = ({
   
   const config = sizeConfig[size as keyof typeof sizeConfig];
 
+  // Temporarily disable Rive loading due to corrupted file
+  const useRiveAnimation = false;
+
   const { rive, RiveComponent } = useRive({
-    src: "/assets/untitled.riv",
+    src: useRiveAnimation ? "/assets/untitled.riv" : "", // Disable loading
     stateMachines: "State Machine 1",
     artboard: "New Artboard",
-    autoplay: isLoading,
+    autoplay: isLoading && useRiveAnimation,
     onLoad: () => {
       console.log('✅ AI Loading animation loaded successfully');
       setIsLoaded(true);
@@ -169,22 +172,12 @@ export const AILoading: React.FC<AILoadingProps> = ({
       console.error('File path attempted:', "/assets/untitled.riv");
       setShowFallback(true);
       setIsLoaded(false);
-      setDebugInfo(`Load error: ${error instanceof Error ? error.message : String(error) || 'Unknown error'}`);
+      setDebugInfo(`Load error: ${error instanceof Error ? error.message : String(error) || 'Corrupted file'}`);
     },
     onStateChange: (event) => {
       console.log('🔄 Rive state changed:', event);
     }
   });
-
-  // Log Rive instance status
-  useEffect(() => {
-    console.log('🔍 Rive instance status:', {
-      rive: !!rive,
-      isLoaded,
-      showFallback,
-      src: "/assets/untitled.riv"
-    });
-  }, [rive, isLoaded, showFallback]);
 
   // Enhanced state machine control with null checks
   const loadingInput = useStateMachineInput(
@@ -199,8 +192,7 @@ export const AILoading: React.FC<AILoadingProps> = ({
   );
 
   useEffect(() => {
-    // Only try to control inputs if rive is loaded and inputs exist
-    if (rive && isLoaded) {
+    if (rive && isLoaded && useRiveAnimation) {
       try {
         console.log('🎮 Attempting to control state machine inputs:', {
           loadingInput: !!loadingInput,
@@ -211,102 +203,57 @@ export const AILoading: React.FC<AILoadingProps> = ({
         if (loadingInput) {
           loadingInput.value = isLoading;
           console.log('✅ Set loading input to:', isLoading);
-        } else {
-          console.warn('⚠️ Loading input not found');
         }
         
         if (speedInput) {
           const speed = isLoading ? 1.0 : 0.5;
           speedInput.value = speed;
           console.log('✅ Set speed input to:', speed);
-        } else {
-          console.warn('⚠️ Speed input not found');
         }
       } catch (error) {
         console.error('❌ Error controlling Rive state machine inputs:', error);
         setDebugInfo(`State machine error: ${error instanceof Error ? error.message : 'Unknown'}`);
       }
     }
-  }, [isLoading, loadingInput, speedInput, rive, isLoaded]);
+  }, [isLoading, loadingInput, speedInput, rive, isLoaded, useRiveAnimation]);
 
-  // Show fallback immediately if there's an error or while loading
-  if (showFallback) {
-    return (
-      <div className={`ai-loading-fallback ${config.containerClass} ${className}`}>
-        <div className="flex flex-col items-center justify-center h-full space-y-2 p-4">
-          <div className="relative">
-            <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
-            <div className="absolute inset-0 w-8 h-8 border-4 border-transparent border-r-purple-400 rounded-full animate-spin animate-reverse"></div>
-          </div>
-          <div className="text-xs text-gray-600 text-center font-medium">
-            {message}
-          </div>
-          <div className="text-xs text-red-500 text-center">
-            Rive Error: {debugInfo}
-          </div>
-          <div className="text-xs text-gray-400 text-center">
-            Using CSS fallback
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Show loading state while Rive is initializing
-  if (!isLoaded) {
-    return (
-      <div className={`ai-loading-initializing ${config.containerClass} ${className}`}>
-        <div className="flex flex-col items-center justify-center h-full space-y-2 p-4 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg border border-blue-200">
-          <div className="w-6 h-6 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
-          <div className="text-xs text-gray-600 text-center">
-            Loading Rive animation...
-          </div>
-          <div className="text-xs text-gray-400 text-center">
-            {debugInfo || "Initializing"}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+  // Enhanced CSS fallback with professional YETI-themed animation
   return (
     <div className={`ai-loading-container ${config.containerClass} ${className}`}>
       <div 
-        className="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg border border-blue-200 shadow-sm overflow-hidden"
+        className="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-lg border border-blue-200 shadow-sm overflow-hidden"
         style={{ 
           minWidth: config.width,
           minHeight: config.height
         }}
       >
-        {/* Debug info overlay (only in development) */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="absolute top-1 left-1 text-xs text-gray-500 bg-white/80 px-1 rounded z-20">
-            Rive: {isLoaded ? '✅' : '❌'}
+        {/* Enhanced YETI Loading Animation */}
+        <div className="relative flex flex-col items-center justify-center space-y-3">
+          {/* Main YETI Logo with Breathing Animation */}
+          <div className="relative">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm animate-pulse shadow-lg">
+              YETI
+            </div>
+            {/* Breathing Ring Effect */}
+            <div className="absolute inset-0 w-12 h-12 border-2 border-blue-400 rounded-full animate-ping opacity-30"></div>
+            <div className="absolute inset-0 w-12 h-12 border-2 border-purple-400 rounded-full animate-ping opacity-20" style={{ animationDelay: '0.5s' }}></div>
           </div>
-        )}
-        
-        {/* Rive Animation Container with proper scaling */}
-        <div 
-          className="absolute inset-0 flex items-center justify-center"
-          style={{
-            width: '100%',
-            height: '100%',
-            transform: 'scale(1)',
-          }}
-        >
-          {RiveComponent && rive && (
-            <RiveComponent 
-              width={config.width}
-              height={config.height}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain',
-                maxWidth: '100%',
-                maxHeight: '100%'
-              }}
-            />
-          )}
+          
+          {/* Thinking Dots Animation */}
+          <div className="flex space-x-1">
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+            <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+            <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+          </div>
+          
+          {/* AI Processing Indicator */}
+          <div className="flex items-center space-x-2">
+            <div className="w-1 h-4 bg-blue-400 rounded-full animate-pulse"></div>
+            <div className="w-1 h-6 bg-indigo-400 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
+            <div className="w-1 h-5 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+            <div className="w-1 h-7 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
+            <div className="w-1 h-4 bg-indigo-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+          </div>
         </div>
         
         {/* Message overlay with better positioning */}
@@ -318,12 +265,23 @@ export const AILoading: React.FC<AILoadingProps> = ({
           </div>
         </div>
         
-        {/* Loading indicator dots */}
-        <div className="absolute top-2 right-2 flex space-x-1">
-          <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse"></div>
-          <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-          <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+        {/* Mountain Theme Background Pattern */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
+          <div className="w-full h-full bg-gradient-to-t from-blue-100 to-transparent"></div>
+          {/* Simple mountain silhouette using CSS */}
+          <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-gray-300 to-transparent opacity-30" 
+               style={{ 
+                 clipPath: 'polygon(0% 100%, 20% 60%, 40% 80%, 60% 40%, 80% 70%, 100% 50%, 100% 100%)'
+               }}>
+          </div>
         </div>
+        
+        {/* Debug info for development */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="absolute top-1 left-1 text-xs text-gray-500 bg-white/80 px-1 rounded z-20">
+            CSS Fallback ✅
+          </div>
+        )}
       </div>
     </div>
   );
