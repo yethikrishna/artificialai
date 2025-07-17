@@ -416,11 +416,6 @@ export default function Chat() {
                 />
               ))}
             </div>
-            
-            {/* Free Access Badge */}
-            <Badge count="FREE" color="green" className="hidden sm:block">
-              <div className="w-8 h-8"></div>
-            </Badge>
           </div>
         </div>
       </motion.header>
