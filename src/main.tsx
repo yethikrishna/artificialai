@@ -2,11 +2,13 @@ import { Toaster } from "@/components/ui/sonner";
 import { InstrumentationProvider } from "@/instrumentation.tsx";
 import Landing from "@/pages/Landing.tsx";
 import NotFound from "@/pages/NotFound.tsx";
+import { useLenis } from "@/hooks/use-lenis";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
 import { ConvexReactClient } from "convex/react";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router";
+import { ConfigProvider, theme } from 'antd';
 import "./index.css";
 import { VlyToolbar } from "@/components/VlyToolbar";
 import { useEffect } from "react";
@@ -36,18 +38,36 @@ function RouteSyncer() {
   return null;
 }
 
+function App() {
+  useLenis();
+  
+  return (
+    <ConfigProvider
+      theme={{
+        algorithm: theme.defaultAlgorithm,
+        token: {
+          colorPrimary: '#000000',
+          borderRadius: 10,
+        },
+      }}
+    >
+      <BrowserRouter>
+        <RouteSyncer />
+        <Routes>
+          <Route path="*" element={<NotFound />} />
+          <Route path="/" element={<Landing />} />
+        </Routes>
+      </BrowserRouter>
+    </ConfigProvider>
+  );
+}
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <VlyToolbar />
     <InstrumentationProvider>
       <ConvexAuthProvider client={convex}>
-        <BrowserRouter>
-          <RouteSyncer />
-          <Routes>
-            <Route path="*" element={<NotFound />} />
-            <Route path="/" element={<Landing />} />
-          </Routes>
-        </BrowserRouter>
+        <App />
         <Toaster />
       </ConvexAuthProvider>
     </InstrumentationProvider>
