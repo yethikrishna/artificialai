@@ -419,9 +419,7 @@ export default function Chat() {
             
             {/* Free Access Badge */}
             <Badge count="FREE" color="green" className="hidden sm:block">
-              <Button type="default" size="small">
-                <Link to="/">Home</Link>
-              </Button>
+              <div className="w-8 h-8"></div>
             </Badge>
           </div>
         </div>
