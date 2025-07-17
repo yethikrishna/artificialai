@@ -142,6 +142,7 @@ export const AILoading: React.FC<AILoadingProps> = ({
 }) => {
   const [showFallback, setShowFallback] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [debugInfo, setDebugInfo] = useState<string>("");
   
   // Size configurations for better scaling
   const sizeConfig = {
@@ -158,18 +159,34 @@ export const AILoading: React.FC<AILoadingProps> = ({
     artboard: "New Artboard",
     autoplay: isLoading,
     onLoad: () => {
-      console.log('AI Loading animation loaded');
+      console.log('✅ AI Loading animation loaded successfully');
       setIsLoaded(true);
       setShowFallback(false);
+      setDebugInfo("Loaded successfully");
     },
     onLoadError: (error) => {
-      console.error('Failed to load AI loading animation:', error);
+      console.error('❌ Failed to load AI loading animation:', error);
+      console.error('File path attempted:', "/assets/untitled.riv");
       setShowFallback(true);
       setIsLoaded(false);
+      setDebugInfo(`Load error: ${error instanceof Error ? error.message : String(error) || 'Unknown error'}`);
     },
+    onStateChange: (event) => {
+      console.log('🔄 Rive state changed:', event);
+    }
   });
 
-  // Enhanced state machine control - only access when rive is loaded
+  // Log Rive instance status
+  useEffect(() => {
+    console.log('🔍 Rive instance status:', {
+      rive: !!rive,
+      isLoaded,
+      showFallback,
+      src: "/assets/untitled.riv"
+    });
+  }, [rive, isLoaded, showFallback]);
+
+  // Enhanced state machine control with null checks
   const loadingInput = useStateMachineInput(
     rive, 
     "State Machine 1", 
@@ -183,33 +200,69 @@ export const AILoading: React.FC<AILoadingProps> = ({
 
   useEffect(() => {
     // Only try to control inputs if rive is loaded and inputs exist
-    if (rive && isLoaded && loadingInput) {
+    if (rive && isLoaded) {
       try {
-        loadingInput.value = isLoading;
+        console.log('🎮 Attempting to control state machine inputs:', {
+          loadingInput: !!loadingInput,
+          speedInput: !!speedInput,
+          isLoading
+        });
+        
+        if (loadingInput) {
+          loadingInput.value = isLoading;
+          console.log('✅ Set loading input to:', isLoading);
+        } else {
+          console.warn('⚠️ Loading input not found');
+        }
+        
+        if (speedInput) {
+          const speed = isLoading ? 1.0 : 0.5;
+          speedInput.value = speed;
+          console.log('✅ Set speed input to:', speed);
+        } else {
+          console.warn('⚠️ Speed input not found');
+        }
       } catch (error) {
-        console.warn('Error setting loading input:', error);
-      }
-    }
-    if (rive && isLoaded && speedInput) {
-      try {
-        speedInput.value = isLoading ? 1.0 : 0.5; // Adjust animation speed
-      } catch (error) {
-        console.warn('Error setting speed input:', error);
+        console.error('❌ Error controlling Rive state machine inputs:', error);
+        setDebugInfo(`State machine error: ${error instanceof Error ? error.message : 'Unknown'}`);
       }
     }
   }, [isLoading, loadingInput, speedInput, rive, isLoaded]);
 
   // Show fallback immediately if there's an error or while loading
-  if (showFallback || !isLoaded) {
+  if (showFallback) {
     return (
       <div className={`ai-loading-fallback ${config.containerClass} ${className}`}>
-        <div className="flex flex-col items-center justify-center h-full space-y-2">
+        <div className="flex flex-col items-center justify-center h-full space-y-2 p-4">
           <div className="relative">
             <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
             <div className="absolute inset-0 w-8 h-8 border-4 border-transparent border-r-purple-400 rounded-full animate-spin animate-reverse"></div>
           </div>
           <div className="text-xs text-gray-600 text-center font-medium">
             {message}
+          </div>
+          <div className="text-xs text-red-500 text-center">
+            Rive Error: {debugInfo}
+          </div>
+          <div className="text-xs text-gray-400 text-center">
+            Using CSS fallback
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading state while Rive is initializing
+  if (!isLoaded) {
+    return (
+      <div className={`ai-loading-initializing ${config.containerClass} ${className}`}>
+        <div className="flex flex-col items-center justify-center h-full space-y-2 p-4 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg border border-blue-200">
+          <div className="w-6 h-6 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+          <div className="text-xs text-gray-600 text-center">
+            Loading Rive animation...
+          </div>
+          <div className="text-xs text-gray-400 text-center">
+            {debugInfo || "Initializing"}
           </div>
         </div>
       </div>
@@ -225,6 +278,13 @@ export const AILoading: React.FC<AILoadingProps> = ({
           minHeight: config.height
         }}
       >
+        {/* Debug info overlay (only in development) */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="absolute top-1 left-1 text-xs text-gray-500 bg-white/80 px-1 rounded z-20">
+            Rive: {isLoaded ? '✅' : '❌'}
+          </div>
+        )}
+        
         {/* Rive Animation Container with proper scaling */}
         <div 
           className="absolute inset-0 flex items-center justify-center"
@@ -234,7 +294,7 @@ export const AILoading: React.FC<AILoadingProps> = ({
             transform: 'scale(1)',
           }}
         >
-          {RiveComponent && (
+          {RiveComponent && rive && (
             <RiveComponent 
               width={config.width}
               height={config.height}
