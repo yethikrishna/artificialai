@@ -31,6 +31,7 @@ import {
   FireOutlined
 } from "@ant-design/icons";
 import { RiveAnimation } from "@/components/RiveAnimation";
+import FloatingSidebar from '@/components/FloatingSidebar';
 
 const { Text, Title } = Typography;
 const { TextArea } = Input;
@@ -168,8 +169,36 @@ export default function Chat() {
     }
   };
 
+  const handleNewConversation = () => {
+    setMessages([{
+      id: Date.now().toString(),
+      type: 'ai',
+      content: "Hello, I am Yeti by Yethikrishna R. I can help you with 16 different AI capabilities. Type @ or / to see all available skills!",
+      timestamp: new Date()
+    }]);
+    setInputValue('');
+    setSelectedSkill(null);
+  };
+
+  const handleChatSelect = (chatId: string) => {
+    console.log('Loading chat:', chatId);
+    // TODO: Load chat history from Convex
+  };
+
+  const handleFileSelect = (file: any) => {
+    console.log('Adding file to chat:', file);
+    // TODO: Add file to current chat context
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      {/* Floating Sidebar */}
+      <FloatingSidebar
+        onNewConversation={handleNewConversation}
+        onChatSelect={handleChatSelect}
+        onFileSelect={handleFileSelect}
+      />
+
       {/* Header - Updated to match landing page style */}
       <motion.header 
         className="bg-white/80 backdrop-blur-sm border-b border-gray-200 px-6 py-4 shadow-sm"
