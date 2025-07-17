@@ -92,24 +92,6 @@ export default function Landing() {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <div className="flex items-center justify-center mb-6">
-              <motion.div
-                className="w-24 h-24 rounded-2xl overflow-hidden border-4 border-blue-200 shadow-2xl mr-6"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                animate={{
-                  rotateY: [0, 10, -10, 0],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
-                <img 
-                  src="/assets/1000158361.jpg" 
-                  alt="YETI AI Logo" 
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
               <div>
                 <div className="text-8xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
                   YETI
