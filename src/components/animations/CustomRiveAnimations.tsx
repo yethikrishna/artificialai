@@ -11,11 +11,20 @@ export const AvatarSelector: React.FC<AvatarSelectorProps> = ({
   onAvatarSelect, 
   className = "" 
 }) => {
+  const [showFallback, setShowFallback] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const { rive, RiveComponent } = useRive({
     src: '/assets/choose_your_avatar.riv',
     autoplay: true,
     onLoad: () => {
       console.log('Avatar selector animation loaded');
+      setShowFallback(false);
+      setIsLoaded(true);
+    },
+    onLoadError: () => {
+      console.error('Failed to load avatar selector animation');
+      setShowFallback(true);
     },
     onStateChange: (event) => {
       console.log('Avatar state changed:', event);
@@ -51,67 +60,65 @@ export const AvatarSelector: React.FC<AvatarSelectorProps> = ({
 
 // Mountain Skiing Animation Component
 interface MountainSkiingProps {
-  autoplay?: boolean;
+  isVisible?: boolean;
   className?: string;
-  onAnimationComplete?: () => void;
+  onSpeedChange?: () => void;
+  onSnowChange?: () => void;
 }
 
 export const MountainSkiing: React.FC<MountainSkiingProps> = ({ 
-  autoplay = true, 
-  className = "",
-  onAnimationComplete 
+  isVisible = true, 
+  onClose,
+  className = "" 
 }) => {
+  const [showFallback, setShowFallback] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const { rive, RiveComponent } = useRive({
-    src: '/assets/new_file.riv',
-    autoplay,
+    src: "/assets/new_file.riv",
+    stateMachines: "State Machine 1",
+    artboard: "New Artboard",
+    autoplay: isVisible,
     onLoad: () => {
       console.log('Mountain skiing animation loaded');
+      setShowFallback(false);
+      setIsLoaded(true);
     },
-    onLoop: () => {
-      console.log('Skiing animation loop completed');
-      onAnimationComplete?.();
+    onLoadError: () => {
+      console.error('Failed to load mountain skiing animation');
+      setShowFallback(true);
     },
   });
 
-  // Control inputs for skiing animation
-  const speedInput = useStateMachineInput(rive, 'Skiing State Machine', 'Speed');
-  const snowInput = useStateMachineInput(rive, 'Skiing State Machine', 'Snow');
+  // State machine inputs with null checks
+  const speedInput = useStateMachineInput(rive, "State Machine 1", "speed");
+  const snowInput = useStateMachineInput(rive, "State Machine 1", "snowIntensity");
 
   useEffect(() => {
-    // Set default animation speed and snow intensity
-    if (speedInput) speedInput.value = 1.0;
-    if (snowInput) snowInput.value = 0.8;
-  }, [speedInput, snowInput]);
+    if (rive && isLoaded && speedInput) {
+      speedInput.value = isVisible ? 1.0 : 0.0;
+    }
+    if (rive && isLoaded && snowInput) {
+      snowInput.value = 0.8; // Medium snow intensity
+    }
+  }, [isVisible, speedInput, snowInput, rive, isLoaded]);
+
+  if (showFallback || !isLoaded) {
+    return (
+      <div className={`mountain-skiing-fallback ${className}`}>
+        <div className="w-full h-full bg-gradient-to-b from-blue-200 via-white to-blue-100 rounded-lg flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-4xl mb-2">🏔️</div>
+            <div className="text-sm text-gray-600">Mountain Skiing</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`mountain-skiing-container ${className}`}>
-      <div className="rive-skiing-animation">
-        <RiveComponent />
-      </div>
-      <div className="skiing-controls">
-        <div className="control-group">
-          <label>Speed:</label>
-          <input 
-            type="range" 
-            min="0.5" 
-            max="2.0" 
-            step="0.1" 
-            defaultValue="1.0"
-            onChange={(e) => speedInput && (speedInput.value = parseFloat(e.target.value))}
-          />
-        </div>
-        <div className="control-group">
-          <label>Snow:</label>
-          <input 
-            type="range" 
-            min="0" 
-            max="1" 
-            step="0.1" 
-            defaultValue="0.8"
-            onChange={(e) => snowInput && (snowInput.value = parseFloat(e.target.value))}
-          />
-        </div>
-      </div>
+      {RiveComponent && <RiveComponent />}
     </div>
   );
 };
@@ -131,6 +138,7 @@ export const AILoading: React.FC<AILoadingProps> = ({
   size = "default"
 }) => {
   const [showFallback, setShowFallback] = useState(false);
+  const [riveLoaded, setRiveLoaded] = useState(false);
   
   // Size configurations for better scaling
   const sizeConfig = {
@@ -148,28 +156,40 @@ export const AILoading: React.FC<AILoadingProps> = ({
     autoplay: isLoading,
     onLoad: () => {
       console.log('AI Loading animation loaded');
+      setRiveLoaded(true);
       setShowFallback(false);
     },
-    onLoadError: () => {
-      console.error('Failed to load AI loading animation');
+    onLoadError: (error) => {
+      console.error('Failed to load AI loading animation:', error);
       setShowFallback(true);
+      setRiveLoaded(false);
     },
   });
 
-  // Enhanced state machine control
-  const loadingInput = useStateMachineInput(rive, "State Machine 1", "isLoading");
-  const speedInput = useStateMachineInput(rive, "State Machine 1", "speed");
+  // Enhanced state machine control - only access when rive is loaded
+  const loadingInput = useStateMachineInput(
+    rive, 
+    "State Machine 1", 
+    "isLoading"
+  );
+  const speedInput = useStateMachineInput(
+    rive, 
+    "State Machine 1", 
+    "speed"
+  );
 
   useEffect(() => {
-    if (loadingInput) {
+    // Only try to control inputs if rive is loaded and inputs exist
+    if (rive && isLoaded && loadingInput) {
       loadingInput.value = isLoading;
     }
-    if (speedInput) {
+    if (rive && isLoaded && speedInput) {
       speedInput.value = isLoading ? 1.0 : 0.5; // Adjust animation speed
     }
-  }, [isLoading, loadingInput, speedInput]);
+  }, [isLoading, loadingInput, speedInput, rive, isLoaded]);
 
-  if (showFallback) {
+  // Show fallback immediately if there's an error or while loading
+  if (showFallback || !riveLoaded) {
     return (
       <div className={`ai-loading-fallback ${config.containerClass} ${className}`}>
         <div className="flex flex-col items-center justify-center h-full space-y-2">
@@ -200,20 +220,22 @@ export const AILoading: React.FC<AILoadingProps> = ({
           style={{
             width: '100%',
             height: '100%',
-            transform: 'scale(1)', // Ensure no scaling conflicts
+            transform: 'scale(1)',
           }}
         >
-          <RiveComponent 
-            width={config.width}
-            height={config.height}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain', // Ensure proper fitting
-              maxWidth: '100%',
-              maxHeight: '100%'
-            }}
-          />
+          {RiveComponent && (
+            <RiveComponent 
+              width={config.width}
+              height={config.height}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                maxWidth: '100%',
+                maxHeight: '100%'
+              }}
+            />
+          )}
         </div>
         
         {/* Message overlay with better positioning */}
@@ -237,21 +259,61 @@ export const AILoading: React.FC<AILoadingProps> = ({
 };
 
 // Enhanced YETI Logo using your mountain animation
-export const EnhancedYetiLogo: React.FC<{ size?: number; className?: string }> = ({ 
-  size = 60, 
+export const EnhancedYetiLogo: React.FC<EnhancedYetiLogoProps> = ({ 
+  size = 50, 
   className = "" 
 }) => {
-  return (
-    <div className={`enhanced-yeti-logo ${className}`} style={{ width: size, height: size }}>
-      <MountainSkiing 
-        autoplay={true}
-        className="logo-mountain-bg"
-        onAnimationComplete={() => console.log('Logo animation cycle complete')}
-      />
-      <div className="yeti-logo-overlay">
-        <div className="yeti-text">YETI</div>
-        <div className="ai-text">AI</div>
+  const [showFallback, setShowFallback] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const { rive, RiveComponent } = useRive({
+    src: "/assets/new_file.riv", // Using the mountain skiing animation as logo background
+    stateMachines: "State Machine 1",
+    artboard: "New Artboard",
+    autoplay: true,
+    onLoad: () => {
+      console.log('Enhanced YETI logo animation loaded');
+      setShowFallback(false);
+      setIsLoaded(true);
+    },
+    onLoadError: () => {
+      console.error('Failed to load enhanced YETI logo animation');
+      setShowFallback(true);
+    },
+  });
+
+  const speedInput = useStateMachineInput(rive, "State Machine 1", "speed");
+
+  useEffect(() => {
+    if (rive && isLoaded && speedInput) {
+      speedInput.value = 0.3; // Slow, subtle animation for logo
+    }
+  }, [speedInput, rive, isLoaded]);
+
+  if (showFallback || !isLoaded) {
+    return (
+      <div 
+        className={`enhanced-yeti-logo-fallback ${className}`}
+        style={{ width: size, height: size }}
+      >
+        <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs">
+          YETI
+        </div>
       </div>
+    );
+  }
+
+  return (
+    <div 
+      className={`enhanced-yeti-logo-container ${className}`}
+      style={{ width: size, height: size }}
+    >
+      {RiveComponent && (
+        <RiveComponent 
+          width={size}
+          height={size}
+        />
+      )}
     </div>
   );
 };

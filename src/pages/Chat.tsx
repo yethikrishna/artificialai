@@ -49,6 +49,31 @@ import "@/components/animations/CustomRiveStyles.css";
 const { Text, Title } = Typography;
 const { TextArea } = Input;
 
+const RiveErrorBoundary: React.FC<{ children: React.ReactNode; fallback: React.ReactNode }> = ({ 
+  children, 
+  fallback 
+}) => {
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    const handleError = (error: ErrorEvent) => {
+      if (error.message?.includes('stateMachines') || error.message?.includes('rive')) {
+        console.error('Rive animation error caught:', error);
+        setHasError(true);
+      }
+    };
+
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
+
+  if (hasError) {
+    return <>{fallback}</>;
+  }
+
+  return <>{children}</>;
+};
+
 interface Message {
   id: string;
   type: 'user' | 'ai';
@@ -340,7 +365,15 @@ export default function Chat() {
               whileHover={{ scale: 1.05 }}
             >
               {/* Enhanced YETI Logo with your mountain animation */}
-              <EnhancedYetiLogo size={window.innerWidth < 640 ? 40 : 50} />
+              <RiveErrorBoundary
+                fallback={
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs">
+                    YETI
+                  </div>
+                }
+              >
+                <EnhancedYetiLogo size={window.innerWidth < 640 ? 40 : 50} />
+              </RiveErrorBoundary>
               
               <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent tracking-wider">
                 YETI
@@ -502,12 +535,23 @@ export default function Chat() {
                       size={window.innerWidth < 640 ? "default" : "large"}
                     />
                     <div className="flex flex-col">
-                      <AILoading 
-                        isLoading={true}
-                        message="YETI is processing your request..."
-                        size={window.innerWidth < 640 ? "small" : "default"}
-                        className="mb-2"
-                      />
+                      <RiveErrorBoundary
+                        fallback={
+                          <div className="w-52 h-32 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg border border-blue-200 flex items-center justify-center">
+                            <div className="text-center">
+                              <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-2"></div>
+                              <div className="text-xs text-gray-600">YETI is thinking...</div>
+                            </div>
+                          </div>
+                        }
+                      >
+                        <AILoading 
+                          isLoading={true}
+                          message="YETI is processing your request..."
+                          size={window.innerWidth < 640 ? "small" : "default"}
+                          className="mb-2"
+                        />
+                      </RiveErrorBoundary>
                       {/* Additional context info */}
                       {currentModel && (
                         <div className="text-xs text-gray-500 ml-2">
