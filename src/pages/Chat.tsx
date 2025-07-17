@@ -495,21 +495,26 @@ export default function Chat() {
                   exit={{ opacity: 0, y: -20 }}
                   className="flex justify-start"
                 >
-                  <div className="flex items-center space-x-2 sm:space-x-3">
+                  <div className="flex items-start space-x-2 sm:space-x-3">
                     <Avatar 
                       src="/assets/1000158361.jpg" 
-                      className="border-2 border-blue-200 shadow-lg" 
+                      className="border-2 border-blue-200 shadow-lg mt-1" 
                       size={window.innerWidth < 640 ? "default" : "large"}
                     />
-                    <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
-                      <div className="p-2">
-                        <AILoading 
-                          isLoading={true}
-                          message="YETI is processing your request..."
-                          className="w-48 h-32"
-                        />
-                      </div>
-                    </Card>
+                    <div className="flex flex-col">
+                      <AILoading 
+                        isLoading={true}
+                        message="YETI is processing your request..."
+                        size={window.innerWidth < 640 ? "small" : "default"}
+                        className="mb-2"
+                      />
+                      {/* Additional context info */}
+                      {currentModel && (
+                        <div className="text-xs text-gray-500 ml-2">
+                          Using {MODEL_CAPABILITIES[currentModel].name}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </motion.div>
               )}
