@@ -359,7 +359,7 @@ export default function Landing() {
             >
               <Avatar 
                 size={120} 
-                src="/founder-photo.jpg" 
+                src="/assets/unnamed.jpg" 
                 className="mb-6 border-4 border-blue-200"
               >
                 YR
