@@ -199,21 +199,21 @@ export default function Chat() {
         onFileSelect={handleFileSelect}
       />
 
-      {/* Header - Updated to match landing page style */}
+      {/* Header - Mobile Responsive */}
       <motion.header 
-        className="bg-white/80 backdrop-blur-sm border-b border-gray-200 px-6 py-4 shadow-sm"
+        className="bg-white/80 backdrop-blur-sm border-b border-gray-200 px-3 sm:px-6 py-3 sm:py-4 shadow-sm"
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
             <motion.div 
-              className="flex items-center space-x-3"
+              className="flex items-center space-x-2 sm:space-x-3"
               whileHover={{ scale: 1.05 }}
             >
               <motion.div 
-                className="w-10 h-10 rounded-lg overflow-hidden border-2 border-blue-200 shadow-lg"
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg overflow-hidden border-2 border-blue-200 shadow-lg"
                 animate={{
                   rotateY: [0, 10, -10, 0],
                 }}
@@ -230,18 +230,18 @@ export default function Chat() {
                   className="w-full h-full object-cover"
                 />
               </motion.div>
-              <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent tracking-wider">
+              <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent tracking-wider">
                 YETI
               </div>
-              <div className="text-xl font-light text-gray-600">AI</div>
+              <div className="text-lg sm:text-xl font-light text-gray-600">AI</div>
             </motion.div>
             
-            <nav className="hidden md:flex items-center space-x-6 ml-8">
+            <nav className="hidden md:flex items-center space-x-4 lg:space-x-6 ml-4 lg:ml-8">
               {['Explore', 'Skills', 'Research', 'Create'].map((item) => (
                 <motion.a
                   key={item}
                   href="#"
-                  className="text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium"
+                  className="text-sm lg:text-base text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium"
                   whileHover={{ y: -2 }}
                 >
                   {item}
@@ -250,10 +250,15 @@ export default function Chat() {
             </nav>
           </div>
           
-          <div className="flex items-center space-x-4">
-            <Badge count={16} color="blue">
-              <Button type="default" className="border-blue-200 text-blue-600 hover:border-blue-400">
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <Badge count={16} color="blue" className="hidden sm:block">
+              <Button type="default" className="border-blue-200 text-blue-600 hover:border-blue-400 text-xs sm:text-sm">
                 Skills Available
+              </Button>
+            </Badge>
+            <Badge count={16} color="blue" className="sm:hidden">
+              <Button type="default" size="small" className="border-blue-200 text-blue-600 hover:border-blue-400 text-xs">
+                16 Skills
               </Button>
             </Badge>
             <motion.div
@@ -262,7 +267,7 @@ export default function Chat() {
             >
               <Avatar 
                 src="/assets/1000158361.jpg" 
-                size="default"
+                size={window.innerWidth < 640 ? "default" : "large"}
                 className="border-2 border-blue-200 shadow-lg"
               />
             </motion.div>
@@ -270,33 +275,33 @@ export default function Chat() {
         </div>
       </motion.header>
 
-      {/* Main Chat Interface */}
-      <div className="flex flex-col h-[calc(100vh-80px)]">
-        {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto px-4 py-6 custom-scrollbar">
-          <div className="max-w-4xl mx-auto space-y-6">
-            {/* Welcome Message */}
+      {/* Main Chat Interface - Mobile Responsive */}
+      <div className="flex flex-col h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)]">
+        {/* Messages Area - Mobile Responsive */}
+        <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-4 sm:py-6 custom-scrollbar">
+          <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
+            {/* Welcome Message - Mobile Responsive */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-center py-8"
+              className="text-center py-4 sm:py-8"
             >
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                className="inline-block mb-4"
+                className="inline-block mb-3 sm:mb-4"
               >
                 <Avatar 
                   src="/assets/1000158361.jpg" 
                   className="border-4 border-blue-200 shadow-xl"
-                  size={80}
+                  size={window.innerWidth < 640 ? 64 : 80}
                 />
               </motion.div>
-              <Title level={3} className="text-gray-700 mb-2">
+              <Title level={window.innerWidth < 640 ? 4 : 3} className="text-gray-700 mb-2 px-4">
                 Hello, I am Yeti by Yethikrishna R
               </Title>
-              <Text className="text-gray-600 text-lg">
+              <Text className="text-gray-600 text-base sm:text-lg px-4">
                 I can help you with 16 different AI capabilities. Type @ or / to see all available skills!
               </Text>
             </motion.div>
@@ -311,7 +316,7 @@ export default function Chat() {
                   transition={{ duration: 0.3 }}
                   className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div className={`flex items-start space-x-3 max-w-[80%] ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                  <div className={`flex items-start space-x-2 sm:space-x-3 max-w-[85%] sm:max-w-[80%] ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                     <motion.div
                       whileHover={{ scale: 1.1, rotate: 5 }}
                       whileTap={{ scale: 0.9 }}
@@ -320,7 +325,7 @@ export default function Chat() {
                         src={message.type === 'ai' ? '/assets/1000158361.jpg' : undefined}
                         icon={message.type === 'user' ? <RobotOutlined /> : undefined}
                         className={`${message.type === 'ai' ? 'border-2 border-blue-200 shadow-lg' : 'bg-blue-600 shadow-lg'}`}
-                        size="large"
+                        size={window.innerWidth < 640 ? "default" : "large"}
                       />
                     </motion.div>
                     
@@ -330,7 +335,7 @@ export default function Chat() {
                           ? 'bg-blue-600 text-white border-blue-500' 
                           : 'bg-white/80 backdrop-blur-sm text-gray-700 border-gray-200'
                       } shadow-lg`}
-                      bodyStyle={{ padding: '12px 16px' }}
+                      bodyStyle={{ padding: window.innerWidth < 640 ? '8px 12px' : '12px 16px' }}
                     >
                       {message.skill && (
                         <Badge 
@@ -339,10 +344,10 @@ export default function Chat() {
                           className="mb-2"
                         />
                       )}
-                      <Text className={message.type === 'user' ? 'text-white' : 'text-gray-700'}>
+                      <Text className={`${message.type === 'user' ? 'text-white' : 'text-gray-700'} text-sm sm:text-base`}>
                         {message.content}
                       </Text>
-                      <div className={`text-xs opacity-70 mt-2 ${message.type === 'user' ? 'text-white/70' : 'text-gray-500'}`}>
+                      <div className={`text-xs opacity-70 mt-1 sm:mt-2 ${message.type === 'user' ? 'text-white/70' : 'text-gray-500'}`}>
                         {message.timestamp.toLocaleTimeString()}
                       </div>
                     </Card>
@@ -351,7 +356,7 @@ export default function Chat() {
               ))}
             </AnimatePresence>
             
-            {/* Typing Indicator */}
+            {/* Typing Indicator - Mobile Responsive */}
             <AnimatePresence>
               {isTyping && (
                 <motion.div
@@ -360,8 +365,12 @@ export default function Chat() {
                   exit={{ opacity: 0, y: -20 }}
                   className="flex justify-start"
                 >
-                  <div className="flex items-center space-x-3">
-                    <Avatar src="/assets/1000158361.jpg" className="border-2 border-blue-200 shadow-lg" />
+                  <div className="flex items-center space-x-2 sm:space-x-3">
+                    <Avatar 
+                      src="/assets/1000158361.jpg" 
+                      className="border-2 border-blue-200 shadow-lg" 
+                      size={window.innerWidth < 640 ? "default" : "large"}
+                    />
                     <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
                       <div className="flex space-x-1 p-2">
                         <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
@@ -378,22 +387,22 @@ export default function Chat() {
           </div>
         </div>
 
-        {/* Skill Selector */}
+        {/* Skill Selector - Mobile Responsive */}
         <AnimatePresence>
           {showSkillSelector && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              className="mx-4 mb-4"
+              className="mx-2 sm:mx-4 mb-2 sm:mb-4"
             >
               <Card className="bg-white/90 backdrop-blur-sm border-gray-200 shadow-xl max-w-4xl mx-auto">
-                <Title level={5} className="text-gray-700 mb-4">Select a Skill</Title>
+                <Title level={5} className="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base">Select a Skill</Title>
                 
                 {Object.entries(skillCategories).map(([category, categorySkills]) => (
-                  <div key={category} className="mb-6">
-                    <Text className="text-gray-600 font-medium mb-3 block">{category}</Text>
-                    <Row gutter={[12, 12]}>
+                  <div key={category} className="mb-4 sm:mb-6">
+                    <Text className="text-gray-600 font-medium mb-2 sm:mb-3 block text-sm sm:text-base">{category}</Text>
+                    <Row gutter={[8, 8]} className="sm:gutter-12">
                       {categorySkills.map((skill) => (
                         <Col xs={12} sm={8} md={6} key={skill.id}>
                           <motion.div
@@ -401,15 +410,15 @@ export default function Chat() {
                             whileTap={{ scale: 0.95 }}
                           >
                             <Card
-                              className="bg-white/60 border-gray-200 hover:bg-white/80 hover:border-blue-300 cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg"
-                              bodyStyle={{ padding: '12px' }}
+                              className="bg-white/60 border-gray-200 hover:bg-white/80 hover:border-blue-300 cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg h-full"
+                              bodyStyle={{ padding: window.innerWidth < 640 ? '8px' : '12px' }}
                               onClick={() => handleSkillSelect(skill)}
                             >
                               <div className="text-center">
-                                <div className={`text-2xl text-${skill.color}-500 mb-2`}>
+                                <div className={`text-lg sm:text-2xl text-${skill.color}-500 mb-1 sm:mb-2`}>
                                   {skill.icon}
                                 </div>
-                                <Text className="text-gray-700 text-xs font-medium block mb-1">
+                                <Text className="text-gray-700 text-xs sm:text-sm font-medium block mb-1">
                                   {skill.name}
                                 </Text>
                                 <Text className="text-gray-500 text-xs">
@@ -428,15 +437,15 @@ export default function Chat() {
           )}
         </AnimatePresence>
 
-        {/* Input Area */}
+        {/* Input Area - Mobile Responsive */}
         <motion.div 
-          className="border-t border-gray-200 bg-white/80 backdrop-blur-sm p-4 shadow-lg"
+          className="border-t border-gray-200 bg-white/80 backdrop-blur-sm p-2 sm:p-4 shadow-lg"
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <div className="max-w-4xl mx-auto">
-            <div className="flex items-end space-x-4">
+            <div className="flex items-end space-x-2 sm:space-x-4">
               {selectedSkill && (
                 <motion.div
                   initial={{ scale: 0 }}
@@ -454,12 +463,15 @@ export default function Chat() {
                   onChange={handleInputChange}
                   onKeyPress={handleKeyPress}
                   placeholder="Type your message... Use @ or / to select skills"
-                  className="bg-white/80 border-gray-300 text-gray-700 placeholder-gray-500 resize-none focus:border-blue-400 focus:ring-blue-400"
-                  autoSize={{ minRows: 1, maxRows: 4 }}
+                  className="bg-white/80 border-gray-300 text-gray-700 placeholder-gray-500 resize-none focus:border-blue-400 focus:ring-blue-400 text-sm sm:text-base"
+                  autoSize={{ minRows: 1, maxRows: window.innerWidth < 640 ? 3 : 4 }}
                 />
-                <div className="flex justify-between items-center mt-2">
-                  <Text className="text-gray-500 text-xs">
+                <div className="flex justify-between items-center mt-1 sm:mt-2">
+                  <Text className="text-gray-500 text-xs hidden sm:block">
                     Press @ or / for skills • Enter to send • Shift+Enter for new line
+                  </Text>
+                  <Text className="text-gray-500 text-xs sm:hidden">
+                    @ or / for skills • Enter to send
                   </Text>
                   <Space>
                     <Text className="text-gray-500 text-xs">16 AI models ready</Text>
@@ -472,31 +484,38 @@ export default function Chat() {
                 icon={<SendOutlined />}
                 onClick={handleSendMessage}
                 disabled={!inputValue.trim()}
-                className="h-10 px-6 bg-blue-600 hover:bg-blue-700 border-blue-600 shadow-lg hover:shadow-xl transition-all duration-300"
+                className="h-8 sm:h-10 px-3 sm:px-6 bg-blue-600 hover:bg-blue-700 border-blue-600 shadow-lg hover:shadow-xl transition-all duration-300 text-xs sm:text-sm"
+                size={window.innerWidth < 640 ? "small" : "middle"}
               >
-                Send
+                {window.innerWidth < 640 ? '' : 'Send'}
               </Button>
             </div>
           </div>
         </motion.div>
       </div>
 
-      {/* Custom Scrollbar Styles */}
+      {/* Custom Scrollbar Styles - Mobile Responsive */}
       <style dangerouslySetInnerHTML={{
         __html: `
           .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
+            width: 4px;
           }
           .custom-scrollbar::-webkit-scrollbar-track {
             background: rgba(0, 0, 0, 0.05);
-            border-radius: 3px;
+            border-radius: 2px;
           }
           .custom-scrollbar::-webkit-scrollbar-thumb {
             background: rgba(59, 130, 246, 0.3);
-            border-radius: 3px;
+            border-radius: 2px;
           }
           .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: rgba(59, 130, 246, 0.5);
+          }
+          
+          @media (max-width: 640px) {
+            .custom-scrollbar::-webkit-scrollbar {
+              width: 3px;
+            }
           }
         `
       }} />
