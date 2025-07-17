@@ -27,7 +27,7 @@ import {
 import { AuthButton } from '@/components/auth/AuthButton';
 import { RiveAnimation } from '@/components/RiveAnimation';
 import { useLenis } from '@/hooks/use-lenis';
-import { Link } from 'react-router';
+import { Link } from "react-router";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -83,7 +83,7 @@ export default function Landing() {
 
   return (
     <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-      {/* Hero Section with YETI AI Introduction - Enhanced Responsive */}
+      {/* Hero Section - Direct Chat Access */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8">
         <motion.div 
           style={{ y: backgroundY }}
@@ -127,28 +127,16 @@ export default function Landing() {
             </Paragraph>
 
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center px-4">
-              <AuthButton 
-                trigger={
-                  <Button 
-                    type="primary" 
-                    size="large" 
-                    className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 border-none hover:shadow-lg transform hover:scale-105 transition-all duration-300 h-12 sm:h-auto text-base sm:text-lg px-6 sm:px-8"
-                    icon={<RocketOutlined />}
-                  >
-                    Get Started Free
-                  </Button>
-                }
-                dashboardTrigger={
-                  <Button 
-                    type="primary" 
-                    size="large" 
-                    className="w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-600 border-none hover:shadow-lg transform hover:scale-105 transition-all duration-300 h-12 sm:h-auto text-base sm:text-lg px-6 sm:px-8"
-                    icon={<RocketOutlined />}
-                  >
-                    <Link to="/chat">Open YETI AI</Link>
-                  </Button>
-                }
-              />
+              <Link to="/chat">
+                <Button 
+                  type="primary" 
+                  size="large" 
+                  className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 border-none hover:shadow-lg transform hover:scale-105 transition-all duration-300 h-12 sm:h-auto text-base sm:text-lg px-6 sm:px-8"
+                  icon={<RocketOutlined />}
+                >
+                  Try YETI AI Free
+                </Button>
+              </Link>
               <Button 
                 size="large" 
                 className="w-full sm:w-auto border-blue-300 text-blue-600 hover:bg-blue-50 transform hover:scale-105 transition-all duration-300 h-12 sm:h-auto text-base sm:text-lg px-6 sm:px-8"
@@ -209,7 +197,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* API Serverless Section - Enhanced Responsive */}
+      {/* API Serverless Section - Updated for Free Access */}
       <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -226,12 +214,12 @@ export default function Landing() {
             </div>
             
             <Title level={2} className="text-white text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 px-4">
-              Serverless API Architecture
+              Free AI Platform
             </Title>
             
             <Paragraph className="text-lg sm:text-xl text-white/90 max-w-4xl mx-auto mb-8 sm:mb-12 px-4">
-              Built on modern serverless infrastructure for unlimited scalability, 
-              zero downtime, and lightning-fast global response times.
+              Experience the full power of YETI AI completely free. No signup required, 
+              no limits - just intelligent AI assistance at your fingertips.
             </Paragraph>
 
             <Row gutter={[16, 24]} className="mb-8 sm:mb-12">
@@ -259,26 +247,15 @@ export default function Landing() {
             </Row>
 
             <div className="px-4">
-              <AuthButton 
-                trigger={
-                  <Button 
-                    size="large" 
-                    className="w-full sm:w-auto bg-white text-blue-600 border-none hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 h-12 sm:h-auto text-base sm:text-lg px-6 sm:px-8"
-                    icon={<ApiOutlined />}
-                  >
-                    Access API Documentation
-                  </Button>
-                }
-                dashboardTrigger={
-                  <Button 
-                    size="large" 
-                    className="w-full sm:w-auto bg-white text-green-600 border-none hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 h-12 sm:h-auto text-base sm:text-lg px-6 sm:px-8"
-                    icon={<ApiOutlined />}
-                  >
-                    <Link to="/chat">Try YETI API</Link>
-                  </Button>
-                }
-              />
+              <Link to="/chat">
+                <Button 
+                  size="large" 
+                  className="w-full sm:w-auto bg-white text-blue-600 border-none hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 h-12 sm:h-auto text-base sm:text-lg px-6 sm:px-8"
+                  icon={<ApiOutlined />}
+                >
+                  Start Using YETI AI Free
+                </Button>
+              </Link>
             </div>
           </motion.div>
         </div>
@@ -396,7 +373,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Call to Action - Enhanced Responsive */}
+      {/* Call to Action - Updated for Free Access */}
       <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-slate-900 to-blue-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
@@ -409,38 +386,26 @@ export default function Landing() {
               Ready to Experience YETI AI?
             </Title>
             <Paragraph className="text-lg sm:text-xl text-white/90 max-w-4xl mx-auto mb-6 sm:mb-8 px-4">
-              Join the AI revolution with intelligent routing, specialized skills, and lightning-fast responses.
+              Start using YETI AI right now - completely free, no signup required!
             </Paragraph>
             
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center px-4">
-              <AuthButton 
-                trigger={
-                  <Button 
-                    type="primary" 
-                    size="large" 
-                    className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 border-none hover:shadow-lg transform hover:scale-105 transition-all duration-300 h-12 sm:h-auto text-base sm:text-lg px-6 sm:px-8"
-                    icon={<RocketOutlined />}
-                  >
-                    Start Free Trial
-                  </Button>
-                }
-                dashboardTrigger={
-                  <Button 
-                    type="primary" 
-                    size="large" 
-                    className="w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-600 border-none hover:shadow-lg transform hover:scale-105 transition-all duration-300 h-12 sm:h-auto text-base sm:text-lg px-6 sm:px-8"
-                    icon={<RocketOutlined />}
-                  >
-                    <Link to="/chat">Launch YETI AI</Link>
-                  </Button>
-                }
-              />
+              <Link to="/chat">
+                <Button 
+                  type="primary" 
+                  size="large" 
+                  className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 border-none hover:shadow-lg transform hover:scale-105 transition-all duration-300 h-12 sm:h-auto text-base sm:text-lg px-6 sm:px-8"
+                  icon={<RocketOutlined />}
+                >
+                  Launch YETI AI Free
+                </Button>
+              </Link>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Footer - Enhanced Responsive */}
+      {/* Footer - Updated Links */}
       <footer className="bg-gray-900 text-white py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Row gutter={[24, 32]}>
@@ -452,17 +417,17 @@ export default function Landing() {
                 <Title level={4} className="text-white mb-0 text-lg sm:text-xl">YETI AI</Title>
               </div>
               <Paragraph className="text-gray-400 text-center md:text-left text-sm sm:text-base">
-                The most intelligent AI assistant with smart routing across 8 model types 
-                and 16 specialized skills.
+                The most intelligent AI assistant - completely free for everyone. 
+                No signup required, unlimited access.
               </Paragraph>
             </Col>
             
             <Col xs={12} sm={12} md={8}>
               <Title level={5} className="text-white mb-4 text-center md:text-left text-base sm:text-lg">Product</Title>
               <div className="space-y-2 text-center md:text-left">
-                <div><Link to="/chat" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">Try YETI AI</Link></div>
-                <div><a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">API Documentation</a></div>
+                <div><Link to="/chat" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">Try YETI AI Free</Link></div>
                 <div><a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">Features</a></div>
+                <div><a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">AI Models</a></div>
               </div>
             </Col>
             
@@ -480,7 +445,7 @@ export default function Landing() {
           
           <div className="text-center">
             <Text className="text-gray-400 text-xs sm:text-sm">
-              © 2025 YETI AI by Yethikrishna R. All rights reserved.
+              © 2025 YETI AI by Yethikrishna R. Free for everyone, forever.
             </Text>
           </div>
         </div>

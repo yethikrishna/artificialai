@@ -38,13 +38,13 @@ import { AnimatedMessage } from "@/components/enhanced/AnimatedMessage";
 import { LoadingAnimation } from "@/components/animations/LoadingAnimation";
 import { TypingAnimation } from "@/components/animations/TypingAnimation";
 import { SkillAnimation, SkillGrid } from "@/components/animations/SkillAnimation";
-import { EnhancedUserButton } from "@/components/enhanced/EnhancedUserButton";
 import { usePersonalization } from "@/components/enhanced/PersonalizationProvider";
 import { YetiLogo, YetiAnimation } from "@/components/animations/YetiAnimations";
 import { MountainTheme, mountainThemeStyles } from "@/components/animations/MountainTheme";
 import { RiveScrollController } from "@/components/animations/RiveScrollController";
 import { MountainSkiing, AILoading, EnhancedYetiLogo } from "@/components/animations/CustomRiveAnimations";
 import "@/components/animations/CustomRiveStyles.css";
+import { Link } from "react-router";
 
 const { Text, Title } = Typography;
 const { TextArea } = Input;
@@ -351,7 +351,7 @@ export default function Chat() {
         onFileSelect={handleFileSelect}
       />
 
-      {/* Enhanced Header with Custom Rive Logo */}
+      {/* Enhanced Header */}
       <motion.header 
         className="bg-white/80 backdrop-blur-sm border-b border-gray-200 px-3 sm:px-6 py-3 sm:py-4 shadow-sm sticky top-0 z-50"
         initial={{ y: -50, opacity: 0 }}
@@ -364,20 +364,21 @@ export default function Chat() {
               className="flex items-center space-x-2 sm:space-x-3"
               whileHover={{ scale: 1.05 }}
             >
-              {/* Enhanced YETI Logo with your mountain animation */}
-              <RiveErrorBoundary
-                fallback={
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs">
-                    YETI
-                  </div>
-                }
-              >
-                <EnhancedYetiLogo size={window.innerWidth < 640 ? 40 : 50} />
-              </RiveErrorBoundary>
+              <Link to="/">
+                <RiveErrorBoundary
+                  fallback={
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs">
+                      YETI
+                    </div>
+                  }
+                >
+                  <EnhancedYetiLogo size={window.innerWidth < 640 ? 40 : 50} />
+                </RiveErrorBoundary>
+              </Link>
               
-              <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent tracking-wider">
+              <Link to="/" className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent tracking-wider">
                 YETI
-              </div>
+              </Link>
               <div className="text-lg sm:text-xl font-light text-gray-600">AI</div>
             </motion.div>
             
@@ -406,7 +407,7 @@ export default function Chat() {
               🏔️
             </Button>
             
-            {/* API Status with Enhanced Indicators */}
+            {/* API Status */}
             <div className="hidden sm:flex items-center space-x-2">
               {Object.entries(apiStatus).map(([provider, status]) => (
                 <motion.div
@@ -420,13 +421,12 @@ export default function Chat() {
               ))}
             </div>
             
-            <EnhancedUserButton 
-              size={window.innerWidth < 640 ? 8 : 10}
-              showNotifications={true}
-              onThemeChange={(theme) => {
-                console.log('Theme changed to:', theme);
-              }}
-            />
+            {/* Free Access Badge */}
+            <Badge count="FREE" color="green" className="hidden sm:block">
+              <Button type="default" size="small">
+                <Link to="/">Home</Link>
+              </Button>
+            </Badge>
           </div>
         </div>
       </motion.header>
