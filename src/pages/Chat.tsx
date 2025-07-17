@@ -45,6 +45,7 @@ import { RiveScrollController } from "@/components/animations/RiveScrollControll
 import { MountainSkiing, AILoading, EnhancedYetiLogo } from "@/components/animations/CustomRiveAnimations";
 import "@/components/animations/CustomRiveStyles.css";
 import { Link } from "react-router";
+import LiveAIActivation from '@/components/LiveAIActivation';
 
 const { Text, Title } = Typography;
 const { TextArea } = Input;
@@ -120,6 +121,8 @@ export default function Chat() {
   const [showMountainAnimation, setShowMountainAnimation] = useState(false);
   const [activeSkill, setActiveSkill] = useState<string | null>(null);
   const [isScrollLocked, setIsScrollLocked] = useState(false);
+  const [showLiveAIActivation, setShowLiveAIActivation] = useState(true);
+  const [isLiveAIActive, setIsLiveAIActive] = useState(false);
 
   const inputRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -302,6 +305,19 @@ export default function Chat() {
     // TODO: Add file to current chat context
   };
 
+  const handleLiveAIActivation = (isActive: boolean) => {
+    setIsLiveAIActive(isActive);
+    if (isActive) {
+      setShowLiveAIActivation(false);
+      // Refresh API status
+      const testAPIs = async () => {
+        const status = await AIRouter.testAPIs();
+        setApiStatus(status);
+      };
+      testAPIs();
+    }
+  };
+
   useEffect(() => {
     if (showSkillSelector) {
       // Prevent body scroll when skill selector is open
@@ -425,6 +441,39 @@ export default function Chat() {
         {/* Messages Area */}
         <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-4 sm:py-6 custom-scrollbar">
           <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
+            {/* Live AI Activation Card */}
+            <AnimatePresence>
+              {showLiveAIActivation && !isLiveAIActive && (
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="mb-6"
+                >
+                  <LiveAIActivation 
+                    onActivation={handleLiveAIActivation}
+                    className="max-w-2xl mx-auto"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Live AI Status Indicator */}
+            <AnimatePresence>
+              {isLiveAIActive && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="mb-4"
+                >
+                  <LiveAIActivation 
+                    onActivation={handleLiveAIActivation}
+                    className="max-w-md mx-auto"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {/* Welcome Message with Updated Logo */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}

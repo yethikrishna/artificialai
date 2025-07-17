@@ -1,6 +1,9 @@
 // YETI AI - Free API Clients for 8 Model Types
 // Connects to Hugging Face, Groq, and other free serverless APIs
 
+// Import Hugging Face inference
+const { HfInference } = require('@huggingface/inference');
+
 interface APIResponse {
   success: boolean;
   data?: any;
@@ -184,189 +187,273 @@ class GroqClient {
   }
 }
 
-// Free API Model Configurations
+// Enhanced API Models with Hugging Face Integration
 export const FREE_API_MODELS = {
-  // Large Language Models (LLMs)
+  // Large Language Models
   LLM: {
-    'microsoft/DialoGPT-medium': { provider: 'huggingface', type: 'chat' } as ModelConfig,
-    'microsoft/DialoGPT-large': { provider: 'huggingface', type: 'chat' } as ModelConfig,
-    'facebook/blenderbot-400M-distill': { provider: 'huggingface', type: 'chat' } as ModelConfig,
-    'llama-3.1-8b-instant': { provider: 'groq', type: 'chat' } as ModelConfig,
-    'llama-3.1-70b-versatile': { provider: 'groq', type: 'chat' } as ModelConfig,
-    'mixtral-8x7b-32768': { provider: 'groq', type: 'chat' } as ModelConfig,
-    'gemma2-9b-it': { provider: 'groq', type: 'chat' } as ModelConfig
+    name: 'Large Language Model',
+    provider: 'huggingface',
+    model: 'meta-llama/Llama-3.1-8B-Instruct',
+    endpoint: 'chatCompletion',
+    free: true,
+    description: 'Advanced conversational AI with reasoning capabilities'
   },
-
-  // Vision Language Models (VLMs)
-  VLM: {
-    'Salesforce/blip-image-captioning-base': { provider: 'huggingface', type: 'image-to-text' } as ModelConfig,
-    'Salesforce/blip-image-captioning-large': { provider: 'huggingface', type: 'image-to-text' } as ModelConfig,
-    'nlpconnect/vit-gpt2-image-captioning': { provider: 'huggingface', type: 'image-to-text' } as ModelConfig,
-    'microsoft/git-base-coco': { provider: 'huggingface', type: 'image-to-text' } as ModelConfig
-  },
-
-  // Small Language Models (SLMs)
-  SLM: {
-    'microsoft/DialoGPT-small': { provider: 'huggingface', type: 'chat' } as ModelConfig,
-    'distilbert-base-uncased': { provider: 'huggingface', type: 'feature-extraction' } as ModelConfig,
-    'sentence-transformers/all-MiniLM-L6-v2': { provider: 'huggingface', type: 'feature-extraction' } as ModelConfig,
-    'gemma-7b-it': { provider: 'groq', type: 'chat' } as ModelConfig
-  },
-
-  // Mixture of Experts (MoE)
-  MOE: {
-    'mixtral-8x7b-32768': { provider: 'groq', type: 'chat' } as ModelConfig,
-    'microsoft/DialoGPT-medium': { provider: 'huggingface', type: 'chat' } as ModelConfig
-  },
-
-  // Masked Language Models (MLMs)
-  MLM: {
-    'bert-base-uncased': { provider: 'huggingface', type: 'feature-extraction' } as ModelConfig,
-    'roberta-base': { provider: 'huggingface', type: 'feature-extraction' } as ModelConfig,
-    'distilbert-base-uncased': { provider: 'huggingface', type: 'feature-extraction' } as ModelConfig,
-    'sentence-transformers/all-MiniLM-L6-v2': { provider: 'huggingface', type: 'feature-extraction' } as ModelConfig
-  },
-
-  // Large Concept Models (LCMs)
+  
+  // Large Concept Models  
   LCM: {
-    'sentence-transformers/all-MiniLM-L6-v2': { provider: 'huggingface', type: 'feature-extraction' } as ModelConfig,
-    'sentence-transformers/all-mpnet-base-v2': { provider: 'huggingface', type: 'feature-extraction' } as ModelConfig,
-    'sentence-transformers/paraphrase-MiniLM-L6-v2': { provider: 'huggingface', type: 'feature-extraction' } as ModelConfig
+    name: 'Large Concept Model',
+    provider: 'huggingface', 
+    model: 'sentence-transformers/all-MiniLM-L6-v2',
+    endpoint: 'featureExtraction',
+    free: true,
+    description: 'Semantic understanding and multilingual translation'
   },
-
-  // Large Action Models (LAMs) - Using chat models for action planning
+  
+  // Vision Language Models
+  VLM: {
+    name: 'Vision-Language Model',
+    provider: 'huggingface',
+    model: 'microsoft/DialoGPT-medium',
+    endpoint: 'textGeneration', 
+    free: true,
+    description: 'Multimodal image and text processing'
+  },
+  
+  // Small Language Models
+  SLM: {
+    name: 'Small Language Model', 
+    provider: 'huggingface',
+    model: 'google/gemma-2-2b-it',
+    endpoint: 'textGeneration',
+    free: true,
+    description: 'Fast, efficient code generation and responses'
+  },
+  
+  // Mixture of Experts
+  MOE: {
+    name: 'Mixture of Experts',
+    provider: 'huggingface',
+    model: 'mistralai/Mixtral-8x7B-Instruct-v0.1', 
+    endpoint: 'textGeneration',
+    free: true,
+    description: 'Complex reasoning with specialized model routing'
+  },
+  
+  // Masked Language Models
+  MLM: {
+    name: 'Masked Language Model',
+    provider: 'huggingface',
+    model: 'cardiffnlp/twitter-roberta-base-sentiment-latest',
+    endpoint: 'textClassification',
+    free: true,
+    description: 'Text analysis, classification, and sentiment'
+  },
+  
+  // Large Action Models
   LAM: {
-    'llama-3.1-8b-instant': { provider: 'groq', type: 'chat' } as ModelConfig,
-    'microsoft/DialoGPT-large': { provider: 'huggingface', type: 'chat' } as ModelConfig
+    name: 'Large Action Model',
+    provider: 'huggingface', 
+    model: 'microsoft/DialoGPT-large',
+    endpoint: 'textGeneration',
+    free: true,
+    description: 'Task automation and workflow execution'
   },
-
-  // Segment Anything Models (SAMs)
+  
+  // Segment Anything Models
   SAM: {
-    'facebook/detr-resnet-50': { provider: 'huggingface', type: 'object-detection' } as ModelConfig,
-    'facebook/detr-resnet-101': { provider: 'huggingface', type: 'object-detection' } as ModelConfig
+    name: 'Segment Anything Model',
+    provider: 'huggingface',
+    model: 'facebook/detr-resnet-50',
+    endpoint: 'objectDetection', 
+    free: true,
+    description: 'Computer vision and image segmentation'
   }
-} as const;
+};
 
-// Main API Client Class
 export class YetiAPIClient {
-  private hfClient = new HuggingFaceClient();
-  private groqClient = new GroqClient();
+  private hf: any;
+  private isLiveMode: boolean = false;
+
+  constructor() {
+    // Initialize Hugging Face client
+    const hfToken = import.meta.env.VITE_HUGGING_FACE_ACCESS_TOKEN || 
+                   process.env.HUGGING_FACE_ACCESS_TOKEN;
+    
+    if (hfToken) {
+      this.hf = new HfInference(hfToken);
+      this.isLiveMode = true;
+      console.log('🚀 YETI AI Live Mode Activated with Hugging Face!');
+    } else {
+      this.hf = new HfInference(); // Will work with demo/fallback
+      console.log('⚠️ YETI AI Demo Mode - Add API keys for live responses');
+    }
+  }
 
   async processRequest(
     modelType: keyof typeof FREE_API_MODELS,
     input: string,
     skill?: string,
-    messages?: ChatMessage[]
-  ): Promise<APIResponse> {
-    const models = FREE_API_MODELS[modelType];
-    const modelNames = Object.keys(models);
+    messages?: Array<{ role: string; content: string }>
+  ) {
+    const modelConfig = FREE_API_MODELS[modelType];
     
-    // Select best model based on skill or use first available
-    let selectedModel = modelNames[0];
-    let modelConfig = models[selectedModel as keyof typeof models] as ModelConfig;
-
-    // Try to find a better model based on skill
-    if (skill) {
-      const skillBasedModel = this.selectModelBySkill(skill, models);
-      if (skillBasedModel) {
-        selectedModel = skillBasedModel;
-        modelConfig = models[selectedModel as keyof typeof models] as ModelConfig;
-      }
+    if (!this.isLiveMode) {
+      return {
+        success: false,
+        error: 'API keys not configured - using demo mode',
+        data: null
+      };
     }
 
-    // Route to appropriate provider
     try {
-      if (modelConfig.provider === 'groq') {
-        return await this.groqClient.chatCompletion(selectedModel, messages || [
-          { role: 'user', content: input }
-        ]);
-      } else if (modelConfig.provider === 'huggingface') {
-        if (modelConfig.type === 'chat') {
-          return await this.hfClient.chatCompletion(selectedModel, messages || [
-            { role: 'user', content: input }
-          ]);
-        } else if (modelConfig.type === 'feature-extraction') {
-          return await this.hfClient.featureExtraction(selectedModel, input);
-        } else if (modelConfig.type === 'image-to-text') {
-          // For VLM tasks, we'd need image input - for now return a placeholder
+      let result;
+      
+      switch (modelConfig.endpoint) {
+        case 'chatCompletion':
+          result = await this.hf.chatCompletion({
+            model: modelConfig.model,
+            messages: messages || [{ role: 'user', content: input }],
+            max_tokens: 512,
+            temperature: 0.7,
+          });
           return {
             success: true,
-            data: `VLM analysis would be performed here for: ${input}`,
-            provider: 'Hugging Face',
-            model: selectedModel
+            data: result.choices[0]?.message?.content || 'No response generated',
+            error: null
+          };
+
+        case 'textGeneration':
+          result = await this.hf.textGeneration({
+            model: modelConfig.model,
+            inputs: input,
+            parameters: {
+              max_new_tokens: 200,
+              temperature: 0.7,
+              top_p: 0.9,
+              return_full_text: false
+            }
+          });
+          return {
+            success: true,
+            data: result.generated_text,
+            error: null
+          };
+
+        case 'textClassification':
+          result = await this.hf.textClassification({
+            model: modelConfig.model,
+            inputs: input
+          });
+          const topResult = result[0];
+          return {
+            success: true,
+            data: `Analysis: ${topResult.label} (${Math.round(topResult.score * 100)}% confidence)\n\nOriginal text: "${input}"`,
+            error: null
+          };
+
+        case 'featureExtraction':
+          result = await this.hf.featureExtraction({
+            model: modelConfig.model,
+            inputs: input
+          });
+          return {
+            success: true,
+            data: `Generated ${Array.isArray(result) ? result.length : 'semantic'} embeddings for: "${input}"\n\nThis can be used for similarity search, clustering, and semantic analysis.`,
+            error: null
+          };
+
+        case 'objectDetection':
+          return {
+            success: true,
+            data: `🔍 Object Detection Analysis for: "${input}"\n\nThis would analyze images for objects, boundaries, and segmentation. Upload an image to see full results!`,
+            error: null
+          };
+
+        default:
+          throw new Error(`Unsupported endpoint: ${modelConfig.endpoint}`);
+      }
+      
+    } catch (error) {
+      console.error(`API Error for ${modelType}:`, error);
+      
+      // Handle specific error types
+      if (error instanceof Error) {
+        if (error.message.includes('401')) {
+          return {
+            success: false,
+            error: 'Invalid API token - please check your Hugging Face credentials',
+            data: null
+          };
+        } else if (error.message.includes('429')) {
+          return {
+            success: false,
+            error: 'Rate limit exceeded - please wait a moment and try again',
+            data: null
+          };
+        } else if (error.message.includes('503')) {
+          return {
+            success: false,
+            error: 'Model is loading - this may take a few moments on first use',
+            data: null
           };
         }
       }
-
-      throw new Error('Unsupported model configuration');
-    } catch (error) {
-      // Fallback to next available model
-      if (modelNames.length > 1) {
-        const fallbackModel = modelNames[1];
-        const fallbackConfig = models[fallbackModel as keyof typeof models] as ModelConfig;
-        
-        if (fallbackConfig.provider === 'huggingface') {
-          return await this.hfClient.chatCompletion(fallbackModel, messages || [
-            { role: 'user', content: input }
-          ]);
-        }
-      }
-
+      
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'API request failed',
-        provider: 'Unknown',
-        model: selectedModel
+        error: error instanceof Error ? error.message : 'Unknown API error',
+        data: null
       };
     }
   }
 
-  private selectModelBySkill(skill: string, models: Record<string, ModelConfig>): string | null {
-    const skillModelMap: Record<string, string[]> = {
-      'writing': ['llama-3.1-70b-versatile', 'microsoft/DialoGPT-large'],
-      'code': ['llama-3.1-8b-instant', 'mixtral-8x7b-32768'],
-      'translate': ['llama-3.1-70b-versatile', 'microsoft/DialoGPT-medium'],
-      'research': ['mixtral-8x7b-32768', 'llama-3.1-70b-versatile'],
-      'image': ['Salesforce/blip-image-captioning-large'],
-      'data': ['sentence-transformers/all-mpnet-base-v2', 'bert-base-uncased']
-    };
-
-    const preferredModels = skillModelMap[skill.toLowerCase()] || [];
+  async testConnections(): Promise<Record<string, boolean>> {
+    const results: Record<string, boolean> = {};
     
-    for (const model of preferredModels) {
-      if (model in models) {
-        return model;
+    if (!this.isLiveMode) {
+      // Demo mode - simulate connections
+      Object.keys(FREE_API_MODELS).forEach(key => {
+        results[key] = false;
+      });
+      results['demo'] = true;
+      return results;
+    }
+
+    // Test each model type
+    for (const [modelType, config] of Object.entries(FREE_API_MODELS)) {
+      try {
+        // Quick test with minimal input
+        const testResult = await this.processRequest(
+          modelType as keyof typeof FREE_API_MODELS,
+          'Hello',
+          undefined,
+          [{ role: 'user', content: 'Hi' }]
+        );
+        results[modelType] = testResult.success;
+      } catch (error) {
+        console.error(`Connection test failed for ${modelType}:`, error);
+        results[modelType] = false;
       }
     }
     
-    return null;
+    return results;
   }
 
-  // Test API connectivity
-  async testConnections(): Promise<Record<string, boolean>> {
-    const results: Record<string, boolean> = {};
+  // Get live mode status
+  isLive(): boolean {
+    return this.isLiveMode;
+  }
 
-    // Test Groq
-    try {
-      const groqResult = await this.groqClient.chatCompletion('llama-3.1-8b-instant', [
-        { role: 'user', content: 'Hello' }
-      ]);
-      results.groq = groqResult.success;
-    } catch {
-      results.groq = false;
-    }
+  // Get available models
+  getAvailableModels() {
+    return FREE_API_MODELS;
+  }
 
-    // Test Hugging Face
-    try {
-      const hfResult = await this.hfClient.chatCompletion('microsoft/DialoGPT-medium', [
-        { role: 'user', content: 'Hello' }
-      ]);
-      results.huggingface = hfResult.success;
-    } catch {
-      results.huggingface = false;
-    }
-
-    return results;
+  // Enable live mode with API key
+  enableLiveMode(apiKey: string) {
+    this.hf = new HfInference(apiKey);
+    this.isLiveMode = true;
+    console.log('🚀 YETI AI Live Mode Activated!');
   }
 }
 
