@@ -1,88 +1,79 @@
-/* Enhanced Animation Styles with Scroll Performance */
+/* Enhanced Professional CSS Animations */
 
-:root {
-  --animation-duration-fast: 0.2s;
-  --animation-duration-medium: 0.5s;
-  --animation-duration-slow: 1s;
-  --animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
-  --mountain-primary: #4F46E5;
-  --mountain-secondary: #1E40AF;
-  --snow-white: #FFFFFF;
-  --aurora-gradient: linear-gradient(45deg, #4F46E5, #7C3AED, #EC4899);
-}
-
-/* Rive Container Styles */
-.rive-scroll-container {
+/* YETI Logo Animation */
+.yeti-logo-container {
   position: relative;
-  overflow: hidden;
-  border-radius: 8px;
-}
-
-.rive-scroll-container canvas {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain;
-}
-
-/* Performance Optimizations */
-.rive-scroll-container {
-  will-change: transform;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* YETI Logo Styles */
-.yeti-logo {
-  position: relative;
-  display: inline-block;
-}
-
-.yeti-logo-rive {
-  position: relative;
-  z-index: 2;
-}
-
-.yeti-logo-fallback {
-  position: relative;
-  width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
-  border-radius: 50%;
-  animation: yeti-logo-pulse 2s ease-in-out infinite;
 }
 
-.yeti-logo-svg {
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+.yeti-logo-animation {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  animation: logoFloat 3s ease-in-out infinite;
 }
 
-.mountain-silhouette {
+.mountain-peak {
   position: absolute;
   bottom: 20%;
   left: 50%;
   transform: translateX(-50%);
-  width: 80%;
-  height: 40%;
-  background: linear-gradient(to top, #1e40af, #ffffff);
-  clip-path: polygon(0% 100%, 20% 60%, 40% 80%, 60% 40%, 80% 70%, 100% 100%);
-  animation: mountain-sway 4s ease-in-out infinite;
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 20px solid #4a5568;
+  animation: peakGlow 4s ease-in-out infinite;
 }
 
-.yeti-text {
-  position: relative;
-  z-index: 2;
-  font-size: 0.8em;
-  font-weight: bold;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  letter-spacing: 1px;
+.snow-cap {
+  position: absolute;
+  bottom: 35%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 8px solid #ffffff;
+  animation: snowSparkle 2s ease-in-out infinite;
 }
 
-.snow-caps {
-  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+.yeti-face {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 20px;
+  background: #f7fafc;
+  border-radius: 50%;
+  animation: faceGlow 3s ease-in-out infinite;
+}
+
+.eye {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #2d3748;
+  border-radius: 50%;
+  animation: blink 4s ease-in-out infinite;
+}
+
+.eye.left { top: 6px; left: 5px; }
+.eye.right { top: 6px; right: 5px; }
+
+.mouth {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 3px;
+  border-radius: 0 0 6px 6px;
+  background: #4a5568;
 }
 
 .snow-particles {
@@ -94,292 +85,376 @@
   pointer-events: none;
 }
 
-.snow-particle {
+.particle {
   position: absolute;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.8;
+  color: #ffffff;
+  font-size: 8px;
+  animation: snowFall 3s linear infinite;
 }
 
-.snow-1 { width: 3px; height: 3px; top: 10%; left: 20%; animation: snow-fall 3s linear infinite; }
-.snow-2 { width: 2px; height: 2px; top: 20%; left: 60%; animation: snow-fall 4s linear infinite 0.5s; }
-.snow-3 { width: 4px; height: 4px; top: 5%; left: 80%; animation: snow-fall 3.5s linear infinite 1s; }
-.snow-4 { width: 2px; height: 2px; top: 15%; left: 40%; animation: snow-fall 4.5s linear infinite 1.5s; }
-.snow-5 { width: 3px; height: 3px; top: 8%; left: 70%; animation: snow-fall 3.8s linear infinite 2s; }
+.particle:nth-child(1) { left: 20%; animation-delay: 0s; }
+.particle:nth-child(2) { left: 50%; animation-delay: 1s; }
+.particle:nth-child(3) { left: 80%; animation-delay: 2s; }
 
-/* Mountain Loading Fallback */
-.mountain-loading-fallback {
+/* Loading Animation */
+.loading-spinner {
   position: relative;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
-  border-radius: 8px;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.mountain-range {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 60%;
+.mountain-loader {
+  position: relative;
   display: flex;
   align-items: flex-end;
-  justify-content: space-around;
+  gap: 2px;
 }
 
-.peak {
-  background: linear-gradient(to top, #1e40af, #ffffff);
+.peak-1, .peak-2, .peak-3 {
+  width: 8px;
+  background: linear-gradient(to top, #4a5568, #718096);
   border-radius: 2px 2px 0 0;
-  animation: peak-grow 2s ease-in-out infinite;
+  animation: peakPulse 1.5s ease-in-out infinite;
 }
 
-.peak-1 { width: 25%; height: 80%; animation-delay: 0s; }
-.peak-2 { width: 30%; height: 100%; animation-delay: 0.3s; }
-.peak-3 { width: 20%; height: 70%; animation-delay: 0.6s; }
+.peak-1 { height: 15px; animation-delay: 0s; }
+.peak-2 { height: 25px; animation-delay: 0.2s; }
+.peak-3 { height: 20px; animation-delay: 0.4s; }
 
-.loading-aurora {
+.snow-fall {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 40%;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(16, 185, 129, 0.3) 25%, 
-    rgba(59, 130, 246, 0.3) 50%, 
-    rgba(139, 92, 246, 0.3) 75%, 
-    transparent 100%
-  );
-  animation: aurora-wave 3s ease-in-out infinite;
+  height: 100%;
+  pointer-events: none;
 }
 
-.progress-indicator {
+.snowflake {
+  position: absolute;
+  color: #ffffff;
+  font-size: 12px;
+  animation: continuousSnowFall 2s linear infinite;
+}
+
+.snowflake-1 { left: 10%; animation-delay: 0s; }
+.snowflake-2 { left: 25%; animation-delay: 0.3s; }
+.snowflake-3 { left: 45%; animation-delay: 0.6s; }
+.snowflake-4 { left: 65%; animation-delay: 0.9s; }
+.snowflake-5 { left: 80%; animation-delay: 1.2s; }
+.snowflake-6 { left: 95%; animation-delay: 1.5s; }
+
+/* Thinking Animation */
+.thinking-animation {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.yeti-head {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  background: #f7fafc;
+  border-radius: 50%;
+  animation: headBob 2s ease-in-out infinite;
+}
+
+.thought-bubble {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.bubble {
+  position: absolute;
+  font-size: 14px;
+  animation: bubbleFloat 3s ease-in-out infinite;
+}
+
+.bubble-1 { top: 0; left: -10px; animation-delay: 0s; }
+.bubble-2 { top: -15px; left: 0; animation-delay: 0.5s; }
+.bubble-3 { top: -25px; left: 10px; animation-delay: 1s; }
+
+/* Success Animation */
+.success-animation {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkmark {
+  font-size: 24px;
+  color: #48bb78;
+  animation: checkmarkPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.success-glow {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle, rgba(72, 187, 120, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: successGlow 2s ease-in-out infinite;
+}
+
+.celebration-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.celebration-particles .particle {
+  position: absolute;
+  font-size: 10px;
+  animation: celebrate 1.5s ease-out infinite;
+}
+
+.particle-1 { top: 20%; left: 20%; animation-delay: 0s; }
+.particle-2 { top: 30%; right: 20%; animation-delay: 0.1s; }
+.particle-3 { bottom: 30%; left: 30%; animation-delay: 0.2s; }
+.particle-4 { bottom: 20%; right: 30%; animation-delay: 0.3s; }
+.particle-5 { top: 50%; left: 10%; animation-delay: 0.4s; }
+.particle-6 { top: 50%; right: 10%; animation-delay: 0.5s; }
+.particle-7 { top: 10%; left: 50%; animation-delay: 0.6s; }
+.particle-8 { bottom: 10%; left: 50%; animation-delay: 0.7s; }
+
+/* Error Animation */
+.error-animation {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-icon {
+  font-size: 24px;
+  animation: errorShake 0.5s ease-in-out infinite;
+}
+
+/* Idle Animation */
+.idle-animation {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.yeti-breathing {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  animation: breathe 4s ease-in-out infinite;
+}
+
+.mountain-silhouette {
   position: absolute;
   bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 20px;
+  background: linear-gradient(to top, #2d3748, #4a5568);
+  clip-path: polygon(0% 100%, 20% 60%, 40% 80%, 60% 40%, 80% 70%, 100% 100%);
+}
+
+.aurora-lights {
+  position: absolute;
+  top: 0;
   left: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #10b981, #3b82f6);
-  transition: width 0.3s ease;
-  border-radius: 0 2px 2px 0;
-}
-
-/* Skill Animation Fallback */
-.skill-animation-fallback {
-  position: relative;
   width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(59, 130, 246, 0.1);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.skill-icon-placeholder {
-  position: relative;
-  width: 60%;
   height: 60%;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.skill-glow {
+.aurora {
   position: absolute;
-  top: -20%;
-  left: -20%;
-  width: 140%;
-  height: 140%;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
-  border-radius: 50%;
-  animation: skill-glow-pulse 2s ease-in-out infinite;
+  height: 2px;
+  border-radius: 1px;
+  animation: auroraFlow 6s ease-in-out infinite;
 }
 
-.skill-pulse {
-  width: 80%;
-  height: 80%;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  animation: skill-inner-pulse 1.5s ease-in-out infinite;
+.aurora-1 {
+  top: 20%;
+  left: 10%;
+  width: 30%;
+  background: linear-gradient(90deg, transparent, #48bb78, transparent);
+  animation-delay: 0s;
 }
 
-/* Generic Animation Fallback */
-.generic-animation-fallback {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-  border-radius: 8px;
-  border: 2px dashed #9ca3af;
+.aurora-2 {
+  top: 30%;
+  left: 40%;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, #4299e1, transparent);
+  animation-delay: 2s;
 }
 
-.placeholder-icon {
-  width: 50%;
-  height: 50%;
-  background: #d1d5db;
-  border-radius: 4px;
-  position: relative;
-  animation: placeholder-fade 2s ease-in-out infinite;
-}
-
-.placeholder-glow {
-  position: absolute;
-  top: -10%;
-  left: -10%;
-  width: 120%;
-  height: 120%;
-  background: radial-gradient(circle, rgba(156, 163, 175, 0.3) 0%, transparent 70%);
-  border-radius: 4px;
-  animation: placeholder-glow-pulse 3s ease-in-out infinite;
+.aurora-3 {
+  top: 40%;
+  left: 20%;
+  width: 35%;
+  background: linear-gradient(90deg, transparent, #9f7aea, transparent);
+  animation-delay: 4s;
 }
 
 /* Keyframe Animations */
-@keyframes yeti-logo-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
 }
 
-@keyframes mountain-sway {
-  0%, 100% { transform: translateX(-50%) rotate(0deg); }
-  50% { transform: translateX(-50%) rotate(1deg); }
+@keyframes peakGlow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.2) drop-shadow(0 0 5px rgba(255, 255, 255, 0.5)); }
 }
 
-@keyframes snow-fall {
-  0% { transform: translateY(-10px); opacity: 0; }
+@keyframes snowSparkle {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.8)); }
+}
+
+@keyframes faceGlow {
+  0%, 100% { box-shadow: 0 0 5px rgba(247, 250, 252, 0.5); }
+  50% { box-shadow: 0 0 10px rgba(247, 250, 252, 0.8); }
+}
+
+@keyframes blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+
+@keyframes snowFall {
+  0% { transform: translateY(-10px) rotate(0deg); opacity: 0; }
   10% { opacity: 1; }
   90% { opacity: 1; }
-  100% { transform: translateY(100px); opacity: 0; }
+  100% { transform: translateY(50px) rotate(360deg); opacity: 0; }
 }
 
-@keyframes peak-grow {
-  0%, 100% { transform: scaleY(1); }
-  50% { transform: scaleY(1.1); }
+@keyframes peakPulse {
+  0%, 100% { transform: scaleY(1); opacity: 0.7; }
+  50% { transform: scaleY(1.2); opacity: 1; }
 }
 
-@keyframes aurora-wave {
-  0%, 100% { transform: translateX(-100%); }
-  50% { transform: translateX(100%); }
+@keyframes continuousSnowFall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(80px) rotate(360deg); opacity: 0; }
 }
 
-@keyframes skill-glow-pulse {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(1.1); }
+@keyframes headBob {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-2px); }
 }
 
-@keyframes skill-inner-pulse {
-  0%, 100% { transform: scale(1); opacity: 0.2; }
-  50% { transform: scale(1.2); opacity: 0.4; }
+@keyframes bubbleFloat {
+  0% { transform: translateY(0px) scale(0); opacity: 0; }
+  20% { transform: translateY(-5px) scale(1); opacity: 1; }
+  80% { transform: translateY(-15px) scale(1); opacity: 1; }
+  100% { transform: translateY(-20px) scale(0); opacity: 0; }
 }
 
-@keyframes placeholder-fade {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 0.8; }
+@keyframes checkmarkPop {
+  0% { transform: scale(0) rotate(-45deg); }
+  50% { transform: scale(1.2) rotate(-45deg); }
+  100% { transform: scale(1) rotate(0deg); }
 }
 
-@keyframes placeholder-glow-pulse {
-  0%, 100% { opacity: 0.2; }
-  50% { opacity: 0.4; }
+@keyframes successGlow {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.1); opacity: 0.6; }
 }
 
-/* Loading Spinner for Rive Files */
-.rive-loading {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10;
+@keyframes celebrate {
+  0% { transform: translateY(0px) scale(0) rotate(0deg); opacity: 0; }
+  20% { transform: translateY(-10px) scale(1) rotate(180deg); opacity: 1; }
+  80% { transform: translateY(-20px) scale(1) rotate(360deg); opacity: 1; }
+  100% { transform: translateY(-30px) scale(0) rotate(540deg); opacity: 0; }
 }
 
-.loading-spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #e5e7eb;
-  border-top: 2px solid #3b82f6;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0px); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+@keyframes auroraFlow {
+  0%, 100% { opacity: 0; transform: translateX(-10px); }
+  50% { opacity: 0.7; transform: translateX(10px); }
 }
 
 /* Responsive Design */
 @media (max-width: 640px) {
-  .yeti-text { font-size: 0.6em; }
-  .snow-particle { transform: scale(0.8); }
-  .skill-icon-placeholder { width: 70%; height: 70%; }
+  .yeti-logo-animation { animation-duration: 4s; }
+  .mountain-peak { border-left-width: 12px; border-right-width: 12px; border-bottom-width: 16px; }
+  .snow-cap { border-left-width: 8px; border-right-width: 8px; border-bottom-width: 6px; }
+  .yeti-face { width: 16px; height: 16px; }
+  .eye { width: 2px; height: 2px; }
+  .particle { font-size: 6px; }
+  .snowflake { font-size: 10px; }
+  .checkmark { font-size: 20px; }
+  .error-icon { font-size: 20px; }
 }
 
 /* Dark Mode Support */
-.dark .generic-animation-fallback {
-  background: linear-gradient(135deg, #374151, #4b5563);
-  border-color: #6b7280;
+.dark .mountain-peak { border-bottom-color: #718096; }
+.dark .yeti-face { background: #e2e8f0; }
+.dark .eye { background: #1a202c; }
+.dark .mouth { background: #2d3748; }
+.dark .mountain-loader .peak-1,
+.dark .mountain-loader .peak-2,
+.dark .mountain-loader .peak-3 {
+  background: linear-gradient(to top, #718096, #a0aec0);
+}
+.dark .mountain-silhouette {
+  background: linear-gradient(to top, #4a5568, #718096);
 }
 
-.dark .placeholder-icon {
-  background: #6b7280;
+/* Performance Optimizations */
+.yeti-logo-container,
+.yeti-animation-container {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
 }
 
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
-  .yeti-logo-fallback,
-  .mountain-silhouette,
-  .snow-particle,
-  .peak,
-  .loading-aurora,
-  .skill-glow,
-  .skill-pulse,
-  .placeholder-icon,
-  .placeholder-glow,
-  .loading-spinner {
-    animation: none !important;
+  .yeti-logo-animation,
+  .loading-spinner,
+  .thinking-animation,
+  .success-animation,
+  .error-animation,
+  .idle-animation {
+    animation: none;
   }
-}
-
-/* Error Handling */
-.rive-scroll-container.error {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px dashed rgba(239, 68, 68, 0.3);
-}
-
-.rive-scroll-container.error::after {
-  content: "Animation Loading...";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 12px;
-  color: rgba(107, 114, 128, 0.7);
-}
-
-/* Loading States */
-.rive-scroll-container.loading {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-/* Intersection Observer Optimizations */
-.rive-scroll-container:not(.visible) {
-  opacity: 0.5;
-  transform: scale(0.95);
-}
-
-.rive-scroll-container.visible {
-  opacity: 1;
-  transform: scale(1);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  
+  .particle,
+  .snowflake,
+  .bubble,
+  .celebration-particles .particle {
+    animation: none;
+    opacity: 0.5;
+  }
 }
