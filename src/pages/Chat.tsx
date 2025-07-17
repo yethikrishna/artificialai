@@ -32,6 +32,7 @@ import {
 } from "@ant-design/icons";
 import { RiveAnimation } from "@/components/RiveAnimation";
 import FloatingSidebar from '@/components/FloatingSidebar';
+import AIRouter, { AIModelType, AI_MODEL_TYPES, MODEL_CAPABILITIES } from '@/lib/ai-router';
 
 const { Text, Title } = Typography;
 const { TextArea } = Input;
@@ -68,7 +69,13 @@ export default function Chat() {
   const [showSkillSelector, setShowSkillSelector] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
   const [isTyping, setIsTyping] = useState(false);
-  
+  const [currentModel, setCurrentModel] = useState<AIModelType | null>(null);
+  const [routingInfo, setRoutingInfo] = useState<{
+    confidence: number;
+    reasoning: string;
+    fallbacks: AIModelType[];
+  } | null>(null);
+
   const inputRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -135,6 +142,23 @@ export default function Chat() {
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
+    // Smart routing logic
+    const routingResult = AIRouter.routeMessage(
+      inputValue,
+      selectedSkill?.id,
+      {
+        requiresFastResponse: false,
+        complexityLevel: inputValue.length > 100 ? 'high' : inputValue.length > 50 ? 'medium' : 'low'
+      }
+    );
+
+    setCurrentModel(routingResult.selectedModel);
+    setRoutingInfo({
+      confidence: routingResult.confidence,
+      reasoning: routingResult.reasoning,
+      fallbacks: routingResult.fallbackModels
+    });
+
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
@@ -148,12 +172,13 @@ export default function Chat() {
     setSelectedSkill(null);
     setIsTyping(true);
 
-    // Simulate AI response
+    // Simulate AI response with model info
     setTimeout(() => {
+      const modelInfo = MODEL_CAPABILITIES[routingResult.selectedModel];
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: `I understand you want help with ${selectedSkill?.name || 'general assistance'}. I'm processing your request using the most suitable AI model from my collection of LLMs, VLMs, SLMs, and specialized models. Here's my response...`,
+        content: `🧠 **${modelInfo.name}** selected for this task!\n\n**Confidence:** ${Math.round(routingResult.confidence * 100)}%\n**Reasoning:** ${routingResult.reasoning}\n\n**Model Strengths:** ${modelInfo.strengths.join(', ')}\n**Speed:** ${modelInfo.speed} | **Cost:** ${modelInfo.cost}\n\n*This is a demo response. In the next phase, I'll connect to real ${modelInfo.providers.join('/')} APIs to process your request: "${inputValue}"*`,
         timestamp: new Date()
       };
       
@@ -292,8 +317,28 @@ export default function Chat() {
                 Hello, I am Yeti by Yethikrishna R
               </Title>
               <Text className="text-gray-600 text-base sm:text-lg px-4">
-                I can help you with 16 different AI capabilities. Type @ or / to see all available skills!
+                I have 8 AI model types with smart routing. Type @ or / to see all 16 skills!
               </Text>
+              
+              {/* Current Model Display */}
+              {currentModel && routingInfo && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 px-4"
+                >
+                  <Card className="bg-blue-50/80 border-blue-200 max-w-md mx-auto">
+                    <div className="text-center">
+                      <Text className="text-blue-700 font-medium text-sm">
+                        🧠 Current Model: {MODEL_CAPABILITIES[currentModel].name}
+                      </Text>
+                      <div className="text-xs text-blue-600 mt-1">
+                        Confidence: {Math.round(routingInfo.confidence * 100)}%
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+              )}
             </motion.div>
 
             <AnimatePresence>
@@ -452,19 +497,19 @@ export default function Chat() {
                   value={inputValue}
                   onChange={handleInputChange}
                   onKeyPress={handleKeyPress}
-                  placeholder="Type your message... Use @ or / to select skills"
+                  placeholder="Type your message... Smart routing will select the best AI model"
                   className="bg-white/80 border-gray-300 text-gray-700 placeholder-gray-500 resize-none focus:border-blue-400 focus:ring-blue-400 text-sm sm:text-base"
                   autoSize={{ minRows: 1, maxRows: window.innerWidth < 640 ? 3 : 4 }}
                 />
                 <div className="flex justify-between items-center mt-1 sm:mt-2">
                   <Text className="text-gray-500 text-xs hidden sm:block">
-                    Press @ or / for skills • Enter to send • Shift+Enter for new line
+                    Smart routing • @ or / for skills • Enter to send
                   </Text>
                   <Text className="text-gray-500 text-xs sm:hidden">
-                    @ or / for skills • Enter to send
+                    Smart routing • @ or / for skills
                   </Text>
                   <Space>
-                    <Text className="text-gray-500 text-xs">16 AI models ready</Text>
+                    <Text className="text-gray-500 text-xs">8 AI models ready</Text>
                   </Space>
                 </div>
               </div>
