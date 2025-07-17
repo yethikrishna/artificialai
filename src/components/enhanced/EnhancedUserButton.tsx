@@ -65,7 +65,7 @@ export function EnhancedUserButton({
         animate={{ opacity: 1, scale: 1 }}
         className={`inline-flex items-center justify-center relative rounded-full ${className}`}
       >
-        <LoadingAnimation size={sizeInPixels} />
+        <LoadingAnimation isLoading={true} size={sizeInPixels} />
       </motion.div>
     );
   }

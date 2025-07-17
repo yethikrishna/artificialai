@@ -1,62 +1,66 @@
-import { useRive, useStateMachineInput } from '@rive-app/react-canvas';
-import { useEffect } from 'react';
+import { YetiAnimation, YetiSkill } from './YetiAnimations';
+import { MountainTheme } from './MountainTheme';
 
 interface SkillAnimationProps {
-  className?: string;
-  skillType?: string;
+  skillType: string;
   isActive?: boolean;
   isHovered?: boolean;
+  size?: number;
+  variant?: 'default' | 'yeti' | 'mountain';
+  className?: string;
 }
 
 export function SkillAnimation({ 
-  className = "", 
-  skillType = 'general',
-  isActive = false,
-  isHovered = false
+  skillType, 
+  isActive = false, 
+  isHovered = false,
+  size = 32,
+  variant = 'yeti',
+  className = "" 
 }: SkillAnimationProps) {
-  const { rive, RiveComponent } = useRive({
-    src: '/animations/skill.riv', // We'll create this
-    stateMachines: 'SkillState',
-    autoplay: true,
-    onLoad: () => {
-      console.log('Skill animation loaded');
-    },
-  });
+  
+  const getSkillState = () => {
+    if (isActive) return 'active';
+    if (isHovered) return 'hover';
+    return 'idle';
+  };
 
-  const activeInput = useStateMachineInput(rive, 'SkillState', 'isActive');
-  const hoverInput = useStateMachineInput(rive, 'SkillState', 'isHovered');
-  const skillInput = useStateMachineInput(rive, 'SkillState', 'skillType');
-
-  useEffect(() => {
-    if (activeInput) {
-      activeInput.value = isActive;
+  const renderVariant = () => {
+    switch (variant) {
+      case 'mountain':
+        return (
+          <div style={{ width: size, height: size }}>
+            <MountainTheme 
+              variant="accent" 
+              animated={isActive || isHovered}
+              className={className} 
+            />
+          </div>
+        );
+      case 'yeti':
+        return (
+          <YetiSkill 
+            skill={skillType}
+            size={size}
+            isActive={isActive}
+            className={className}
+          />
+        );
+      default:
+        return (
+          <YetiAnimation 
+            type="skill"
+            state={skillType}
+            size={size}
+            className={`${className} ${getSkillState()}`}
+          />
+        );
     }
-  }, [activeInput, isActive]);
-
-  useEffect(() => {
-    if (hoverInput) {
-      hoverInput.value = isHovered;
-    }
-  }, [hoverInput, isHovered]);
-
-  useEffect(() => {
-    if (skillInput) {
-      // Map skill types to animation states
-      const skillMap: Record<string, number> = {
-        'writing': 0,
-        'code': 1,
-        'image': 2,
-        'translate': 3,
-        'research': 4,
-        'general': 5
-      };
-      skillInput.value = skillMap[skillType] || 5;
-    }
-  }, [skillInput, skillType]);
+  };
 
   return (
-    <div className={`skill-animation ${className}`}>
-      <RiveComponent />
+    <div className="skill-animation-container">
+      {renderVariant()}
     </div>
   );
 }

@@ -1,40 +1,39 @@
-import { useRive, useStateMachineInput } from '@rive-app/react-canvas';
-import { useEffect } from 'react';
+import { YetiAnimation, YetiLoader } from './YetiAnimations';
+import { MountainTheme } from './MountainTheme';
 
 interface LoadingAnimationProps {
-  className?: string;
+  isLoading: boolean;
   size?: number;
-  isLoading?: boolean;
+  variant?: 'default' | 'mountain' | 'yeti';
+  className?: string;
 }
 
 export function LoadingAnimation({ 
-  className = "", 
-  size = 60,
-  isLoading = true 
+  isLoading, 
+  size = 40, 
+  variant = 'yeti',
+  className = "" 
 }: LoadingAnimationProps) {
-  const { rive, RiveComponent } = useRive({
-    src: '/animations/loading.riv', // We'll create this
-    stateMachines: 'LoadingState',
-    autoplay: isLoading,
-    onLoad: () => {
-      console.log('Loading animation loaded');
-    },
-  });
+  if (!isLoading) return null;
 
-  const loadingInput = useStateMachineInput(rive, 'LoadingState', 'isLoading');
-
-  useEffect(() => {
-    if (loadingInput) {
-      loadingInput.value = isLoading;
+  const renderVariant = () => {
+    switch (variant) {
+      case 'mountain':
+        return (
+          <div style={{ width: size, height: size }}>
+            <MountainTheme variant="loading" className={className} />
+          </div>
+        );
+      case 'yeti':
+        return <YetiLoader size={size} className={className} />;
+      default:
+        return <YetiAnimation type="loading" size={size} className={className} />;
     }
-  }, [loadingInput, isLoading]);
+  };
 
   return (
-    <div 
-      className={`loading-animation ${className}`}
-      style={{ width: size, height: size }}
-    >
-      <RiveComponent />
+    <div className="loading-animation-container">
+      {renderVariant()}
     </div>
   );
 }

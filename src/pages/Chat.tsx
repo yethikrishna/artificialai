@@ -40,6 +40,8 @@ import { TypingAnimation } from "@/components/animations/TypingAnimation";
 import { SkillAnimation } from "@/components/animations/SkillAnimation";
 import { EnhancedUserButton } from "@/components/enhanced/EnhancedUserButton";
 import { usePersonalization } from "@/components/enhanced/PersonalizationProvider";
+import { YetiLogo, YetiAnimation } from "@/components/animations/YetiAnimations";
+import { MountainTheme, mountainThemeStyles } from "@/components/animations/MountainTheme";
 
 const { Text, Title } = Typography;
 const { TextArea } = Input;
@@ -293,11 +295,7 @@ export default function Chat() {
                 }}
                 whileHover={{ scale: 1.1, rotate: 5 }}
               >
-                <img 
-                  src="/assets/1000158361.jpg" 
-                  alt="YETI AI Logo" 
-                  className="w-full h-full object-cover"
-                />
+                <YetiLogo size={window.innerWidth < 640 ? 32 : 40} animated={true} />
               </motion.div>
               <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent tracking-wider">
                 YETI
@@ -355,23 +353,30 @@ export default function Chat() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-center py-4 sm:py-8"
+              className="text-center py-4 sm:py-8 relative"
             >
+              {/* Mountain background */}
+              <div className="absolute inset-0 opacity-10 pointer-events-none">
+                <MountainTheme variant="background" animated={true} />
+              </div>
+              
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                className="inline-block mb-3 sm:mb-4"
+                className="inline-block mb-3 sm:mb-4 relative z-10"
               >
-                <Avatar 
-                  src="/assets/1000158361.jpg" 
-                  className="border-4 border-blue-200 shadow-xl"
+                <YetiAnimation 
+                  type="logo"
+                  state="pulse"
                   size={window.innerWidth < 640 ? 64 : 80}
+                  className="border-4 border-blue-200 shadow-xl rounded-full"
                 />
               </motion.div>
-              <Title level={window.innerWidth < 640 ? 4 : 3} className="text-gray-700 mb-2 px-4">
+              
+              <Title level={window.innerWidth < 640 ? 4 : 3} className="text-gray-700 mb-2 px-4 relative z-10">
                 Hello, I am Yeti by Yethikrishna R
               </Title>
-              <Text className="text-gray-600 text-base sm:text-lg px-4">
+              <Text className="text-gray-600 text-base sm:text-lg px-4 relative z-10">
                 I have 8 AI model types with smart routing. Type @ or / to see all 16 skills!
               </Text>
               
@@ -576,6 +581,11 @@ export default function Chat() {
             }
           }
         `
+      }} />
+
+      {/* Mountain Theme Styles */}
+      <style dangerouslySetInnerHTML={{
+        __html: mountainThemeStyles
       }} />
     </div>
   );

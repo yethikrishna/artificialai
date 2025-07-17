@@ -1,45 +1,81 @@
-import { useRive, useStateMachineInput } from '@rive-app/react-canvas';
-import { useEffect } from 'react';
+import { YetiAnimation, YetiThinking } from './YetiAnimations';
 
 interface TypingAnimationProps {
-  className?: string;
-  isTyping?: boolean;
+  isTyping: boolean;
   speed?: 'slow' | 'medium' | 'fast';
+  size?: number;
+  variant?: 'default' | 'yeti' | 'mountain';
+  className?: string;
 }
 
 export function TypingAnimation({ 
-  className = "", 
-  isTyping = false,
-  speed = 'medium'
+  isTyping, 
+  speed = 'medium', 
+  size = 24,
+  variant = 'yeti',
+  className = "" 
 }: TypingAnimationProps) {
-  const { rive, RiveComponent } = useRive({
-    src: '/animations/typing.riv', // We'll create this
-    stateMachines: 'TypingState',
-    autoplay: isTyping,
-    onLoad: () => {
-      console.log('Typing animation loaded');
-    },
-  });
+  if (!isTyping) return null;
 
-  const typingInput = useStateMachineInput(rive, 'TypingState', 'isTyping');
-  const speedInput = useStateMachineInput(rive, 'TypingState', 'speed');
-
-  useEffect(() => {
-    if (typingInput) {
-      typingInput.value = isTyping;
+  const getAnimationDuration = () => {
+    switch (speed) {
+      case 'slow': return '2s';
+      case 'fast': return '0.8s';
+      default: return '1.2s';
     }
-  }, [typingInput, isTyping]);
+  };
 
-  useEffect(() => {
-    if (speedInput) {
-      const speedValue = speed === 'slow' ? 0.5 : speed === 'fast' ? 2 : 1;
-      speedInput.value = speedValue;
-    }
-  }, [speedInput, speed]);
+  if (variant === 'yeti') {
+    return <YetiThinking size={size} isThinking={isTyping} className={className} />;
+  }
 
+  // Fallback typing dots animation
   return (
-    <div className={`typing-animation ${className}`}>
-      <RiveComponent />
+    <div className={`typing-animation ${className}`} style={{ fontSize: size / 2 }}>
+      <span 
+        className="typing-dot" 
+        style={{ animationDuration: getAnimationDuration() }}
+      >
+        •
+      </span>
+      <span 
+        className="typing-dot" 
+        style={{ 
+          animationDuration: getAnimationDuration(),
+          animationDelay: '0.2s'
+        }}
+      >
+        •
+      </span>
+      <span 
+        className="typing-dot" 
+        style={{ 
+          animationDuration: getAnimationDuration(),
+          animationDelay: '0.4s'
+        }}
+      >
+        •
+      </span>
+      
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          .typing-animation {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+          }
+          
+          .typing-dot {
+            opacity: 0.4;
+            animation: typingPulse ${getAnimationDuration()} ease-in-out infinite;
+          }
+          
+          @keyframes typingPulse {
+            0%, 60%, 100% { opacity: 0.4; }
+            30% { opacity: 1; }
+          }
+        `
+      }} />
     </div>
   );
 }
