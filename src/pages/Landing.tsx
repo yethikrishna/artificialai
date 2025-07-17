@@ -1,442 +1,492 @@
 import { motion } from "framer-motion";
-import { Button, Card, Typography, Space, Row, Col, Divider, Badge, Avatar } from "antd";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { AuthButton } from "@/components/auth/AuthButton";
 import { 
-  RocketOutlined, 
-  ThunderboltOutlined, 
-  StarOutlined,
-  BulbOutlined,
-  EyeOutlined,
-  ApiOutlined,
-  CloudOutlined,
-  SettingOutlined,
-  BookOutlined,
-  ToolOutlined,
-  ScanOutlined
-} from "@ant-design/icons";
-
-const { Title, Paragraph, Text } = Typography;
+  Brain, 
+  Zap, 
+  Globe, 
+  Code, 
+  Image, 
+  MessageSquare, 
+  Search,
+  Sparkles,
+  ArrowRight,
+  CheckCircle,
+  Star,
+  Users,
+  Rocket,
+  Shield,
+  Cpu,
+  Target
+} from "lucide-react";
+import { Link } from "react-router";
 
 export default function Landing() {
-  const modelTypes = [
+  const features = [
     {
-      icon: <BulbOutlined className="text-4xl text-blue-500" />,
-      title: "LLMs",
-      subtitle: "Large Language Models",
-      description: "Advanced text generation and understanding with GPT-class capabilities",
-      color: "blue"
+      icon: <Brain className="w-6 h-6" />,
+      title: "Smart AI Routing",
+      description: "8 AI model types with intelligent routing for optimal responses",
+      color: "from-blue-500 to-indigo-600"
     },
     {
-      icon: <CloudOutlined className="text-4xl text-purple-500" />,
-      title: "LCMs", 
-      subtitle: "Large Concept Models",
-      description: "Sentence-level semantic understanding across languages and modalities",
-      color: "purple"
+      icon: <Zap className="w-6 h-6" />,
+      title: "16 AI Skills",
+      description: "Writing, coding, image generation, translation, and more",
+      color: "from-purple-500 to-pink-600"
     },
     {
-      icon: <EyeOutlined className="text-4xl text-green-500" />,
-      title: "VLMs",
-      subtitle: "Vision-Language Models", 
-      description: "Multimodal AI that understands both images and text seamlessly",
-      color: "green"
+      icon: <Globe className="w-6 h-6" />,
+      title: "Multi-Language",
+      description: "Translate between 100+ languages instantly",
+      color: "from-green-500 to-emerald-600"
     },
     {
-      icon: <ThunderboltOutlined className="text-4xl text-orange-500" />,
-      title: "SLMs",
-      subtitle: "Small Language Models",
-      description: "Efficient edge computing with fast inference and low latency",
-      color: "orange"
+      icon: <Code className="w-6 h-6" />,
+      title: "Code Assistant",
+      description: "Debug, optimize, and generate code in any language",
+      color: "from-orange-500 to-red-600"
     },
     {
-      icon: <ApiOutlined className="text-4xl text-red-500" />,
-      title: "MoE",
-      subtitle: "Mixture of Experts",
-      description: "Intelligent routing to specialized models for optimal performance",
-      color: "red"
+      icon: <Image className="w-6 h-6" />,
+      title: "Visual AI",
+      description: "Create and analyze images with advanced vision models",
+      color: "from-cyan-500 to-blue-600"
     },
     {
-      icon: <BookOutlined className="text-4xl text-cyan-500" />,
-      title: "MLMs",
-      subtitle: "Masked Language Models",
-      description: "Bidirectional context understanding for deep text analysis",
-      color: "cyan"
+      icon: <MessageSquare className="w-6 h-6" />,
+      title: "Real-time Chat",
+      description: "Instant responses with contextual understanding",
+      color: "from-violet-500 to-purple-600"
+    }
+  ];
+
+  const stats = [
+    { number: "8", label: "AI Models", icon: <Cpu className="w-4 h-4" /> },
+    { number: "16", label: "Skills", icon: <Target className="w-4 h-4" /> },
+    { number: "100+", label: "Languages", icon: <Globe className="w-4 h-4" /> },
+    { number: "24/7", label: "Available", icon: <Shield className="w-4 h-4" /> }
+  ];
+
+  const testimonials = [
+    {
+      name: "Sarah Chen",
+      role: "Software Developer",
+      content: "YETI AI has revolutionized my coding workflow. The smart routing always picks the perfect model for my needs.",
+      avatar: "SC"
     },
     {
-      icon: <ToolOutlined className="text-4xl text-pink-500" />,
-      title: "LAMs",
-      subtitle: "Large Action Models",
-      description: "AI that takes action - from automation to task execution",
-      color: "pink"
+      name: "Marcus Rodriguez",
+      role: "Content Creator",
+      content: "From writing to image generation, YETI handles everything. It's like having a creative team in my pocket.",
+      avatar: "MR"
     },
     {
-      icon: <ScanOutlined className="text-4xl text-indigo-500" />,
-      title: "SAMs",
-      subtitle: "Segment Anything Models",
-      description: "Precise computer vision segmentation for any object or region",
-      color: "indigo"
+      name: "Dr. Emily Watson",
+      role: "Researcher",
+      content: "The research capabilities are incredible. YETI helps me analyze data and generate insights faster than ever.",
+      avatar: "EW"
     }
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
-      className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100"
-    >
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <motion.div
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <div className="flex items-center justify-center mb-6">
-              <div>
-                <div className="text-8xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                  YETI
-                </div>
-                <div className="text-6xl font-light text-gray-600 text-center">AI</div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      {/* Navigation */}
+      <motion.nav 
+        className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 lg:h-20">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-2 sm:space-x-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm">
+                YETI
               </div>
+              <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                YETI AI
+              </div>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#features" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">
+                Features
+              </a>
+              <a href="#how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">
+                How it Works
+              </a>
+              <a href="#testimonials" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">
+                Testimonials
+              </a>
             </div>
-            
-            <Title level={2} className="text-3xl font-medium mb-6 text-gray-700 max-w-4xl mx-auto">
-              The Ultimate AI Platform - 8 Model Types, Infinite Possibilities
-            </Title>
-            
-            <Paragraph className="text-xl text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed">
-              Experience the future of AI with our intelligent routing system that seamlessly connects you to 
-              <Text strong> LLMs, LCMs, VLMs, SLMs, MoE, MLMs, LAMs, and SAMs</Text> - all through one beautiful interface.
-              Fast inference meets powerful capabilities.
-            </Paragraph>
 
-            <div className="flex items-center justify-center mb-8">
-              <Badge count="FREE" color="green" className="mr-4">
-                <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-green-200">
-                  <Text className="text-green-700 font-medium">🚀 Serverless APIs Only</Text>
-                </div>
-              </Badge>
-              <Badge count="FAST" color="blue">
-                <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-blue-200">
-                  <Text className="text-blue-700 font-medium">⚡ Smart Routing</Text>
-                </div>
-              </Badge>
+            {/* CTA Button */}
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              <AuthButton 
+                trigger={
+                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 py-2 text-sm sm:text-base">
+                    Get Started
+                  </Button>
+                }
+                dashboardTrigger={
+                  <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-4 sm:px-6 py-2 text-sm sm:text-base">
+                    <Link to="/chat">Open YETI</Link>
+                  </Button>
+                }
+              />
             </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="mb-12"
-          >
-            <Space size="large">
-              <Button 
-                type="primary" 
-                size="large" 
-                icon={<RocketOutlined />}
-                className="h-14 px-8 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300"
-                onClick={() => window.location.href = '/chat'}
-              >
-                Try YETI AI Now
-              </Button>
-              <Button 
-                size="large" 
-                icon={<StarOutlined />}
-                className="h-14 px-8 text-lg font-medium border-2 hover:border-primary transition-all duration-300"
-              >
-                Explore Models
-              </Button>
-            </Space>
-          </motion.div>
-
-          {/* AI Model Types Grid */}
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 1, delay: 0.6 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto"
-          >
-            {modelTypes.map((model, index) => (
-              <motion.div
-                key={model.title}
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
-              >
-                <Card
-                  className="h-full text-center hover:shadow-xl transition-all duration-300 cursor-pointer border-0 bg-white/60 backdrop-blur-sm hover:bg-white/80"
-                  bodyStyle={{ padding: '1.5rem 1rem' }}
-                >
-                  <div className="mb-3">{model.icon}</div>
-                  <Title level={5} className="mb-1 font-bold">{model.title}</Title>
-                  <Text className="text-xs text-gray-500 block mb-2">{model.subtitle}</Text>
-                  <Paragraph className="text-xs text-gray-600 mb-0 leading-tight">
-                    {model.description}
-                  </Paragraph>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
+          </div>
         </div>
-      </section>
+      </motion.nav>
 
-      {/* How It Works Section */}
-      <section className="py-20 px-4 bg-white/50">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ y: 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <Title level={2} className="text-4xl font-bold mb-4">
-              How YETI AI Works
-            </Title>
-            <Paragraph className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Our intelligent routing system analyzes your request and instantly connects you 
-              to the most suitable AI model - no complexity, just results.
-            </Paragraph>
-          </motion.div>
+      {/* Hero Section */}
+      <section className="relative py-12 sm:py-20 lg:py-32 overflow-hidden">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <Badge className="mb-4 sm:mb-6 bg-blue-100 text-blue-700 border-blue-200 px-3 sm:px-4 py-1 text-xs sm:text-sm">
+                <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                Powered by 8 AI Model Types
+              </Badge>
+              
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
+                Meet{" "}
+                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                  YETI AI
+                </span>
+                <br className="hidden sm:block" />
+                Your Intelligent Assistant
+              </h1>
+              
+              <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 mb-6 sm:mb-8 leading-relaxed px-4 sm:px-0">
+                Experience the future of AI with smart routing across 8 model types, 
+                16 specialized skills, and lightning-fast responses tailored to your needs.
+              </p>
 
-          <Row gutter={[32, 32]}>
-            <Col xs={24} md={8}>
-              <motion.div
-                initial={{ x: -50, opacity: 0 }}
-                whileInView={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.1 }}
-                viewport={{ once: true }}
-              >
-                <Card 
-                  className="h-full text-center hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-blue-50 to-indigo-50"
-                  bodyStyle={{ padding: '2.5rem' }}
-                >
-                  <div className="text-6xl mb-4">🎯</div>
-                  <Title level={3} className="mb-4 text-blue-700">Smart Analysis</Title>
-                  <Paragraph className="text-gray-600 text-base">
-                    Fast inference models analyze your prompt in milliseconds to understand 
-                    intent, complexity, and optimal routing path.
-                  </Paragraph>
-                </Card>
-              </motion.div>
-            </Col>
+              {/* Stats */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
+                {stats.map((stat, index) => (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="text-center"
+                  >
+                    <div className="flex items-center justify-center mb-2">
+                      <div className="p-2 bg-blue-100 rounded-full text-blue-600 mr-2">
+                        {stat.icon}
+                      </div>
+                    </div>
+                    <div className="text-2xl sm:text-3xl font-bold text-gray-900">{stat.number}</div>
+                    <div className="text-sm sm:text-base text-gray-600">{stat.label}</div>
+                  </motion.div>
+                ))}
+              </div>
 
-            <Col xs={24} md={8}>
-              <motion.div
-                initial={{ y: 50, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                viewport={{ once: true }}
-              >
-                <Card 
-                  className="h-full text-center hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-purple-50 to-pink-50"
-                  bodyStyle={{ padding: '2.5rem' }}
-                >
-                  <div className="text-6xl mb-4">🔀</div>
-                  <Title level={3} className="mb-4 text-purple-700">Intelligent Routing</Title>
-                  <Paragraph className="text-gray-600 text-base">
-                    Automatically routes to the perfect model type - whether you need vision, 
-                    language, actions, or specialized processing.
-                  </Paragraph>
-                </Card>
-              </motion.div>
-            </Col>
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4">
+                <AuthButton 
+                  trigger={
+                    <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-base sm:text-lg">
+                      Start Chatting Now
+                      <ArrowRight className="ml-2 w-5 h-5" />
+                    </Button>
+                  }
+                  dashboardTrigger={
+                    <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-8 py-3 text-base sm:text-lg">
+                      <Link to="/chat" className="flex items-center">
+                        Open YETI AI
+                        <ArrowRight className="ml-2 w-5 h-5" />
+                      </Link>
+                    </Button>
+                  }
+                />
+                <Button variant="outline" size="lg" className="w-full sm:w-auto border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 text-base sm:text-lg">
+                  Watch Demo
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        </div>
 
-            <Col xs={24} md={8}>
-              <motion.div
-                initial={{ x: 50, opacity: 0 }}
-                whileInView={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                viewport={{ once: true }}
-              >
-                <Card 
-                  className="h-full text-center hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-green-50 to-emerald-50"
-                  bodyStyle={{ padding: '2.5rem' }}
-                >
-                  <div className="text-6xl mb-4">⚡</div>
-                  <Title level={3} className="mb-4 text-green-700">Instant Results</Title>
-                  <Paragraph className="text-gray-600 text-base">
-                    Get powerful AI responses without the complexity. One interface, 
-                    eight model types, infinite possibilities.
-                  </Paragraph>
-                </Card>
-              </motion.div>
-            </Col>
-          </Row>
+        {/* Background Elements */}
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute top-1/4 left-1/4 w-32 sm:w-64 h-32 sm:h-64 bg-blue-200 rounded-full opacity-20 animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-24 sm:w-48 h-24 sm:h-48 bg-purple-200 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '1s' }}></div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
+      <section id="features" className="py-12 sm:py-20 lg:py-32 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ y: 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-12 sm:mb-16"
           >
-            <Title level={2} className="text-4xl font-bold mb-4">
-              Why Choose YETI AI?
-            </Title>
-            <Paragraph className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Built for developers, researchers, and innovators who demand the best AI capabilities 
-              without the infrastructure complexity.
-            </Paragraph>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
+              Powerful AI Features
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4 sm:px-0">
+              YETI AI combines multiple AI models to give you the best possible experience for every task
+            </p>
           </motion.div>
 
-          <Row gutter={[24, 24]}>
-            {[
-              {
-                icon: "🆓",
-                title: "Completely Free",
-                description: "Built entirely on free serverless APIs. No hidden costs, no subscriptions."
-              },
-              {
-                icon: "🚀",
-                title: "Lightning Fast",
-                description: "Optimized routing ensures you get results in milliseconds, not minutes."
-              },
-              {
-                icon: "🧠",
-                title: "8 Model Types",
-                description: "Access to LLMs, VLMs, SLMs, MoE, LCMs, MLMs, LAMs, and SAMs in one platform."
-              },
-              {
-                icon: "🎯",
-                title: "Smart Routing",
-                description: "AI automatically selects the best model for your specific task."
-              },
-              {
-                icon: "🌐",
-                title: "No Setup Required",
-                description: "Start using advanced AI immediately - no API keys, no configuration."
-              },
-              {
-                icon: "🔒",
-                title: "Privacy First",
-                description: "Your data stays secure with enterprise-grade privacy protection."
-              }
-            ].map((feature, index) => (
-              <Col xs={24} sm={12} lg={8} key={index}>
-                <motion.div
-                  initial={{ y: 30, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <Card
-                    className="h-full hover:shadow-lg transition-all duration-300 border border-gray-100"
-                    bodyStyle={{ padding: '2rem' }}
-                  >
-                    <div className="text-4xl mb-4">{feature.icon}</div>
-                    <Title level={4} className="mb-3">{feature.title}</Title>
-                    <Paragraph className="text-gray-600 mb-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -5 }}
+              >
+                <Card className="h-full border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300">
+                  <CardContent className="p-6 sm:p-8">
+                    <div className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r ${feature.color} rounded-lg flex items-center justify-center text-white mb-4 sm:mb-6`}>
+                      {feature.icon}
+                    </div>
+                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
                       {feature.description}
-                    </Paragraph>
-                  </Card>
-                </motion.div>
-              </Col>
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
-          </Row>
+          </div>
         </div>
       </section>
 
-      {/* Founder Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-50 to-indigo-50">
-        <div className="max-w-4xl mx-auto text-center">
+      {/* How It Works Section */}
+      <section id="how-it-works" className="py-12 sm:py-20 lg:py-32 bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ y: 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
+            className="text-center mb-12 sm:mb-16"
           >
-            <Title level={2} className="text-4xl font-bold mb-8">
-              Meet the Founder
-            </Title>
-            
-            <Card 
-              className="max-w-2xl mx-auto shadow-xl border-0 bg-white/80 backdrop-blur-sm"
-              bodyStyle={{ padding: '3rem' }}
-            >
-              <Avatar 
-                size={120} 
-                src="/assets/unnamed.jpg" 
-                className="mb-6 border-4 border-blue-200"
-              >
-                YR
-              </Avatar>
-              
-              <Title level={3} className="mb-2 text-blue-700">
-                Yethikrishna R
-              </Title>
-              
-              <Text className="text-lg text-gray-600 block mb-4">
-                Founder & AI Architect
-              </Text>
-              
-              <Paragraph className="text-gray-700 text-base leading-relaxed">
-                Passionate about democratizing AI access, Yethikrishna created YETI AI to bridge 
-                the gap between complex AI capabilities and user-friendly interfaces. With a vision 
-                of making advanced AI accessible to everyone, YETI AI represents the future of 
-                intelligent, multi-modal AI platforms.
-              </Paragraph>
-            </Card>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
+              How YETI AI Works
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4 sm:px-0">
+              Our intelligent routing system automatically selects the best AI model for your specific task
+            </p>
           </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
+            {[
+              {
+                step: "1",
+                title: "Input Analysis",
+                description: "YETI analyzes your message to understand the task type, complexity, and requirements",
+                icon: <Search className="w-6 h-6" />
+              },
+              {
+                step: "2",
+                title: "Smart Routing",
+                description: "Our AI router selects the optimal model from 8 different types based on your needs",
+                icon: <Brain className="w-6 h-6" />
+              },
+              {
+                step: "3",
+                title: "Instant Response",
+                description: "Get the best possible answer with lightning-fast processing and contextual understanding",
+                icon: <Zap className="w-6 h-6" />
+              }
+            ].map((step, index) => (
+              <motion.div
+                key={step.step}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.2 }}
+                viewport={{ once: true }}
+                className="text-center"
+              >
+                <div className="relative mb-6 sm:mb-8">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white mx-auto mb-4">
+                    {step.icon}
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-white border-2 border-blue-600 rounded-full flex items-center justify-center text-blue-600 font-bold text-sm">
+                    {step.step}
+                  </div>
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">
+                  {step.title}
+                </h3>
+                <p className="text-gray-600 text-sm sm:text-base leading-relaxed px-2 sm:px-0">
+                  {step.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section id="testimonials" className="py-12 sm:py-20 lg:py-32 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-12 sm:mb-16"
+          >
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
+              What Users Say
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4 sm:px-0">
+              Join thousands of satisfied users who have transformed their workflow with YETI AI
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            {testimonials.map((testimonial, index) => (
+              <motion.div
+                key={testimonial.name}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <Card className="h-full border-gray-200 hover:shadow-lg transition-shadow duration-300">
+                  <CardContent className="p-6 sm:p-8">
+                    <div className="flex items-center mb-4 sm:mb-6">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-current" />
+                      ))}
+                    </div>
+                    <p className="text-gray-700 text-sm sm:text-base mb-4 sm:mb-6 leading-relaxed">
+                      "{testimonial.content}"
+                    </p>
+                    <div className="flex items-center">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3 sm:mr-4">
+                        {testimonial.avatar}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-900 text-sm sm:text-base">
+                          {testimonial.name}
+                        </div>
+                        <div className="text-gray-600 text-xs sm:text-sm">
+                          {testimonial.role}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="py-12 sm:py-20 lg:py-32 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ y: 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
+            className="text-center text-white"
           >
-            <Title level={2} className="text-4xl font-bold mb-6 text-white">
-              Ready to Experience the Future of AI?
-            </Title>
-            <Paragraph className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Join thousands of developers and researchers already using YETI AI 
-              to unlock the full potential of artificial intelligence.
-            </Paragraph>
-            
-            <Space size="large">
-              <Button 
-                type="primary" 
-                size="large" 
-                icon={<RocketOutlined />}
-                className="h-14 px-8 text-lg font-medium bg-white text-blue-600 border-white hover:bg-blue-50 hover:text-blue-700"
-                onClick={() => window.location.href = '/chat'}
-              >
-                Start Using YETI AI
-              </Button>
-              <Button 
-                size="large" 
-                icon={<StarOutlined />}
-                className="h-14 px-8 text-lg font-medium text-white border-white hover:bg-white/10"
-              >
-                View Documentation
-              </Button>
-            </Space>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6">
+              Ready to Experience YETI AI?
+            </h2>
+            <p className="text-lg sm:text-xl opacity-90 mb-6 sm:mb-8 max-w-2xl mx-auto px-4 sm:px-0">
+              Join the AI revolution with intelligent routing, 16 specialized skills, and lightning-fast responses.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4">
+              <AuthButton 
+                trigger={
+                  <Button size="lg" className="w-full sm:w-auto bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 text-base sm:text-lg font-semibold">
+                    Get Started Free
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                }
+                dashboardTrigger={
+                  <Button size="lg" className="w-full sm:w-auto bg-white text-green-600 hover:bg-gray-100 px-8 py-3 text-base sm:text-lg font-semibold">
+                    <Link to="/chat" className="flex items-center">
+                      Open YETI AI
+                      <ArrowRight className="ml-2 w-5 h-5" />
+                    </Link>
+                  </Button>
+                }
+              />
+            </div>
           </motion.div>
         </div>
       </section>
 
-      <Divider />
-
       {/* Footer */}
-      <footer className="py-12 text-center bg-gray-50">
-        <Paragraph className="text-gray-500 mb-4">
-          Built with ❤️ using Lenis, Ant Design 5.0, and Rive
-        </Paragraph>
-        <Paragraph className="text-gray-400 text-sm">
-          YETI AI - Democratizing Advanced AI for Everyone
-        </Paragraph>
+      <footer className="bg-gray-900 text-white py-8 sm:py-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
+            <div className="col-span-1 sm:col-span-2 lg:col-span-1">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  YETI
+                </div>
+                <div className="text-xl font-bold">YETI AI</div>
+              </div>
+              <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
+                The most intelligent AI assistant with smart routing across 8 model types and 16 specialized skills.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Product</h4>
+              <ul className="space-y-2 text-gray-400 text-sm sm:text-base">
+                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
+                <li><a href="#how-it-works" className="hover:text-white transition-colors">How it Works</a></li>
+                <li><Link to="/chat" className="hover:text-white transition-colors">Try YETI</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Company</h4>
+              <ul className="space-y-2 text-gray-400 text-sm sm:text-base">
+                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Support</h4>
+              <ul className="space-y-2 text-gray-400 text-sm sm:text-base">
+                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Privacy</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Terms</a></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-800 pt-6 sm:pt-8 text-center">
+            <p className="text-gray-400 text-xs sm:text-sm">
+              © 2025 YETI AI by Yethikrishna R. All rights reserved.
+            </p>
+          </div>
+        </div>
       </footer>
-    </motion.div>
+    </div>
   );
 }
