@@ -43,7 +43,7 @@ import { usePersonalization } from "@/components/enhanced/PersonalizationProvide
 import { YetiLogo, YetiAnimation } from "@/components/animations/YetiAnimations";
 import { MountainTheme, mountainThemeStyles } from "@/components/animations/MountainTheme";
 import { RiveScrollController } from "@/components/animations/RiveScrollController";
-import { AvatarSelector, MountainSkiing, AILoading, EnhancedYetiLogo } from "@/components/animations/CustomRiveAnimations";
+import { MountainSkiing, AILoading, EnhancedYetiLogo } from "@/components/animations/CustomRiveAnimations";
 import "@/components/animations/CustomRiveStyles.css";
 
 const { Text, Title } = Typography;
@@ -336,16 +336,6 @@ export default function Chat() {
           </div>
           
           <div className="flex items-center space-x-2 sm:space-x-4">
-            {/* Avatar Selector Button */}
-            <Button
-              type="default"
-              size="small"
-              onClick={() => setShowAvatarSelector(true)}
-              className="hidden sm:flex"
-            >
-              Choose Avatar
-            </Button>
-            
             {/* Mountain Animation Toggle */}
             <Button
               type="default"
@@ -380,67 +370,6 @@ export default function Chat() {
           </div>
         </div>
       </motion.header>
-
-      {/* Avatar Selection Modal */}
-      <AnimatePresence>
-        {showAvatarSelector && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            onClick={() => setShowAvatarSelector(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <AvatarSelector 
-                onAvatarSelect={handleAvatarSelect}
-                className="max-w-md"
-              />
-              <div className="text-center mt-4">
-                <Button
-                  type="default"
-                  onClick={() => setShowAvatarSelector(false)}
-                >
-                  Close
-                </Button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Mountain Animation Overlay */}
-      <AnimatePresence>
-        {showMountainAnimation && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-4 right-4 z-40"
-          >
-            <div className="relative">
-              <MountainSkiing 
-                autoplay={true}
-                className="w-80 h-60"
-                onAnimationComplete={() => console.log('Mountain animation completed')}
-              />
-              <Button
-                type="default"
-                size="small"
-                onClick={() => setShowMountainAnimation(false)}
-                className="absolute top-2 right-2"
-              >
-                ✕
-              </Button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Main Chat Interface */}
       <div className="flex flex-col h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)]">
