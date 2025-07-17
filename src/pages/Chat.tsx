@@ -212,9 +212,9 @@ export default function Chat() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {/* Animated Mountain Icon */}
+              {/* YETI AI Logo */}
               <motion.div 
-                className="text-4xl"
+                className="w-12 h-12 rounded-lg overflow-hidden border-2 border-white/20 shadow-lg"
                 animate={{
                   rotateY: [0, 10, -10, 0],
                 }}
@@ -223,8 +223,13 @@ export default function Chat() {
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
+                whileHover={{ scale: 1.1, rotate: 5 }}
               >
-                🏔️
+                <img 
+                  src="/assets/1000158361.jpg" 
+                  alt="YETI AI Logo" 
+                  className="w-full h-full object-cover"
+                />
               </motion.div>
               
               {/* YETI Wordmark with Snow Effect */}
@@ -318,7 +323,7 @@ export default function Chat() {
               whileTap={{ scale: 0.9 }}
             >
               <Avatar 
-                src="/assets/unnamed.jpg" 
+                src="/assets/1000158361.jpg" 
                 size="default"
                 className="border-2 border-blue-400/50 shadow-lg shadow-blue-500/20"
               />
@@ -384,7 +389,7 @@ export default function Chat() {
                       whileTap={{ scale: 0.9 }}
                     >
                       <Avatar 
-                        src={message.type === 'ai' ? '/assets/unnamed.jpg' : undefined}
+                        src={message.type === 'ai' ? '/assets/1000158361.jpg' : undefined}
                         icon={message.type === 'user' ? <RobotOutlined /> : undefined}
                         className={`${message.type === 'ai' ? 'border-2 border-blue-400 shadow-lg shadow-blue-500/20' : 'bg-blue-600 shadow-lg shadow-blue-600/20'}`}
                         size="large"
@@ -456,7 +461,7 @@ export default function Chat() {
                       transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                     >
                       <Avatar 
-                        src="/assets/unnamed.jpg" 
+                        src="/assets/1000158361.jpg" 
                         className="border-2 border-blue-400 shadow-lg shadow-blue-500/20"
                         size="large"
                       />
