@@ -34,6 +34,12 @@ import { RiveAnimation } from "@/components/RiveAnimation";
 import FloatingSidebar from '@/components/FloatingSidebar';
 import AIRouter, { AIModelType, AI_MODEL_TYPES, MODEL_CAPABILITIES } from '@/lib/ai-router';
 import { YetiAPIClient } from '@/lib/api-clients';
+import { AnimatedMessage } from "@/components/enhanced/AnimatedMessage";
+import { LoadingAnimation } from "@/components/animations/LoadingAnimation";
+import { TypingAnimation } from "@/components/animations/TypingAnimation";
+import { SkillAnimation } from "@/components/animations/SkillAnimation";
+import { EnhancedUserButton } from "@/components/enhanced/EnhancedUserButton";
+import { usePersonalization } from "@/components/enhanced/PersonalizationProvider";
 
 const { Text, Title } = Typography;
 const { TextArea } = Input;
@@ -317,24 +323,24 @@ export default function Chat() {
             {/* API Status Indicators */}
             <div className="hidden sm:flex items-center space-x-2">
               {Object.entries(apiStatus).map(([provider, status]) => (
-                <div
+                <motion.div
                   key={provider}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
                   className={`w-2 h-2 rounded-full ${status ? 'bg-green-500' : 'bg-red-500'}`}
                   title={`${provider}: ${status ? 'Connected' : 'Disconnected'}`}
                 />
               ))}
             </div>
             
-            <motion.div
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <Avatar 
-                src="/assets/1000158361.jpg" 
-                size={window.innerWidth < 640 ? "default" : "large"}
-                className="border-2 border-blue-200 shadow-lg"
-              />
-            </motion.div>
+            <EnhancedUserButton 
+              size={window.innerWidth < 640 ? 8 : 10}
+              showNotifications={true}
+              onThemeChange={(theme) => {
+                // Handle theme change
+                console.log('Theme changed to:', theme);
+              }}
+            />
           </div>
         </div>
       </motion.header>
@@ -392,55 +398,15 @@ export default function Chat() {
 
             <AnimatePresence>
               {messages.map((message) => (
-                <motion.div
+                <AnimatedMessage
                   key={message.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
-                  className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div className={`flex items-start space-x-2 sm:space-x-3 max-w-[85%] sm:max-w-[80%] ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                    <motion.div
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <Avatar 
-                        src={message.type === 'ai' ? '/assets/1000158361.jpg' : undefined}
-                        icon={message.type === 'user' ? <RobotOutlined /> : undefined}
-                        className={`${message.type === 'ai' ? 'border-2 border-blue-200 shadow-lg' : 'bg-blue-600 shadow-lg'}`}
-                        size={window.innerWidth < 640 ? "default" : "large"}
-                      />
-                    </motion.div>
-                    
-                    <Card
-                      className={`${
-                        message.type === 'user' 
-                          ? 'bg-blue-600 text-white border-blue-500' 
-                          : 'bg-white/80 backdrop-blur-sm text-gray-700 border-gray-200'
-                      } shadow-lg`}
-                      bodyStyle={{ padding: window.innerWidth < 640 ? '8px 12px' : '12px 16px' }}
-                    >
-                      {message.skill && (
-                        <Badge 
-                          count={message.skill} 
-                          color="blue" 
-                          className="mb-2"
-                        />
-                      )}
-                      <Text className={`${message.type === 'user' ? 'text-white' : 'text-gray-700'} text-sm sm:text-base`}>
-                        {message.content}
-                      </Text>
-                      <div className={`text-xs opacity-70 mt-1 sm:mt-2 ${message.type === 'user' ? 'text-white/70' : 'text-gray-500'}`}>
-                        {message.timestamp.toLocaleTimeString()}
-                      </div>
-                    </Card>
-                  </div>
-                </motion.div>
+                  message={message}
+                  isTyping={isTyping && message.id === messages[messages.length - 1]?.id}
+                />
               ))}
             </AnimatePresence>
             
-            {/* Typing Indicator - Mobile Responsive */}
+            {/* Enhanced Typing Indicator */}
             <AnimatePresence>
               {isTyping && (
                 <motion.div
@@ -456,10 +422,9 @@ export default function Chat() {
                       size={window.innerWidth < 640 ? "default" : "large"}
                     />
                     <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg">
-                      <div className="flex space-x-1 p-2">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="flex items-center space-x-2 p-2">
+                        <TypingAnimation isTyping={true} speed="medium" />
+                        <Text className="text-gray-600 text-sm">YETI is thinking...</Text>
                       </div>
                     </Card>
                   </div>
@@ -494,11 +459,20 @@ export default function Chat() {
                             whileTap={{ scale: 0.95 }}
                           >
                             <Card
-                              className="bg-white/60 border-gray-200 hover:bg-white/80 hover:border-blue-300 cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg h-full"
+                              className="bg-white/60 border-gray-200 hover:bg-white/80 hover:border-blue-300 cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg h-full relative overflow-hidden"
                               bodyStyle={{ padding: window.innerWidth < 640 ? '8px' : '12px' }}
                               onClick={() => handleSkillSelect(skill)}
                             >
-                              <div className="text-center">
+                              {/* Skill Animation Background */}
+                              <div className="absolute inset-0 pointer-events-none opacity-20">
+                                <SkillAnimation 
+                                  skillType={skill.id}
+                                  isActive={selectedSkill?.id === skill.id}
+                                  isHovered={false}
+                                />
+                              </div>
+                              
+                              <div className="text-center relative z-10">
                                 <div className={`text-lg sm:text-2xl text-${skill.color}-500 mb-1 sm:mb-2`}>
                                   {skill.icon}
                                 </div>

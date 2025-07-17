@@ -13,6 +13,7 @@ import "./index.css";
 import { VlyToolbar } from "@/components/VlyToolbar";
 import { useEffect } from "react";
 import Chat from "@/pages/Chat.tsx";
+import { PersonalizationProvider } from "@/components/enhanced/PersonalizationProvider";
 
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
 
@@ -52,14 +53,16 @@ function App() {
         },
       }}
     >
-      <BrowserRouter>
-        <RouteSyncer />
-        <Routes>
-          <Route path="*" element={<NotFound />} />
-          <Route path="/" element={<Landing />} />
-          <Route path="/chat" element={<Chat />} />
-        </Routes>
-      </BrowserRouter>
+      <PersonalizationProvider>
+        <BrowserRouter>
+          <RouteSyncer />
+          <Routes>
+            <Route path="*" element={<NotFound />} />
+            <Route path="/" element={<Landing />} />
+            <Route path="/chat" element={<Chat />} />
+          </Routes>
+        </BrowserRouter>
+      </PersonalizationProvider>
     </ConfigProvider>
   );
 }
