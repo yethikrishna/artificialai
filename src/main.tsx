@@ -1,6 +1,5 @@
 import { Toaster } from "@/components/ui/sonner";
 import { InstrumentationProvider } from "@/instrumentation.tsx";
-import Auth from "@/pages/Auth.tsx";
 import Landing from "@/pages/Landing.tsx";
 import NotFound from "@/pages/NotFound.tsx";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
@@ -47,7 +46,6 @@ createRoot(document.getElementById("root")!).render(
           <Routes>
             <Route path="*" element={<NotFound />} />
             <Route path="/" element={<Landing />} />
-            <Route path="/auth" element={<Auth />} />
           </Routes>
         </BrowserRouter>
         <Toaster />
