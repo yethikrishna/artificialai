@@ -27,7 +27,7 @@ import {
 import { AuthButton } from '@/components/auth/AuthButton';
 import { RiveAnimation } from '@/components/RiveAnimation';
 import { useLenis } from '@/hooks/use-lenis';
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 const { Title, Paragraph, Text } = Typography;
 
