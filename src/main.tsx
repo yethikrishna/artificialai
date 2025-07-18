@@ -7,35 +7,10 @@ import { PersonalizationProvider } from "@/components/enhanced/PersonalizationPr
 import VlyToolbar from "@/components/VlyToolbar";
 import "@/index.css";
 
-// Simple test components
-function TestLanding() {
-  return (
-    <div style={{ padding: '20px', textAlign: 'center' }}>
-      <h1>YETI AI Landing Page</h1>
-      <p>This is working!</p>
-      <a href="/chat">Go to Chat</a>
-    </div>
-  );
-}
-
-function TestChat() {
-  return (
-    <div style={{ padding: '20px', textAlign: 'center' }}>
-      <h1>YETI AI Chat Page</h1>
-      <p>Chat is working!</p>
-      <a href="/">Back to Home</a>
-    </div>
-  );
-}
-
-function TestNotFound() {
-  return (
-    <div style={{ padding: '20px', textAlign: 'center' }}>
-      <h1>404 - Page Not Found</h1>
-      <a href="/">Go Home</a>
-    </div>
-  );
-}
+// Import pages
+import Landing from "@/pages/Landing";
+import Chat from "@/pages/Chat";
+import NotFound from "@/pages/NotFound";
 
 // Initialize Convex client
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
@@ -46,9 +21,9 @@ function App() {
       <PersonalizationProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<TestLanding />} />
-            <Route path="/chat" element={<TestChat />} />
-            <Route path="*" element={<TestNotFound />} />
+            <Route path="/" element={<Landing />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />
           <VlyToolbar />

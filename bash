@@ -5,4 +5,4 @@ cp src/.env.example .env
 VITE_HF_TOKEN=your_hugging_face_token
 VITE_GROQ_TOKEN=your_groq_api_key
 
-pnpm dev
+npx convex dev
