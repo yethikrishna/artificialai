@@ -6,17 +6,18 @@ import { ConvexAuthProvider } from "@convex-dev/auth/react";
 import { Toaster } from "@/components/ui/sonner";
 import { PersonalizationProvider } from "@/components/enhanced/PersonalizationProvider";
 import VlyToolbar from "@/components/VlyToolbar";
-import "./index.css";
+import "@/index.css";
 
 // Import pages
 import Landing from "@/pages/Landing";
 import Chat from "@/pages/Chat";
 import NotFound from "@/pages/NotFound";
 
+// Initialize Convex client
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
+function App() {
+  return (
     <ConvexProvider client={convex}>
       <ConvexAuthProvider client={convex}>
         <PersonalizationProvider>
@@ -32,5 +33,16 @@ createRoot(document.getElementById("root")!).render(
         </PersonalizationProvider>
       </ConvexAuthProvider>
     </ConvexProvider>
-  </StrictMode>
-);
+  );
+}
+
+// Mount the app
+const rootElement = document.getElementById("root");
+if (rootElement) {
+  const root = createRoot(rootElement);
+  root.render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+}
