@@ -218,7 +218,7 @@ export default function Chat() {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <LiveAIActivation onActivate={handleLiveAIActivation} />
+                  <LiveAIActivation onActivation={handleLiveAIActivation} />
                 </motion.div>
               )}
             </AnimatePresence>
