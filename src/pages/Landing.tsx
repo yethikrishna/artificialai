@@ -83,7 +83,7 @@ export default function Landing() {
 
   return (
     <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-      {/* Hero Section - Direct Chat Access */}
+      {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8">
         <motion.div 
           style={{ y: backgroundY }}
@@ -103,18 +103,21 @@ export default function Landing() {
             transition={{ duration: 1, ease: "easeOut" }}
             className="mb-6 sm:mb-8"
           >
-            <div className="flex justify-center mb-4 sm:mb-6">
-              <RiveAnimation 
-                src="/assets/untitled.riv"
-                className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32"
-                stateMachines="Main State Machine"
+            {/* YETI AI Logo */}
+            <motion.div
+              className="inline-block mb-6 sm:mb-8"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <img 
+                src="/assets/1000158361.jpg" 
+                alt="YETI AI Logo" 
+                className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full border-4 border-blue-200 shadow-xl mx-auto object-cover"
               />
-            </div>
-            
-            <Title level={1} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-3 sm:mb-4 px-2">
-              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                YETI AI
-              </span>
+            </motion.div>
+
+            <Title level={1} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4 sm:mb-6 px-4">
+              YETI AI
             </Title>
             
             <Title level={2} className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600 font-light mb-6 sm:mb-8 px-4">
@@ -405,15 +408,17 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Footer - Updated Links */}
+      {/* Footer - Updated Logo */}
       <footer className="bg-gray-900 text-white py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Row gutter={[24, 32]}>
             <Col xs={24} sm={24} md={8}>
               <div className="flex items-center justify-center md:justify-start mb-4">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold mr-3 text-sm sm:text-base">
-                  YETI
-                </div>
+                <img 
+                  src="/assets/1000158361.jpg" 
+                  alt="YETI AI Logo" 
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-blue-400 mr-3 object-cover"
+                />
                 <Title level={4} className="text-white mb-0 text-lg sm:text-xl">YETI AI</Title>
               </div>
               <Paragraph className="text-gray-400 text-center md:text-left text-sm sm:text-base">
