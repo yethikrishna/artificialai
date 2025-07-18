@@ -15,7 +15,7 @@ import {
 import { Authenticated, Unauthenticated, useConvexAuth } from "convex/react";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthCard } from "./AuthCard";
 
 interface AuthButtonProps {

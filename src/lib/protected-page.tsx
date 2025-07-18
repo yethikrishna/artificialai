@@ -2,7 +2,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { AuthLoading, Authenticated, Unauthenticated } from "convex/react";
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export function Protected({ children }: { children: React.ReactNode }) {
   const { isLoading, isAuthenticated } = useAuth();
