@@ -82,7 +82,7 @@ export default function Landing() {
   ];
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <main ref={containerRef} className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8">
         <motion.div 
@@ -455,6 +455,6 @@ export default function Landing() {
           </div>
         </div>
       </footer>
-    </div>
+    </main>
   );
 }

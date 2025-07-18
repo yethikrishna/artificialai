@@ -343,7 +343,7 @@ export default function Chat() {
   }, [isScrollLocked]);
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 ${isScrolling ? 'scrolling' : ''}`}>
+    <main className={`min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 ${isScrolling ? 'scrolling' : ''}`}>
       {/* Floating Sidebar */}
       <FloatingSidebar
         onNewConversation={handleNewConversation}
@@ -807,6 +807,6 @@ export default function Chat() {
       <style dangerouslySetInnerHTML={{
         __html: mountainThemeStyles
       }} />
-    </div>
+    </main>
   );
 }
