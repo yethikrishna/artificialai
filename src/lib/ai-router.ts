@@ -1,4 +1,4 @@
-import { YetiAPIClient } from './api-clients';
+import { huggingFaceClient } from './huggingface-client';
 import { toast } from "sonner";
 
 // AI Model Types and their capabilities
@@ -147,10 +147,10 @@ interface RoutingFactors {
   userPreference?: AIModelType;
 }
 
-// Smart routing algorithm
+// Enhanced routing algorithm with Hugging Face integration
 export class AIRouter {
   
-  private static apiClient = new YetiAPIClient();
+  private static hfClient = huggingFaceClient;
 
   static analyzeInput(input: string): {
     detectedPatterns: string[];
@@ -313,14 +313,65 @@ export class AIRouter {
       duration: 3000,
     });
 
-    // Process with real API
+    // Process with Hugging Face API
     try {
-      const apiResponse = await this.apiClient.processRequest(
-        routingResult.selectedModel.toUpperCase() as keyof typeof import('./api-clients').FREE_API_MODELS,
-        input,
-        selectedSkill,
-        [{ role: 'user', content: input }]
-      );
+      let apiResponse;
+      
+      switch (routingResult.selectedModel) {
+        case AI_MODEL_TYPES.LLM:
+          apiResponse = await this.hfClient.chatCompletion(
+            'meta-llama/Llama-3.1-8B-Instruct',
+            [{ role: 'user', content: input }]
+          );
+          break;
+          
+        case AI_MODEL_TYPES.SLM:
+          apiResponse = await this.hfClient.textGeneration(
+            input,
+            'google/gemma-2-2b-it'
+          );
+          break;
+          
+        case AI_MODEL_TYPES.MOE:
+          apiResponse = await this.hfClient.textGeneration(
+            input,
+            'mistralai/Mixtral-8x7B-Instruct-v0.1'
+          );
+          break;
+          
+        case AI_MODEL_TYPES.VLM:
+          if (input.toLowerCase().includes('image') || input.toLowerCase().includes('picture')) {
+            apiResponse = await this.hfClient.textToImage(input);
+          } else {
+            apiResponse = await this.hfClient.textGeneration(input);
+          }
+          break;
+          
+        case AI_MODEL_TYPES.LCM:
+          apiResponse = await this.hfClient.featureExtraction(input);
+          break;
+          
+        case AI_MODEL_TYPES.MLM:
+          apiResponse = await this.hfClient.textClassification(input);
+          break;
+          
+        case AI_MODEL_TYPES.LAM:
+          apiResponse = await this.hfClient.textGeneration(
+            `Task: ${input}`,
+            'microsoft/DialoGPT-large'
+          );
+          break;
+          
+        case AI_MODEL_TYPES.SAM:
+          apiResponse = await this.hfClient.objectDetection(input);
+          break;
+          
+        default:
+          apiResponse = await this.hfClient.chatCompletion(
+            'meta-llama/Llama-3.1-8B-Instruct',
+            [{ role: 'user', content: input }]
+          );
+      }
 
       return {
         ...routingResult,
@@ -338,9 +389,24 @@ export class AIRouter {
     }
   }
 
-  // Test API connections
+  // Test Hugging Face API connection
   static async testAPIs() {
-    return await this.apiClient.testConnections();
+    const isConnected = await this.hfClient.testConnection();
+    return {
+      huggingface: isConnected,
+      configured: this.hfClient.isReady()
+    };
+  }
+
+  // Configure Hugging Face API key
+  static configureHuggingFace(apiKey: string) {
+    this.hfClient.setApiKey(apiKey);
+    toast.success('🤗 Hugging Face API configured successfully!');
+  }
+
+  // Check if APIs are ready
+  static isReady(): boolean {
+    return this.hfClient.isReady();
   }
 }
 
