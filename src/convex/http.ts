@@ -1,8 +1,15 @@
 import { httpRouter } from "convex/server";
-import { auth } from "./auth";
 
 const http = httpRouter();
 
-auth.addHttpRoutes(http);
+// Add your HTTP routes here
+// Example:
+// http.route({
+//   path: "/api/example",
+//   method: "GET",
+//   handler: httpAction(async (ctx, request) => {
+//     return new Response("Hello World!");
+//   }),
+// });
 
 export default http;

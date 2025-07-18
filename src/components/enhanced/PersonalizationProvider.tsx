@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { useAuth } from '@/hooks/use-auth';
 
 interface PersonalizationSettings {
   theme: 'light' | 'dark' | 'auto';
@@ -34,7 +33,6 @@ interface PersonalizationProviderProps {
 }
 
 export function PersonalizationProvider({ children }: PersonalizationProviderProps) {
-  const { user } = useAuth();
   const [settings, setSettings] = useState<PersonalizationSettings>(defaultSettings);
 
   // Load settings from localStorage on mount

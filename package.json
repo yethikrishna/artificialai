@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
-    "@convex-dev/auth": "^0.0.86",
     "@faker-js/faker": "^9.8.0",
     "@hookform/resolvers": "^5.0.1",
     "@huggingface/inference": "^4.5.3",
