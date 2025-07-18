@@ -12,8 +12,3 @@ git remote add origin https://github.com/yethikrishna/yeti-ai.git
 
 # Push to GitHub
 git push -u origin main
-
-# Deploy Convex functions
-npx convex deploy --prod
-
-# Update your environment variables with the production Convex URL
