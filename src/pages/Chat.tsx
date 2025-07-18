@@ -44,7 +44,7 @@ import { MountainTheme, mountainThemeStyles } from "@/components/animations/Moun
 import { RiveScrollController } from "@/components/animations/RiveScrollController";
 import { MountainSkiing, AILoading, EnhancedYetiLogo } from "@/components/animations/CustomRiveAnimations";
 import "@/components/animations/CustomRiveStyles.css";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 const { Text, Title } = Typography;
 const { TextArea } = Input;

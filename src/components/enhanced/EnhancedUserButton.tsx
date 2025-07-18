@@ -19,7 +19,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { motion, AnimatePresence } from "framer-motion";
 import { LogOut, Settings, User, Palette, Bell } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { LoadingAnimation } from "@/components/animations/LoadingAnimation";
 
 interface EnhancedUserButtonProps {

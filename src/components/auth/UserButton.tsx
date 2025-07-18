@@ -23,7 +23,7 @@ import { useAuth } from "@/hooks/use-auth"; // Assuming you have an auth hook
 import { motion } from "framer-motion"; // Import motion from framer-motion
 import { LogOut } from "lucide-react"; // Import icons
 import { useState } from "react"; // Import useState for dialog state
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 interface UserButtonProps {
   className?: string;
