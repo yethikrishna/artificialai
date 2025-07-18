@@ -365,11 +365,15 @@ export default function Chat() {
               whileHover={{ scale: 1.05 }}
             >
               <Link to="/">
-                <img 
-                  src="/assets/1000158361.jpg" 
-                  alt="YETI AI Logo" 
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-blue-200 shadow-lg object-cover"
-                />
+                <RiveErrorBoundary
+                  fallback={
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs">
+                      YETI
+                    </div>
+                  }
+                >
+                  <EnhancedYetiLogo size={window.innerWidth < 640 ? 40 : 50} />
+                </RiveErrorBoundary>
               </Link>
               
               <Link to="/" className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent tracking-wider">
@@ -416,6 +420,13 @@ export default function Chat() {
                 />
               ))}
             </div>
+            
+            {/* Free Access Badge */}
+            <Badge count="FREE" color="green" className="hidden sm:block">
+              <Button type="default" size="small">
+                <Link to="/">Home</Link>
+              </Button>
+            </Badge>
           </div>
         </div>
       </motion.header>
@@ -425,7 +436,7 @@ export default function Chat() {
         {/* Messages Area */}
         <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-4 sm:py-6 custom-scrollbar">
           <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
-            {/* Welcome Message with Updated Logo */}
+            {/* Welcome Message with Enhanced Animation */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -445,14 +456,18 @@ export default function Chat() {
                 />
               </div>
               
-              {/* Updated YETI Logo */}
+              {/* Animated YETI Logo */}
               <motion.div
                 className="inline-block mb-3 sm:mb-4 relative z-10"
               >
-                <img 
-                  src="/assets/1000158361.jpg" 
-                  alt="YETI AI Logo" 
-                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 border-blue-200 shadow-xl mx-auto object-cover"
+                <RiveScrollController
+                  src="/animations/yeti-logo.riv"
+                  stateMachine="Welcome State Machine"
+                  artboard="Welcome"
+                  width={window.innerWidth < 640 ? 64 : 80}
+                  height={window.innerWidth < 640 ? 64 : 80}
+                  scrollBound={false}
+                  className="welcome-logo border-4 border-blue-200 shadow-xl rounded-full"
                 />
               </motion.div>
               
@@ -493,7 +508,7 @@ export default function Chat() {
               )}
             </motion.div>
 
-            {/* Messages with Enhanced AI Avatar */}
+            {/* Messages with Enhanced AI Loading */}
             <AnimatePresence>
               {messages.map((message) => (
                 <AnimatedMessage
@@ -504,7 +519,7 @@ export default function Chat() {
               ))}
             </AnimatePresence>
             
-            {/* Enhanced Typing Indicator with YETI Logo */}
+            {/* Enhanced Typing Indicator with Custom Rive */}
             <AnimatePresence>
               {isTyping && (
                 <motion.div
