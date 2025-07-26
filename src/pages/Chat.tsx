@@ -1,19 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Input, Button, Card, Select, Badge, Typography, Space, Divider } from 'antd';
+import { Input, Button, Card, Select, Badge, Typography } from 'antd';
 import { 
   SendOutlined, 
   RobotOutlined, 
   UserOutlined,
-  ThunderboltOutlined,
-  BankOutlined,
-  EyeOutlined,
-  ApiOutlined,
   HomeOutlined
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { LiveAIActivation } from '@/components/LiveAIActivation';
-import { YetiAPIClient, FREE_API_MODELS } from '@/lib/api-clients';
+import { FREE_API_MODELS } from '@/lib/api-clients';
 import { AIRouter } from '@/lib/ai-router';
 import { toast } from 'sonner';
 
@@ -36,7 +32,6 @@ export default function Chat() {
   const [selectedSkill, setSelectedSkill] = useState<string>('');
   const [isLiveMode, setIsLiveMode] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const apiClient = useRef(new YetiAPIClient());
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -80,7 +75,7 @@ export default function Chat() {
         const aiMessage: Message = {
           id: (Date.now() + 1).toString(),
           type: 'ai',
-          content: result.realResponse || result.error || 'No response generated',
+          content: String(result.realResponse || result.error || 'No response generated'),
           timestamp: new Date(),
           modelType: result.selectedModel,
           skill: selectedSkill

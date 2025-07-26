@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { RiveScrollController } from './RiveScrollController';
-import { Button, Card, Space, Typography, Row, Col, Switch } from 'antd';
+import { Card, Space, Typography, Row, Col, Switch } from 'antd';
 
 const { Title, Text } = Typography;
 

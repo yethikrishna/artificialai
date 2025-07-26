@@ -3,7 +3,6 @@
 // start completely from scratch to make this landing page using aesthetic design principles and tailwind styling to create a unique and thematic landing page.
 
 import { motion } from "framer-motion";
-import { Loader } from "lucide-react";
 
 export default function NotFound() {
   return (

@@ -71,7 +71,7 @@ const Overlay: React.FC<{
       lastHovered.current = null;
     }
     onUnhover();
-  }, [onUnhover]);
+  }, [onUnhover, selectMode]);
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
