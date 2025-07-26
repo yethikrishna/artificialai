@@ -7,7 +7,7 @@ interface HuggingFaceConfig {
 
 interface ModelResponse {
   success: boolean;
-  data?: any;
+  data?: unknown;
   error?: string;
   model?: string;
   provider: string;
@@ -16,7 +16,7 @@ interface ModelResponse {
 interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
   content: string;
-  [key: string]: any; // Add index signature for compatibility
+  [key: string]: unknown; // Add index signature for compatibility
 }
 
 export class HuggingFaceClient {
@@ -247,7 +247,7 @@ export class HuggingFaceClient {
   }
 
   // Error handler
-  private handleError(error: any, model: string): ModelResponse {
+  private handleError(error: unknown, model: string): ModelResponse {
     console.error(`Hugging Face API Error for ${model}:`, error);
     
     let errorMessage = 'Unknown API error';

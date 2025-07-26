@@ -2,28 +2,30 @@
 // Connects to Hugging Face, Groq, and other free serverless APIs
 
 // Import Hugging Face inference
-const { HfInference } = require('@huggingface/inference');
+import { HfInference } from '@huggingface/inference';
 
-interface APIResponse {
+// Interfaces for type safety
+export interface APIResponse {
   success: boolean;
-  data?: any;
+  data?: unknown;
   error?: string;
   provider?: string;
   model?: string;
 }
 
-interface ChatMessage {
+export interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
   content: string;
 }
 
-// Model configuration type
-interface ModelConfig {
-  provider: 'huggingface' | 'groq';
-  type: 'chat' | 'feature-extraction' | 'image-to-text' | 'object-detection';
-}
+// Model configuration type (unused for now)
+// interface ModelConfig {
+//   provider: 'huggingface' | 'groq';
+//   type: 'chat' | 'feature-extraction' | 'image-to-text' | 'object-detection';
+// }
 
-// Hugging Face Inference API Client
+// Hugging Face Inference API Client (unused for now)
+/*
 class HuggingFaceClient {
   private baseURL = 'https://api-inference.huggingface.co/models';
   private token = import.meta.env.VITE_HF_TOKEN || '';
@@ -142,8 +144,10 @@ class HuggingFaceClient {
     }
   }
 }
+*/
 
-// Groq API Client (Fast LLM Inference)
+// Groq API Client (Fast LLM Inference) (unused for now)
+/*
 class GroqClient {
   private baseURL = 'https://api.groq.com/openai/v1';
   private token = import.meta.env.VITE_GROQ_TOKEN || '';
@@ -186,6 +190,7 @@ class GroqClient {
     }
   }
 }
+*/
 
 // Enhanced API Models with Hugging Face Integration
 export const FREE_API_MODELS = {
@@ -271,7 +276,7 @@ export const FREE_API_MODELS = {
 };
 
 export class YetiAPIClient {
-  private hf: any;
+  private hf: HfInference | null;
   private isLiveMode: boolean = false;
 
   constructor() {
@@ -302,6 +307,15 @@ export class YetiAPIClient {
         success: false,
         error: 'API keys not configured - using demo mode',
         data: null
+      };
+    }
+
+    if (!this.hf) {
+      return {
+        success: false,
+        error: 'Hugging Face client not initialized',
+        provider: 'Hugging Face',
+        model: modelConfig.model
       };
     }
 
@@ -339,7 +353,7 @@ export class YetiAPIClient {
             error: null
           };
 
-        case 'textClassification':
+        case 'textClassification': {
           result = await this.hf.textClassification({
             model: modelConfig.model,
             inputs: input
@@ -350,6 +364,7 @@ export class YetiAPIClient {
             data: `Analysis: ${topResult.label} (${Math.round(topResult.score * 100)}% confidence)\n\nOriginal text: "${input}"`,
             error: null
           };
+        }
 
         case 'featureExtraction':
           result = await this.hf.featureExtraction({
@@ -420,7 +435,7 @@ export class YetiAPIClient {
     }
 
     // Test each model type
-    for (const [modelType, config] of Object.entries(FREE_API_MODELS)) {
+    for (const [modelType] of Object.entries(FREE_API_MODELS)) {
       try {
         // Quick test with minimal input
         const testResult = await this.processRequest(

@@ -175,14 +175,14 @@ export default function FloatingSidebar({
     }
   ];
 
-  const handleFileUpload = (info: { file: { status: string; name: string; size: number; response?: { url: string } } }) => {
+  const handleFileUpload = (info: { file: { status?: string; name?: string; size?: number; response?: { url: string } } }) => {
     const { file } = info;
     if (file.status === 'done') {
       const newFile: AIFile = {
         id: Date.now().toString(),
-        name: file.name,
+        name: file.name || 'Unknown file',
         type: 'uploaded',
-        size: `${(file.size / 1024 / 1024).toFixed(1)} MB`,
+        size: file.size ? `${(file.size / 1024 / 1024).toFixed(1)} MB` : 'Unknown size',
         timestamp: new Date(),
         downloadUrl: file.response?.url
       };

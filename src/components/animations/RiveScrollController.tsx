@@ -46,7 +46,6 @@ export const RiveScrollController: React.FC<RiveScrollControllerProps> = ({
     autoplay: !scrollBound,
     onLoad: () => {
       console.log('Rive animation loaded successfully');
-      setIsLoaded(true);
       onLoad?.();
     },
     onLoadError: (error: unknown) => {

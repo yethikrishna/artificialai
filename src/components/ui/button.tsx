@@ -1,7 +1,6 @@
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
-import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -46,21 +45,13 @@ function Button({
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
   }) {
-  const Comp = asChild ? Slot : motion.button;
-
-  const animationProps = !asChild
-    ? {
-        whileHover: { scale: 0.97 },
-        whileTap: { scale: 0.95 },
-        transition: { duration: 0.08 },
-      }
-    : {};
+  const Comp = asChild ? Slot : "button";
 
   return (
     <Comp
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
-      {...(asChild ? props : ({ ...animationProps, ...props } as React.ComponentProps<typeof Comp>))}
+      {...props}
     />
   );
 }
