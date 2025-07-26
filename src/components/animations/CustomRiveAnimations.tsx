@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useRive, useStateMachineInput, Fit, Alignment } from '@rive-app/react-canvas';
+import React, { useEffect, useState } from 'react';
+import { useRive, useStateMachineInput } from '@rive-app/react-canvas';
 
 // Avatar Selection Component
 interface AvatarSelectorProps {
@@ -41,15 +41,20 @@ export const AvatarSelector: React.FC<AvatarSelectorProps> = ({
 
   return (
     <div className={`avatar-selector-container ${className}`}>
-      <div className="rive-avatar-animation">
-        <RiveComponent />
-      </div>
+      {showFallback ? (
+        <div className="avatar-fallback">Avatar animation failed to load</div>
+      ) : (
+        <div className="rive-avatar-animation">
+          <RiveComponent />
+        </div>
+      )}
       <div className="avatar-controls">
         <button 
           className="avatar-btn"
           onMouseEnter={() => hoverInput && (hoverInput.value = true)}
           onMouseLeave={() => hoverInput && (hoverInput.value = false)}
           onClick={() => selectInput && selectInput.fire()}
+          disabled={!isLoaded}
         >
           Choose Avatar
         </button>
@@ -69,10 +74,7 @@ interface MountainSkiingProps {
 
 export const MountainSkiing: React.FC<MountainSkiingProps> = ({ 
   isActive = true, 
-  onClose,
-  className = "",
-  onSpeedChange,
-  onSnowChange 
+  className = ""
 }) => {
   const [showFallback, setShowFallback] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -142,7 +144,7 @@ export const AILoading: React.FC<AILoadingProps> = ({
 }) => {
   const [showFallback, setShowFallback] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [useRiveAnimation, setUseRiveAnimation] = useState(true);
+  const [useRiveAnimation] = useState(true);
   const [debugInfo, setDebugInfo] = useState<string>('Initializing...');
 
   const sizeConfig = {

@@ -22,28 +22,24 @@ export const RiveScrollController: React.FC<RiveScrollControllerProps> = ({
   scrollBound = false,
   className = "",
   onLoadError,
-  onLoad,
-  ...props
+  onLoad
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const riveInstanceRef = useRef<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
+  const [isLoading] = useState(true);
+  const [hasError] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   // Enhanced error handling for missing .riv files
-  const handleLoadError = useCallback((error: any) => {
+  const handleLoadError = useCallback((error: unknown) => {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to load animation';
     console.error('Rive animation load error:', error);
-    setError(error?.message || 'Failed to load animation');
-    onLoadError?.(error?.message || 'Failed to load animation');
-  }, [src, onLoadError]);
+    onLoadError?.(errorMessage);
+  }, [onLoadError]);
 
   // Rive hook with error handling
-  const { rive, RiveComponent } = useRive({
+  const { rive } = useRive({
     src,
     stateMachines: stateMachine,
     artboard,
@@ -53,9 +49,10 @@ export const RiveScrollController: React.FC<RiveScrollControllerProps> = ({
       setIsLoaded(true);
       onLoad?.();
     },
-    onLoadError: (error: any) => {
+    onLoadError: (error: unknown) => {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       console.error('Rive load error:', error);
-      onLoadError?.(`Failed to load animation: ${error?.message || 'Unknown error'}`);
+      onLoadError?.(`Failed to load animation: ${errorMessage}`);
       handleLoadError(error);
     },
   });
@@ -68,7 +65,7 @@ export const RiveScrollController: React.FC<RiveScrollControllerProps> = ({
   );
 
   // Throttle utility
-  const throttle = useCallback(<T extends (...args: any[]) => any>(
+  const throttle = useCallback(<T extends (...args: unknown[]) => unknown>(
     func: T,
     delay: number
   ): ((...args: Parameters<T>) => void) => {
@@ -119,9 +116,9 @@ export const RiveScrollController: React.FC<RiveScrollControllerProps> = ({
   useEffect(() => {
     if (!scrollBound || !progressInput || isModalOpen) return;
 
-    const throttle = (func: Function, limit: number) => {
+    const throttle = (func: (...args: unknown[]) => void, limit: number) => {
       let inThrottle: boolean;
-      return function(this: any, ...args: any[]) {
+      return function(this: unknown, ...args: unknown[]) {
         if (!inThrottle) {
           func.apply(this, args);
           inThrottle = true;
