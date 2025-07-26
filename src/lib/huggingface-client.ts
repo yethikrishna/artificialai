@@ -25,8 +25,7 @@ export class HuggingFaceClient {
 
   constructor(config?: HuggingFaceConfig) {
     const apiKey = config?.apiKey || 
-                   import.meta.env.VITE_HUGGING_FACE_ACCESS_TOKEN || 
-                   process.env.HUGGING_FACE_ACCESS_TOKEN;
+                   import.meta.env.VITE_HF_TOKEN;
     
     if (apiKey) {
       this.hf = new HfInference(apiKey);
