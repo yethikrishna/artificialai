@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Button,
   Drawer,
-  Space,
   Typography,
   List,
   Avatar,
@@ -13,7 +12,6 @@ import {
   Upload,
   Dropdown,
   Card,
-  Divider,
   Empty,
   Tag
 } from 'antd';
@@ -23,7 +21,6 @@ import {
   CloudOutlined,
   FileOutlined,
   HistoryOutlined,
-  SearchOutlined,
   DownloadOutlined,
   EditOutlined,
   DeleteOutlined,
@@ -35,7 +32,7 @@ import {
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 const { Search } = Input;
 
 interface ChatHistory {
@@ -91,7 +88,7 @@ export default function FloatingSidebar({
     }
   ]);
 
-  const [chatHistory, setChatHistory] = useState<ChatHistory[]>([
+  const [chatHistory] = useState<ChatHistory[]>([
     {
       id: '1',
       title: 'AI Writing Assistant',
@@ -178,14 +175,14 @@ export default function FloatingSidebar({
     }
   ];
 
-  const handleFileUpload = (info: any) => {
+  const handleFileUpload = (info: { file: { status?: string; name?: string; size?: number; response?: { url: string } } }) => {
     const { file } = info;
     if (file.status === 'done') {
       const newFile: AIFile = {
         id: Date.now().toString(),
-        name: file.name,
+        name: file.name || 'Unknown file',
         type: 'uploaded',
-        size: `${(file.size / 1024 / 1024).toFixed(1)} MB`,
+        size: file.size ? `${(file.size / 1024 / 1024).toFixed(1)} MB` : 'Unknown size',
         timestamp: new Date(),
         downloadUrl: file.response?.url
       };

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Card, Button, Input, Alert, Badge, Typography, Space, Divider } from 'antd';
+import { Card, Button, Input, Alert, Badge, Typography, Space } from 'antd';
 import { 
   ThunderboltOutlined, 
   KeyOutlined, 
   CheckCircleOutlined, 
-  ExclamationCircleOutlined,
   RocketOutlined,
   ApiOutlined,
   BulbOutlined
