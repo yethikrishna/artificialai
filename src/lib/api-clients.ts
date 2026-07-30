@@ -281,8 +281,7 @@ export class YetiAPIClient {
 
   constructor() {
     // Initialize Hugging Face client
-    const hfToken = import.meta.env.VITE_HUGGING_FACE_ACCESS_TOKEN || 
-                   process.env.HUGGING_FACE_ACCESS_TOKEN;
+    const hfToken = import.meta.env.VITE_HF_TOKEN;
     
     if (hfToken) {
       this.hf = new HfInference(hfToken);
